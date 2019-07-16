@@ -1,8 +1,9 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/themes.dart';
 
 /// BLoC that allows to change the application theme.
-class ThemeBloc {
+class ThemeBloc extends BaseBloc {
   factory ThemeBloc.instance() {
     return _bloc;
   }
@@ -18,6 +19,7 @@ class ThemeBloc {
 
   void Function(AppTheme) get changeTheme => _themeSubject.sink.add;
 
+  @override
   void dispose() {
     _themeSubject.close();
   }
