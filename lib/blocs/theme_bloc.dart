@@ -1,9 +1,17 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:swat_nation/themes/app_theme.dart';
+import 'package:swat_nation/themes.dart';
 
 /// BLoC that allows to change the application theme.
 class ThemeBloc {
-  final BehaviorSubject<AppTheme> _themeSubject = BehaviorSubject<AppTheme>();
+  factory ThemeBloc.instance() {
+    return _bloc;
+  }
+
+  ThemeBloc._internal();
+
+  static final ThemeBloc _bloc = ThemeBloc._internal();
+
+  final BehaviorSubject<AppTheme> _themeSubject = BehaviorSubject<AppTheme>.seeded(AppTheme.light);
 
   Stream<AppTheme> get stream => _themeSubject.stream;
   AppTheme get currentTheme => _themeSubject.value;
