@@ -42,6 +42,19 @@ class _AppState extends State<App> {
             appBar: AppBar(
               title: const Text('SWAT Nation'),
             ),
+            body: SafeArea(
+              child: Center(
+                child: RaisedButton(
+                  onPressed: () {
+                    final AppTheme newTheme = snapshot.data == AppTheme.light
+                      ? AppTheme.dark
+                      : AppTheme.light;
+                    themeBloc.changeTheme(newTheme);
+                  },
+                  child: const Text('Change Theme'),
+                ),
+              ),
+            ),
           ),
         );
       },
