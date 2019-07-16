@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'blocs/theme_bloc.dart';
 import 'themes.dart';
 
-// TODO(itsprof): provide BLoC to change the theme
 void main() => runApp(const App());
 
 class App extends StatefulWidget {
