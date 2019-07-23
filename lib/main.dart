@@ -35,12 +35,29 @@ class _AppState extends State<App> {
     return StreamBuilder<AppTheme>(
       stream: themeBloc.stream,
       builder: (BuildContext context, AsyncSnapshot<AppTheme> snapshot) {
+        final ThemeData theme = snapshot.data == AppTheme.light
+          ? lightTheme
+          : darkTheme;
+
         return MaterialApp(
           title: 'SWAT Nation',
-          theme: snapshot.data == AppTheme.light ? lightTheme : darkTheme,
+          theme: theme,
           home: Scaffold(
             appBar: AppBar(
               title: const Text('SWAT Nation'),
+            ),
+            body: SafeArea(
+              child: Center(
+                child: RaisedButton(
+                  onPressed: () {
+                    final AppTheme newTheme = snapshot.data == AppTheme.light
+                      ? AppTheme.dark
+                      : AppTheme.light;
+                    themeBloc.changeTheme(newTheme);
+                  },
+                  child: const Text('Change Theme'),
+                ),
+              ),
             ),
           ),
         );
