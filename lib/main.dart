@@ -125,7 +125,7 @@ class _AppState extends State<App> {
                   title: const Text('Chat'),
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(MdiIcons.store),
+                  icon: Icon(MdiIcons.cart),
                   title: const Text('Store'),
                 ),
               ],
