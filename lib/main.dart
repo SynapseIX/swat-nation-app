@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import 'blocs/tab_bar_bloc.dart';
 import 'blocs/theme_bloc.dart';
 import 'themes.dart';
 
@@ -18,61 +19,16 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   // TODO(itsprof): persist selected theme
   ThemeBloc themeBloc;
+  TabBarBloc tabBarBloc;
 
-  int selectedTabIndex;
   List<Widget> tabs;
 
   @override
   void initState() {
     themeBloc = ThemeBloc.instance();
+    tabBarBloc = TabBarBloc.instance();
 
-    selectedTabIndex = 0;
-    tabs = <Widget>[
-      _DummyScreen(
-        onPressed: () {
-          final AppTheme currentTheme = themeBloc.currentTheme;
-          themeBloc.changeTheme(currentTheme == AppTheme.light 
-            ? AppTheme.dark
-            : AppTheme.light);
-        },
-      ),
-      _DummyScreen(
-        backgroundColor: Colors.lime,
-        onPressed: () {
-          final AppTheme currentTheme = themeBloc.currentTheme;
-          themeBloc.changeTheme(currentTheme == AppTheme.light 
-            ? AppTheme.dark
-            : AppTheme.light);
-        },
-      ),
-      _DummyScreen(
-        backgroundColor: Colors.purple,
-        onPressed: () {
-          final AppTheme currentTheme = themeBloc.currentTheme;
-          themeBloc.changeTheme(currentTheme == AppTheme.light 
-            ? AppTheme.dark
-            : AppTheme.light);
-        },
-      ),
-      _DummyScreen(
-        backgroundColor: Colors.lightGreen,
-        onPressed: () {
-          final AppTheme currentTheme = themeBloc.currentTheme;
-          themeBloc.changeTheme(currentTheme == AppTheme.light 
-            ? AppTheme.dark
-            : AppTheme.light);
-        },
-      ),
-      _DummyScreen(
-        backgroundColor: Colors.grey,
-        onPressed: () {
-          final AppTheme currentTheme = themeBloc.currentTheme;
-          themeBloc.changeTheme(currentTheme == AppTheme.light 
-            ? AppTheme.dark
-            : AppTheme.light);
-        },
-      ),
-    ];
+    tabs = _kDummyScreens;
 
     super.initState();
   }
@@ -80,6 +36,7 @@ class _AppState extends State<App> {
   @override
   void dispose() {
     themeBloc.dispose();
+    tabBarBloc.dispose();
     super.dispose();
   }
 
@@ -95,41 +52,45 @@ class _AppState extends State<App> {
         return MaterialApp(
           title: 'SWAT Nation',
           theme: theme,
-          home: Scaffold(
-            appBar: AppBar(title: const Text('SWAT Nation')),
-            body: tabs[selectedTabIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: selectedTabIndex,
-              type: BottomNavigationBarType.fixed,
-              onTap: (int index) {
-                setState(() {
-                  selectedTabIndex = index;
-                });
-              },
-              selectedItemColor: theme.primaryColor,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(MdiIcons.home),
-                  title: const Text('Home'),
+          home: StreamBuilder<int>(
+            initialData: 0,
+            stream: tabBarBloc.stream,
+            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+              return Scaffold(
+                appBar: AppBar(title: const Text('SWAT Nation')),
+                body: tabs[snapshot.data],
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: snapshot.data,
+                  type: BottomNavigationBarType.fixed,
+                  onTap: (int index) {
+                    tabBarBloc.setCurrentIndex(index);
+                  },
+                  selectedItemColor: theme.primaryColor,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(MdiIcons.home),
+                      title: const Text('Home'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(MdiIcons.trophy),
+                      title: const Text('Tourneys'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(MdiIcons.accountSearch),
+                      title: const Text('Team Finder'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(MdiIcons.chat),
+                      title: const Text('Chat'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(MdiIcons.information),
+                      title: const Text('About'),
+                    ),
+                  ],
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(MdiIcons.trophy),
-                  title: const Text('Tourneys'),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(MdiIcons.accountSearch),
-                  title: const Text('Team Finder'),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(MdiIcons.chat),
-                  title: const Text('Chat'),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(MdiIcons.cart),
-                  title: const Text('Store'),
-                ),
-              ],
-            ),
+              );
+            }
           ),
         );
       },
@@ -137,25 +98,40 @@ class _AppState extends State<App> {
   }
 }
 
+// TODO(itsprof): remove everything below this comment
+
 class _DummyScreen extends StatelessWidget {
   const _DummyScreen({
-    this.backgroundColor,
+    @required this.title,
     this.onPressed,
   });
   
-  final Color backgroundColor;
+  final String title;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundColor,
       child: Center(
         child: RaisedButton(
           onPressed: onPressed,
-          child: const Text('Change Theme'),
+          child: Text(title),
         ),
       ),
     );
   }
 }
+
+final List<Widget> _kDummyScreens = List<Widget>.generate(5, (int i) {
+  return _DummyScreen(
+    title: 'Tab $i',
+    onPressed: () {
+      final ThemeBloc themeBloc = ThemeBloc.instance();
+      final AppTheme currentTheme = themeBloc.currentTheme;
+
+      themeBloc.changeTheme(currentTheme == AppTheme.light 
+        ? AppTheme.dark
+        : AppTheme.light);
+    },
+  );
+});
