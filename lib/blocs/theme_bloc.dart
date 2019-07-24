@@ -1,5 +1,6 @@
 import 'package:swat_nation/base/base_bloc.dart';
-import 'package:swat_nation/themes.dart';
+import 'package:swat_nation/themes/base_theme.dart';
+import 'package:swat_nation/themes/light_theme.dart';
 
 /// BLoC that allows to change the application theme.
 class ThemeBloc extends BaseBloc {
@@ -11,12 +12,12 @@ class ThemeBloc extends BaseBloc {
 
   static final ThemeBloc _bloc = ThemeBloc._internal();
 
-  final BehaviorSubject<AppTheme> _themeSubject = BehaviorSubject<AppTheme>.seeded(AppTheme.light);
+  final BehaviorSubject<BaseTheme> _themeSubject = BehaviorSubject<BaseTheme>.seeded(LightTheme());
 
-  Stream<AppTheme> get stream => _themeSubject.stream;
-  AppTheme get currentTheme => _themeSubject.value;
+  Stream<BaseTheme> get stream => _themeSubject.stream;
+  BaseTheme get currentTheme => _themeSubject.value;
 
-  void Function(AppTheme) get changeTheme => _themeSubject.sink.add;
+  void Function(BaseTheme) get changeTheme => _themeSubject.sink.add;
 
   @override
   void dispose() {
