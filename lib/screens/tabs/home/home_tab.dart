@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Represents the home tab screen.
 class HomeTab extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeTabState();
