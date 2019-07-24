@@ -57,8 +57,9 @@ class _AppState extends State<App> {
             stream: tabBarBloc.stream,
             builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
               return Scaffold(
-                appBar: AppBar(title: const Text('SWAT Nation')),
-                body: tabs[snapshot.data],
+                body: SafeArea(
+                  child: tabs[snapshot.data],
+                ),
                 bottomNavigationBar: BottomNavigationBar(
                   currentIndex: snapshot.data,
                   type: BottomNavigationBarType.fixed,
