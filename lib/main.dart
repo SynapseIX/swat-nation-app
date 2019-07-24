@@ -29,7 +29,6 @@ class _AppState extends State<App> {
     selectedTabIndex = 0;
     tabs = <Widget>[
       _DummyScreen(
-        backgroundColor: Colors.lightBlue,
         onPressed: () {
           final AppTheme currentTheme = themeBloc.currentTheme;
           themeBloc.changeTheme(currentTheme == AppTheme.light 
@@ -97,6 +96,7 @@ class _AppState extends State<App> {
           title: 'SWAT Nation',
           theme: theme,
           home: Scaffold(
+            appBar: AppBar(title: const Text('SWAT Nation')),
             body: tabs[selectedTabIndex],
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: selectedTabIndex,
@@ -106,6 +106,7 @@ class _AppState extends State<App> {
                   selectedTabIndex = index;
                 });
               },
+              selectedItemColor: theme.primaryColor,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(MdiIcons.home),
