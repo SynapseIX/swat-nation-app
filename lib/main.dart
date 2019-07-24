@@ -66,9 +66,6 @@ class _AppState extends State<App> {
                 bottomNavigationBar: BottomNavigationBar(
                   currentIndex: snapshot.data,
                   type: BottomNavigationBarType.fixed,
-                  onTap: (int index) {
-                    tabBarBloc.setCurrentIndex(index);
-                  },
                   selectedItemColor: theme.primaryColor,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
@@ -92,6 +89,9 @@ class _AppState extends State<App> {
                       title: const Text('About'),
                     ),
                   ],
+                  onTap: (int index) {
+                    tabBarBloc.setCurrentIndex(index);
+                  },
                 ),
               );
             }

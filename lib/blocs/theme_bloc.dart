@@ -1,6 +1,7 @@
-import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/themes/base_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
+
+import 'base_bloc.dart';
 
 /// BLoC that allows to change the application theme.
 class ThemeBloc extends BaseBloc {
