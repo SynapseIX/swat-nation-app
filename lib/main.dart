@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/screens/tabs/home/home_tab.dart';
 import 'package:swat_nation/themes/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
@@ -30,7 +31,13 @@ class _AppState extends State<App> {
     themeBloc = ThemeBloc.instance();
     tabBarBloc = TabBarBloc.instance();
 
-    tabs = _kDummyScreens;
+    tabs = <Widget>[
+      HomeTab(),
+      Container(color: Colors.lightBlue),
+      Container(color: Colors.lightGreen),
+      Container(color: Colors.pink),
+      Container(color: Colors.purple),
+    ];
 
     super.initState();
   }
@@ -60,9 +67,7 @@ class _AppState extends State<App> {
             stream: tabBarBloc.stream,
             builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
               return Scaffold(
-                body: SafeArea(
-                  child: tabs[snapshot.data],
-                ),
+                body: tabs[snapshot.data],
                 bottomNavigationBar: BottomNavigationBar(
                   currentIndex: snapshot.data,
                   type: BottomNavigationBarType.fixed,
@@ -101,41 +106,3 @@ class _AppState extends State<App> {
     );
   }
 }
-
-// TODO(itsprof): remove everything below this comment
-
-class _DummyScreen extends StatelessWidget {
-  const _DummyScreen({
-    @required this.title,
-    this.onPressed,
-  });
-  
-  final String title;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: RaisedButton(
-          onPressed: onPressed,
-          child: Text(title),
-        ),
-      ),
-    );
-  }
-}
-
-final List<Widget> _kDummyScreens = List<Widget>.generate(5, (int i) {
-  return _DummyScreen(
-    title: 'Tab $i',
-    onPressed: () {
-      final ThemeBloc themeBloc = ThemeBloc.instance();
-      final BaseTheme currentTheme = themeBloc.currentTheme;
-
-      themeBloc.changeTheme(currentTheme is LightTheme 
-        ? DarkTheme()
-        : LightTheme());
-    },
-  );
-});
