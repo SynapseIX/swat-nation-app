@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/themes/base_theme.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
+import 'package:swat_nation/themes/light_theme.dart';
 
 import 'blocs/tab_bar_bloc.dart';
 import 'blocs/theme_bloc.dart';
-import 'themes.dart';
 
 void main() => runApp(const App());
 
@@ -42,16 +44,17 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<AppTheme>(
+    return StreamBuilder<BaseTheme>(
       stream: themeBloc.stream,
-      builder: (BuildContext context, AsyncSnapshot<AppTheme> snapshot) {
-        final ThemeData theme = snapshot.data == AppTheme.light
-          ? lightTheme
-          : darkTheme;
+      initialData: LightTheme(),
+      builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
+        final BaseTheme theme = snapshot.data is LightTheme
+          ? LightTheme()
+          : DarkTheme();
 
         return MaterialApp(
           title: 'SWAT Nation',
-          theme: theme,
+          theme: theme.getThemeData(),
           home: StreamBuilder<int>(
             initialData: 0,
             stream: tabBarBloc.stream,
@@ -128,11 +131,11 @@ final List<Widget> _kDummyScreens = List<Widget>.generate(5, (int i) {
     title: 'Tab $i',
     onPressed: () {
       final ThemeBloc themeBloc = ThemeBloc.instance();
-      final AppTheme currentTheme = themeBloc.currentTheme;
+      final BaseTheme currentTheme = themeBloc.currentTheme;
 
-      themeBloc.changeTheme(currentTheme == AppTheme.light 
-        ? AppTheme.dark
-        : AppTheme.light);
+      themeBloc.changeTheme(currentTheme is LightTheme 
+        ? DarkTheme()
+        : LightTheme());
     },
   );
 });

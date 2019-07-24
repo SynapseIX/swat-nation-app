@@ -10,7 +10,7 @@ class TabBarBloc extends BaseBloc {
 
   static final TabBarBloc _bloc = TabBarBloc._internal();
 
-  final BehaviorSubject<int> _tabBarSubject = BehaviorSubject<int>();
+  final BehaviorSubject<int> _tabBarSubject = BehaviorSubject<int>.seeded(0);
 
   Stream<int> get stream => _tabBarSubject.stream;
   int get currentIndex => _tabBarSubject.value;
