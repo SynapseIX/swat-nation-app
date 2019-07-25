@@ -5,8 +5,10 @@ class HorizontalCardList extends StatelessWidget {
   const HorizontalCardList({
     @required this.cards,
     @required this.height,
-    this.padding = EdgeInsets.zero,
-  }) : assert(height > 0.0);
+    Key key,
+    this.padding = const EdgeInsets.all(8.0),
+  }) : assert(height > 0.0),
+       super(key: key);
 
   final List<Widget> cards;
   final double height;
