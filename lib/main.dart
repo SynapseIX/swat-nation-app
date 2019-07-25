@@ -83,7 +83,7 @@ class _AppState extends State<App> {
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(MdiIcons.accountSearch),
-                      title: const Text('Team Finder'),
+                      title: const Text('Finder'),
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(MdiIcons.chat),
