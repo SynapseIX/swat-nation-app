@@ -20,7 +20,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     super.build(context);
     
     final double cardWidth = MediaQuery.of(context).size.width * 0.9;
-    final double cardHeight = iPhoneX(context) ? 220 : 210;
+    final double cardHeight = iPhoneX(context) ? 230 : 210;
 
     return CustomScrollView(
       slivers: <Widget>[
