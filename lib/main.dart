@@ -35,7 +35,7 @@ class _AppState extends State<App> {
       HomeTab(),
       Container(color: Colors.lightBlue),
       Container(color: Colors.lightGreen),
-      Container(color: Colors.pink),
+      Container(color: Colors.orange),
       Container(color: Colors.purple),
     ];
 
