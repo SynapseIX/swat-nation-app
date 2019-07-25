@@ -11,9 +11,11 @@ class HomeTab extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    
     final double cardListHeightMultiplier = iPhoneX(context) ? 0.25 : 0.3;
     final double cardListHeight = MediaQuery.of(context).size.height * cardListHeightMultiplier;
 
@@ -88,6 +90,9 @@ class _HomeTabState extends State<HomeTab> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 /// Creates a section with a header and a horizontal card list.
