@@ -1,4 +1,4 @@
-package com.example.swat_nation;
+package com.mindshakelabs.swat_nation;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
