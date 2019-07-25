@@ -3,7 +3,7 @@ import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/image_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
-import 'package:swat_nation/widgets/common/sliver_card_section.dart';
+import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
@@ -32,7 +32,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Upcoming Tournaments
-        SliverCardSection(
+        CardSection(
           header: TextHeader(
             'Upcoming\nTournaments',
             style: TextStyle(
@@ -57,10 +57,11 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               ),
             ],
           ),
+          sliver: true,
         ),
 
         // Latest News
-        SliverCardSection(
+        CardSection(
           header: TextHeader(
             'Latest News',
             style: TextStyle(
@@ -92,6 +93,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               ),
             ],
           ),
+          sliver: true,
         ),
       ],
     );
