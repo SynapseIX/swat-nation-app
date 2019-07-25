@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/image_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
+import 'package:swat_nation/widgets/common/view_all_card.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
@@ -48,6 +50,9 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               ImageCard(
                 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2318%20Bears%20Don\'t%20SWAT.png?alt=media&token=1f219fca-aed0-41ba-9a63-9f66b5d73628',
                 width: cardWidth,
+              ),
+              ViewAllCard(
+                onTap: () => TabBarBloc.instance().setCurrentIndex(1),
               ),
             ],
           ),

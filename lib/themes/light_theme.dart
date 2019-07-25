@@ -10,6 +10,7 @@ class LightTheme extends BaseTheme {
       brightness: Brightness.light,
       primaryColor: primaryColor,
       primaryColorBrightness: Brightness.dark,
+      scaffoldBackgroundColor: const Color(0xFFEDEDED),
     );
   }
 }
