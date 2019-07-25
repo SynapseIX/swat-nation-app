@@ -30,10 +30,13 @@ class ImageCard extends StatelessWidget {
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: src,
-            fit: BoxFit.cover,
+          child: Container(
+            color: Colors.grey,
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: src,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
