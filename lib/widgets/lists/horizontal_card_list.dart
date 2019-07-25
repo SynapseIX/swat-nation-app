@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 /// Creates an horizontal card list.
 class HorizontalCardList extends StatelessWidget {
   const HorizontalCardList({
-    @required this.children,
+    @required this.cards,
     @required this.height,
     this.padding = EdgeInsets.zero,
   }) : assert(height > 0.0);
 
-  final List<Widget> children;
+  final List<Widget> cards;
   final double height;
   final EdgeInsets padding;
 
@@ -19,7 +19,7 @@ class HorizontalCardList extends StatelessWidget {
       padding: padding,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: children,
+        children: cards,
       ),
     );
   }
