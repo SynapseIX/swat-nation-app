@@ -66,7 +66,7 @@ class _HomeTabState extends State<HomeTab> {
             cards: <Widget>[
               NewsCard(
                 title: 'New App Launched',
-                excerpt: 'We have launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
+                excerpt: 'We\'ve launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
                 thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/Infinite/hi_stinger_hologramexplosion_wtrmk-70aef8e8f5654444be45072bed746709.jpg',
                 width: cardWidth,
                 isNew: true,
@@ -75,6 +75,11 @@ class _HomeTabState extends State<HomeTab> {
                 title: 'Tournament Rules',
                 excerpt: 'These are the rules that we’ve set for ANY tournament hosted by SWAT Nation. Knowledge is power.',
                 thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/3840_haloinfinite_e318_ring-96bf71d241184bfb8b1f1b0c3bb8a1a0.png',
+                width: cardWidth,
+              ),
+              NewsCard(
+                title: 'Tips For New Streamers',
+                excerpt: 'Prof discusses what, from his experience, is needed to grow a successful channel on Twitch or any other streaming platform.',
                 width: cardWidth,
               ),
             ],
