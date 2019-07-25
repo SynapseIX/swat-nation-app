@@ -51,13 +51,13 @@ class NewsCard extends StatelessWidget {
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
-                    sigmaX: 5.0,
-                    sigmaY: 5.0,
+                    sigmaX: 2.0,
+                    sigmaY: 2.0,
                   ),
                   child: Container(color: Colors.black.withOpacity(0)),
                 ),
               ),
-              Container(color: Colors.black.withAlpha(128)),
+              Container(color: Colors.black.withAlpha(96)),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
