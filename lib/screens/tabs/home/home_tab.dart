@@ -43,11 +43,11 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
           cardList: HorizontalCardList(
             cards: <Widget>[
               TourneyCard(
-                src: 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.png?alt=media&token=1fd124d1-6ea8-4a1d-80e5-1b8274b230cb',
+                src: 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.jpg?alt=media&token=58f286a3-fd53-48fc-92c4-b53b4a37df56',
                 width: cardWidth,
               ),
               TourneyCard(
-                src: 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2318%20Bears%20Don\'t%20SWAT.png?alt=media&token=1f219fca-aed0-41ba-9a63-9f66b5d73628',
+                src: 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2318%20Bears%20Don\'t%20SWAT.jpg?alt=media&token=5dcf559d-9a1f-4bc3-90a3-7ad88de9d65b',
                 width: cardWidth,
               ),
               ViewAllCard(
@@ -73,14 +73,14 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               NewsCard(
                 title: 'New App Launched',
                 excerpt: 'We\'ve launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
-                thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/Infinite/hi_stinger_hologramexplosion_wtrmk-70aef8e8f5654444be45072bed746709.jpg',
+                thumbnailSrc: 'https://picsum.photos/640/360?random=1',
                 width: cardWidth,
                 isNew: true,
               ),
               NewsCard(
                 title: 'Tournament Rules',
                 excerpt: 'These are the rules that we’ve set for ANY tournament hosted by SWAT Nation. Knowledge is power.',
-                thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/3840_haloinfinite_e318_ring-96bf71d241184bfb8b1f1b0c3bb8a1a0.png',
+                thumbnailSrc: 'https://picsum.photos/640/360?random=2',
                 width: cardWidth,
               ),
               NewsCard(
