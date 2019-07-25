@@ -25,8 +25,6 @@ class ImageCard extends StatelessWidget {
     return AspectRatio(
       aspectRatio: aspectRatio,
       child: Container(
-        width: width,
-        height: height,
         margin: margin,
         padding: padding,
         child: Card(
