@@ -3,6 +3,7 @@ import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/image_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
+import 'package:swat_nation/widgets/common/sliver_card_section.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
@@ -31,7 +32,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Upcoming Tournaments
-        _SliverCardSection(
+        SliverCardSection(
           header: TextHeader(
             'Upcoming\nTournaments',
             style: TextStyle(
@@ -59,7 +60,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Latest News
-        _SliverCardSection(
+        SliverCardSection(
           header: TextHeader(
             'Latest News',
             style: TextStyle(
@@ -98,29 +99,4 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => true;
-}
-
-/// Creates a section with a header and a horizontal card list.
-class _SliverCardSection extends StatelessWidget {
-  const _SliverCardSection({
-    @required this.header,
-    @required this.cardList,
-  });
-  
-  final TextHeader header;
-  final HorizontalCardList cardList;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          header,
-          cardList,
-        ],
-      ),
-    );
-  }
 }
