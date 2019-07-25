@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/image_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
@@ -13,6 +14,11 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
+    final double cardListHeightMultiplier = iPhoneX(context) ? 0.25 : 0.3;
+    final double cardListHeight = MediaQuery.of(context).size.height * cardListHeightMultiplier;
+
+    final double cardWidth = MediaQuery.of(context).size.width * 0.8;
+
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -32,17 +38,17 @@ class _HomeTabState extends State<HomeTab> {
                 margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
               ),
               HorizontalCardList(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: cardListHeight,
                 padding: const EdgeInsets.all(8.0),
-                children: <Widget>[
+                cards: <Widget>[
                   ImageCard(
                     'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.png?alt=media&token=1fd124d1-6ea8-4a1d-80e5-1b8274b230cb',
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: cardWidth,
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                   ),
                   ImageCard(
                     'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2318%20Bears%20Don\'t%20SWAT.png?alt=media&token=1f219fca-aed0-41ba-9a63-9f66b5d73628',
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: cardWidth,
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                   ),
                 ],
@@ -58,14 +64,14 @@ class _HomeTabState extends State<HomeTab> {
                 margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
               ),
               HorizontalCardList(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: cardListHeight,
                 padding: const EdgeInsets.all(8.0),
-                children: <Widget>[
+                cards: <Widget>[
                   NewsCard(
                     title: 'New App Launched',
                     excerpt: 'We have launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
                     thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/Infinite/hi_stinger_hologramexplosion_wtrmk-70aef8e8f5654444be45072bed746709.jpg',
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: cardWidth,
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                     isNew: true,
                   ),
@@ -73,7 +79,7 @@ class _HomeTabState extends State<HomeTab> {
                     title: 'Tournament Rules',
                     excerpt: 'These are the rules that we’ve set for ANY tournament hosted by SWAT Nation. Knowledge is power.',
                     thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/3840_haloinfinite_e318_ring-96bf71d241184bfb8b1f1b0c3bb8a1a0.png',
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: cardWidth,
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                   ),
                 ],
