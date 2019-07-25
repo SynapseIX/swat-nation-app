@@ -17,7 +17,9 @@ class _HomeTabState extends State<HomeTab> {
     final double cardListHeightMultiplier = iPhoneX(context) ? 0.25 : 0.3;
     final double cardListHeight = MediaQuery.of(context).size.height * cardListHeightMultiplier;
 
-    final double cardWidth = MediaQuery.of(context).size.width * 0.8;
+    final double cardWidth = MediaQuery.of(context).size.width * 0.85;
+
+    const EdgeInsets cardMargin = EdgeInsets.only(top: 4.0, bottom: 4.0);
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -43,12 +45,12 @@ class _HomeTabState extends State<HomeTab> {
               ImageCard(
                 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.png?alt=media&token=1fd124d1-6ea8-4a1d-80e5-1b8274b230cb',
                 width: cardWidth,
-                margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                margin: cardMargin,
               ),
               ImageCard(
                 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2318%20Bears%20Don\'t%20SWAT.png?alt=media&token=1f219fca-aed0-41ba-9a63-9f66b5d73628',
                 width: cardWidth,
-                margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                margin: cardMargin,
               ),
             ],
           ),
@@ -73,7 +75,7 @@ class _HomeTabState extends State<HomeTab> {
                 excerpt: 'We have launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
                 thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/Infinite/hi_stinger_hologramexplosion_wtrmk-70aef8e8f5654444be45072bed746709.jpg',
                 width: cardWidth,
-                margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                margin: cardMargin,
                 isNew: true,
               ),
               NewsCard(
@@ -81,7 +83,7 @@ class _HomeTabState extends State<HomeTab> {
                 excerpt: 'These are the rules that we’ve set for ANY tournament hosted by SWAT Nation. Knowledge is power.',
                 thumbnailSrc: 'https://content.halocdn.com/media/Default/community/blogs/3840_haloinfinite_e318_ring-96bf71d241184bfb8b1f1b0c3bb8a1a0.png',
                 width: cardWidth,
-                margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                margin: cardMargin,
               ),
             ],
           ),
