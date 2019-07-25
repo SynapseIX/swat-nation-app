@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class HorizontalCardList extends StatelessWidget {
   const HorizontalCardList({
     @required this.cards,
-    @required this.height,
+    this.height = 200.0,
     Key key,
     this.padding = const EdgeInsets.all(8.0),
   }) : assert(height > 0.0),
