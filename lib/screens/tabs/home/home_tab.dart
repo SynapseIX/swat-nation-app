@@ -19,10 +19,8 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     
-    final double cardListHeightMultiplier = iPhoneX(context) ? 0.25 : 0.3;
-    final double cardListHeight = MediaQuery.of(context).size.height * cardListHeightMultiplier;
-
-    final double cardWidth = MediaQuery.of(context).size.width * 0.85;
+    final double cardWidth = MediaQuery.of(context).size.width * 0.9;
+    final double cardHeight = iPhoneX(context) ? 220 : 210;
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -42,7 +40,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
             margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
-            height: cardListHeight,
+            height: cardHeight,
             cards: <Widget>[
               ImageCard(
                 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.png?alt=media&token=1fd124d1-6ea8-4a1d-80e5-1b8274b230cb',
@@ -71,7 +69,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
             margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
-            height: cardListHeight,
+            height: cardHeight,
             cards: <Widget>[
               NewsCard(
                 title: 'New App Launched',
