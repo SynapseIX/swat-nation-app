@@ -48,6 +48,7 @@ class NewsCard extends StatelessWidget {
                 height: double.infinity,
                 width: double.infinity,
               ),
+              if (thumbnailSrc != null)
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
