@@ -15,6 +15,7 @@ class NewsCard extends StatelessWidget {
     this.width = double.infinity,
     this.height = double.infinity,
     this.isNew = false,
+    this.sliver = false,
   }) : super(key: key);
 
   final String title;
@@ -25,10 +26,11 @@ class NewsCard extends StatelessWidget {
   final double width;
   final double height;
   final bool isNew;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final Widget card = Container(
       margin: margin,
       padding: padding,
       width: width,
@@ -113,5 +115,7 @@ class NewsCard extends StatelessWidget {
         ),
       ),
     );
+    
+    return sliver ? SliverToBoxAdapter(child: card) : card;
   }
 }

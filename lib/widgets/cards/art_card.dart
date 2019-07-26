@@ -14,6 +14,7 @@ class ArtCard extends StatelessWidget {
     this.width = double.infinity,
     this.height = double.infinity,
     this.latest = false,
+    this.sliver = false,
   }) : super(key: key);
 
   final String src;
@@ -23,10 +24,11 @@ class ArtCard extends StatelessWidget {
   final double width;
   final double height;
   final bool latest;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
+    final Widget card = AspectRatio(
       aspectRatio: 1.0,
       child: Container(
         margin: margin,
@@ -76,5 +78,7 @@ class ArtCard extends StatelessWidget {
         ),
       ),
     );
+    
+    return sliver ? SliverToBoxAdapter(child: card) : card;
   }
 }
