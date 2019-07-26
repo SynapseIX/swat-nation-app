@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
+import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
 import 'package:swat_nation/widgets/cards/tourney_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
@@ -58,6 +59,24 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
           sliver: true,
         ),
 
+        // Community Highlight
+        TextHeader(
+          'Community\nHighlight',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 28.0,
+            ),
+            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+          sliver: true,
+        ),
+        const ClipCard(
+          src: 'https://picsum.photos/640/360?random=1',
+          duration: '28s',
+          author: 'Recorded by\n@itsprof',
+          padding: EdgeInsets.all(8.0),
+          sliver: true,
+        ),
+
         // Latest News
         CardSection(
           header: TextHeader(
@@ -73,14 +92,14 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               NewsCard(
                 title: 'New App Launched',
                 excerpt: 'We\'ve launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
-                thumbnailSrc: 'https://picsum.photos/640/360?random=1',
+                thumbnailSrc: 'https://picsum.photos/640/360?random=2',
                 width: cardWidth,
                 isNew: true,
               ),
               NewsCard(
                 title: 'Tournament Rules',
                 excerpt: 'These are the rules that we’ve set for ANY tournament hosted by SWAT Nation. Knowledge is power.',
-                thumbnailSrc: 'https://picsum.photos/640/360?random=2',
+                thumbnailSrc: 'https://picsum.photos/640/360?random=3',
                 width: cardWidth,
               ),
               NewsCard(

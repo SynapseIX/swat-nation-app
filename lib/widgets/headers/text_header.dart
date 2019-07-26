@@ -10,6 +10,7 @@ class TextHeader extends StatelessWidget {
     this.overflow = TextOverflow.ellipsis,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
+    this.sliver = false,
   }) : super(key: key);
 
   final String text;
@@ -18,10 +19,11 @@ class TextHeader extends StatelessWidget {
   final TextOverflow overflow;
   final EdgeInsets margin;
   final EdgeInsets padding;
+  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final Widget header = Container(
       margin: margin,
       padding: padding,
       child: Text(
@@ -31,5 +33,7 @@ class TextHeader extends StatelessWidget {
         overflow: overflow,
       ),
     );
+
+    return sliver ? SliverToBoxAdapter(child: header): header;
   }
 }
