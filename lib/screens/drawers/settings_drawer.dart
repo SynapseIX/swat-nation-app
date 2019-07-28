@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/themes/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
+import 'package:swat_nation/utils/url_launcher.dart';
 
 class SettingsDrawer extends StatelessWidget {
   @override
@@ -27,9 +29,12 @@ class SettingsDrawer extends StatelessWidget {
                 Text('Check out our Website'),
               ],
             ),
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              openURL(kWebsite);
+              Navigator.of(context).pop();
+            },
           ),
-          Divider(indent: 16.0),
+          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -38,9 +43,12 @@ class SettingsDrawer extends StatelessWidget {
                 Text('Join the Community'),
               ],
             ),
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              openURL(kFacebookGroup);
+              Navigator.of(context).pop();
+            },
           ),
-          Divider(indent: 16.0),
+          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -49,9 +57,12 @@ class SettingsDrawer extends StatelessWidget {
                 Text('Follow us on Twitter'),
               ],
             ),
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              openURL(kTwitter);
+              Navigator.of(context).pop();
+            },
           ),
-          Divider(indent: 16.0),
+          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -60,9 +71,12 @@ class SettingsDrawer extends StatelessWidget {
                 Text('Follow us on Instagram'),
               ],
             ),
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              openURL(kInstagram);
+              Navigator.of(context).pop();
+            },
           ),
-          Divider(indent: 16.0),
+          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -71,9 +85,12 @@ class SettingsDrawer extends StatelessWidget {
                 Text('Join the Xbox Club'),
               ],
             ),
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () {
+              openURL(kXboxClub);
+              Navigator.of(context).pop();
+            },
           ),
-          Divider(indent: 16.0),
+          const Divider(indent: 16.0),
 
           // Change theme
           ListTile(
