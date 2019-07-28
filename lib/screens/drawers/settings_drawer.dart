@@ -6,6 +6,7 @@ import 'package:swat_nation/themes/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class SettingsDrawer extends StatelessWidget {
   @override
@@ -118,10 +119,18 @@ class _NoAuthHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Row(
-        children: const <Widget>[
-          Icon(
-            MdiIcons.login,
-            size: 30.0,
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF333333),
+              shape: BoxShape.circle,
+            ),
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: 'https://static1.squarespace.com/static/5bfb2111372b964077959077/t/5bfcbd661ae6cf259c75a2ad/1563085290045/?format=500w',
+              width: 40.0,
+              height: 40.0,
+            ),
           ),
           SizedBox(width: 8.0),
           Text(
