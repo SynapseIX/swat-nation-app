@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
+import 'package:swat_nation/screens/drawers/settings_drawer.dart';
 import 'package:swat_nation/screens/tabs/about_tab.dart';
 import 'package:swat_nation/screens/tabs/chat_tab.dart';
 import 'package:swat_nation/screens/tabs/finder_tab.dart';
@@ -54,6 +55,7 @@ class _MainScreenState extends State<MainScreen> {
       initialData: 0,
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
         return Scaffold(
+          endDrawer: SettingsDrawer(),
           body: PageStorage(
             bucket: bucket,
             child: tabs[snapshot.data],
