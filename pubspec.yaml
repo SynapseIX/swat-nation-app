@@ -1,5 +1,5 @@
 name: swat_nation
-description: A new Flutter project.
+description: SWAT Nation's mobile application.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -23,6 +23,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+
+  # Plugins
+  url_launcher: ^5.1.1
+
+  # Community Packages
   material_design_icons_flutter: ^3.2.3895
   rxdart: ^0.22.0
   transparent_image: ^1.0.0
