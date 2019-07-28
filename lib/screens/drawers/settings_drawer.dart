@@ -84,11 +84,8 @@ class SettingsDrawer extends StatelessWidget {
                 Switch(
                   activeColor: Theme.of(context).primaryColor,
                   value: currentTheme is DarkTheme,
-                  onChanged: (bool value) {
-                    // TODO(itsprof): persist theme
-                    final BaseTheme newTheme = currentTheme is LightTheme ? DarkTheme() : LightTheme();
-                    bloc.changeTheme(newTheme);
-                  },
+                  // TODO(itsprof): persist theme
+                  onChanged: (bool value) => bloc.changeTheme(value ? DarkTheme() : LightTheme()),
                 ),
               ],
             ),
