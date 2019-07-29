@@ -20,6 +20,24 @@ class SettingsDrawer extends StatelessWidget {
           DrawerHeader(
             child: _NoAuthHeader(),
           ),
+
+          // About Us
+          ListTile(
+            title: Row(
+              children: const <Widget>[
+                Icon(MdiIcons.information),
+                SizedBox(width: 8.0),
+                Text('About Us'),
+                Spacer(),
+                Icon(MdiIcons.chevronRight),
+              ],
+            ),
+            onTap: () {
+              openURL(kWebsite);
+              Navigator.of(context).pop();
+            },
+          ),
+          const Divider(indent: 16.0),
           
           // Social
           ListTile(
@@ -27,7 +45,7 @@ class SettingsDrawer extends StatelessWidget {
               children: const <Widget>[
                 Icon(MdiIcons.web),
                 SizedBox(width: 8.0),
-                Text('Check out our Website'),
+                Text('Visit our Website'),
               ],
             ),
             onTap: () {
@@ -69,7 +87,7 @@ class SettingsDrawer extends StatelessWidget {
               children: const <Widget>[
                 Icon(MdiIcons.instagram),
                 SizedBox(width: 8.0),
-                Text('Follow us on Instagram'),
+                Text('Check our Instagram'),
               ],
             ),
             onTap: () {
@@ -97,8 +115,10 @@ class SettingsDrawer extends StatelessWidget {
           ListTile(
             title: Row(
               children: <Widget>[
-                const Text('Dark Theme'),
-                Spacer(),
+                const Icon(MdiIcons.weatherNight),
+                const SizedBox(width: 8.0),
+                const Text('Dark Mode'),
+                const Spacer(),
                 Switch(
                   activeColor: Theme.of(context).primaryColor,
                   value: currentTheme is DarkTheme,
@@ -132,7 +152,7 @@ class _NoAuthHeader extends StatelessWidget {
               height: 40.0,
             ),
           ),
-          SizedBox(width: 8.0),
+          const SizedBox(width: 8.0),
           Text(
             'Create Account / Sign In',
             style: TextStyle(
@@ -144,7 +164,7 @@ class _NoAuthHeader extends StatelessWidget {
       subtitle: Container(
         margin: const EdgeInsets.only(top: 16.0),
         child: const Text(
-          'SWAT Nation is better enjoyed if you create an account. If you already have an account, please sign in.',
+          'All of SWAT Nation personalized just for you. Tap here to create an account or to sign in.',
           style: TextStyle(
             fontWeight: FontWeight.w300,
           ),

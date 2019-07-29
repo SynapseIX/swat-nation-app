@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/screens/drawers/settings_drawer.dart';
-import 'package:swat_nation/screens/tabs/about_tab.dart';
 import 'package:swat_nation/screens/tabs/chat_tab.dart';
 import 'package:swat_nation/screens/tabs/finder_tab.dart';
 import 'package:swat_nation/screens/tabs/home_tab.dart';
+import 'package:swat_nation/screens/tabs/ranking_tab.dart';
 import 'package:swat_nation/screens/tabs/tourneys_tab.dart';
 
 /// Main screen that holds the bottom navigation bar.
@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   TourneysTab tourneysTab;
   FinderTab finderTab;
   ChatTab chatTab;
-  AboutTab aboutTab;
+  RankingTab rankingTab;
 
   List<BaseTab> tabs;
 
@@ -35,14 +35,14 @@ class _MainScreenState extends State<MainScreen> {
     tourneysTab = const TourneysTab(key: PageStorageKey<String>('tourneys'));
     finderTab = const FinderTab(key: PageStorageKey<String>('finder'));
     chatTab = const ChatTab(key: PageStorageKey<String>('chat'));
-    aboutTab = const AboutTab(key: PageStorageKey<String>('about'));
+    rankingTab = const RankingTab(key: PageStorageKey<String>('ranking'));
 
     tabs = <BaseTab>[
       homeTab,
       tourneysTab,
       finderTab,
       chatTab,
-      aboutTab,
+      rankingTab,
     ];
 
     super.initState();
