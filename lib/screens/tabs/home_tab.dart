@@ -88,10 +88,10 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
           sliver: true,
         ),
 
-        // Latest News
+        // Announcements
         CardSection(
           header: TextHeader(
-            'Latest News',
+            'Announcements',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
