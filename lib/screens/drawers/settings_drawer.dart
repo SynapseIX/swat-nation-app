@@ -174,9 +174,6 @@ class _NoAuthHeader extends StatelessWidget {
             fadeInDuration: Duration(milliseconds: 300),
             width: 60.0,
             height: 60.0,
-            placeholder: (BuildContext context, String url) {
-              return Center(child: const CircularProgressIndicator());
-            },
           ),
         ),
         title: Text(
