@@ -83,7 +83,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         const ClipCard(
           src: 'https://picsum.photos/640/360?random=1',
           duration: '28s',
-          author: 'Recorded by\n@itsprof',
+          author: 'Gameplay by\n@itsprof',
           padding: EdgeInsets.all(8.0),
           sliver: true,
         ),
