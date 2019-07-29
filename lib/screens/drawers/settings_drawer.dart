@@ -11,8 +11,7 @@ import 'package:transparent_image/transparent_image.dart';
 class SettingsDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ThemeBloc bloc = ThemeBloc.instance();
-    final BaseTheme currentTheme = bloc.currentTheme;
+    final ThemeBloc themeBloc = ThemeBloc.instance();
     
     return Drawer(
       child: ListView(
@@ -119,11 +118,15 @@ class SettingsDrawer extends StatelessWidget {
                 const SizedBox(width: 8.0),
                 const Text('Dark Mode'),
                 const Spacer(),
-                Switch(
-                  activeColor: Theme.of(context).primaryColor,
-                  value: currentTheme is DarkTheme,
-                  // TODO(itsprof): persist theme
-                  onChanged: (bool value) => bloc.changeTheme(value ? DarkTheme() : LightTheme()),
+                FutureBuilder<BaseTheme>(
+                  future: themeBloc.currentTheme,
+                  builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
+                    return Switch(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: snapshot.data is DarkTheme,
+                      onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
+                    );
+                  },
                 ),
               ],
             ),

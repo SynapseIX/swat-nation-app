@@ -35,16 +35,21 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return StreamBuilder<BaseTheme>(
       stream: themeBloc.stream,
-      initialData: LightTheme(),
       builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
         final BaseTheme theme = snapshot.data is LightTheme
           ? LightTheme()
           : DarkTheme();
 
-        return MaterialApp(
-          title: 'SWAT Nation',
-          theme: theme.getThemeData(),
-          home: MainScreen(),
+        return FutureBuilder<BaseTheme>(
+          future: themeBloc.currentTheme,
+          initialData: theme,
+          builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
+            return MaterialApp(
+              title: 'SWAT Nation',
+              theme: snapshot.data.getThemeData(),
+              home: MainScreen(),
+            );
+          },
         );
       },
     );
