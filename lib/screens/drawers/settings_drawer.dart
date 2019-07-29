@@ -164,7 +164,7 @@ class _NoAuthHeader extends StatelessWidget {
       subtitle: Container(
         margin: const EdgeInsets.only(top: 16.0),
         child: const Text(
-          'All of SWAT Nation personalized just for you. Tap here to create an account or to sign in.',
+          'All of SWAT Nation personalized just for you! Tap HERE to CREATE AN ACCOUNT or to SIGN IN.',
           style: TextStyle(
             fontWeight: FontWeight.w300,
           ),
