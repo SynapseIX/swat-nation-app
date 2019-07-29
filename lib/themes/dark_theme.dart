@@ -4,6 +4,8 @@ import 'base_theme.dart';
 
 /// Dark theme.
 class DarkTheme extends BaseTheme {
+  static const String name = 'dark';
+  
   @override
   ThemeData getThemeData() {
     return ThemeData(
