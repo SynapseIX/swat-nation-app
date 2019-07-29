@@ -66,7 +66,7 @@ class SettingsDrawer extends StatelessWidget {
               children: const <Widget>[
                 Icon(MdiIcons.web),
                 SizedBox(width: 8.0),
-                Text('Visit our Website'),
+                Text('Browse our Website'),
               ],
             ),
             onTap: () {
