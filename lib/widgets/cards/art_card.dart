@@ -1,7 +1,7 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 /// Creates a card that represents an art piece.
 class ArtCard extends StatelessWidget {
@@ -42,10 +42,12 @@ class ArtCard extends StatelessWidget {
             color: Colors.grey,
             child: Stack(
               children: <Widget>[
-                FadeInImage.memoryNetwork(
-                  placeholder: kTransparentImage,
-                  image: src,
-                  fit: BoxFit.fill,
+                CachedNetworkImage(
+                  imageUrl: src,
+                  fadeInDuration: Duration(milliseconds: 300),
+                  placeholder: (BuildContext context, String url) {
+                    return Center(child: const CircularProgressIndicator());
+                  },
                 ),
                 if (latest)
                 Positioned.fill(

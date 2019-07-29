@@ -31,6 +31,7 @@ dependencies:
   # Community Packages
   material_design_icons_flutter: ^3.2.3895
   rxdart: ^0.22.0
+  cached_network_image: ^1.1.1
   transparent_image: ^1.0.0
 
 dev_dependencies:

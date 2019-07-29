@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:swat_nation/themes/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class SettingsDrawer extends StatelessWidget {
   @override
@@ -169,11 +169,14 @@ class _NoAuthHeader extends StatelessWidget {
             color: Color(0xFF333333),
             shape: BoxShape.circle,
           ),
-          child: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: 'https://static1.squarespace.com/static/5bfb2111372b964077959077/t/5bfcbd661ae6cf259c75a2ad/1563085290045/?format=500w',
+          child: CachedNetworkImage(
+            imageUrl: kLogo,
+            fadeInDuration: Duration(milliseconds: 300),
             width: 60.0,
             height: 60.0,
+            placeholder: (BuildContext context, String url) {
+              return Center(child: const CircularProgressIndicator());
+            },
           ),
         ),
         title: Text(
