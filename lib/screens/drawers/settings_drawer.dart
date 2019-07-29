@@ -23,16 +23,38 @@ class SettingsDrawer extends StatelessWidget {
           // About Us
           ListTile(
             title: Row(
-              children: const <Widget>[
+              children: <Widget>[
                 Icon(MdiIcons.information),
-                SizedBox(width: 8.0),
-                Text('About Us'),
-                Spacer(),
-                Icon(MdiIcons.chevronRight),
+                const SizedBox(width: 8.0),
+                const Text('About Us'),
+                const Spacer(),
+                Icon(
+                  MdiIcons.chevronRight,
+                  color: Theme.of(context).hintColor,
+                ),
               ],
             ),
             onTap: () {
-              openURL(kWebsite);
+              Navigator.of(context).pop();
+            },
+          ),
+          const Divider(indent: 16.0),
+
+          // Store
+          ListTile(
+            title: Row(
+              children: <Widget>[
+                Icon(MdiIcons.cart),
+                const SizedBox(width: 8.0),
+                const Text('Visit the Store'),
+                const Spacer(),
+                Icon(
+                  MdiIcons.chevronRight,
+                  color: Theme.of(context).hintColor,
+                ),
+              ],
+            ),
+            onTap: () {
               Navigator.of(context).pop();
             },
           ),
@@ -140,40 +162,37 @@ class SettingsDrawer extends StatelessWidget {
 class _NoAuthHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Row(
-        children: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF333333),
-              shape: BoxShape.circle,
-            ),
-            child: FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image: 'https://static1.squarespace.com/static/5bfb2111372b964077959077/t/5bfcbd661ae6cf259c75a2ad/1563085290045/?format=500w',
-              width: 40.0,
-              height: 40.0,
-            ),
+    return Center(
+      child: ListTile(
+        leading: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF333333),
+            shape: BoxShape.circle,
           ),
-          const SizedBox(width: 8.0),
-          Text(
-            'Create Account / Sign In',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-      subtitle: Container(
-        margin: const EdgeInsets.only(top: 16.0),
-        child: const Text(
-          'All of SWAT Nation personalized just for you! Tap HERE to CREATE AN ACCOUNT or to SIGN IN.',
-          style: TextStyle(
-            fontWeight: FontWeight.w300,
+          child: FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            image: 'https://static1.squarespace.com/static/5bfb2111372b964077959077/t/5bfcbd661ae6cf259c75a2ad/1563085290045/?format=500w',
+            width: 60.0,
+            height: 60.0,
           ),
         ),
+        title: Text(
+          'Create Account / Sign In',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Container(
+          margin: const EdgeInsets.only(top: 8.0),
+          child: const Text(
+            'You\'re signed out of SWAT Nation. Sign in to register for tourneys, chat, and subscribe.',
+            style: TextStyle(
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+        onTap: () => Navigator.of(context).pop(),
       ),
-      onTap: () => Navigator.of(context).pop(),
     );
   }
 }
