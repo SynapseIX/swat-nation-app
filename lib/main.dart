@@ -15,7 +15,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  // TODO(itsprof): persist selected theme
   ThemeBloc themeBloc;
 
   @override
