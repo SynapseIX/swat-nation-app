@@ -12,16 +12,21 @@ class ThemeBloc extends BaseBloc {
 
   ThemeBloc._internal();
   static final ThemeBloc _bloc = ThemeBloc._internal();
-  
-  final String _prefKey = 'theme';
-
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   final BehaviorSubject<BaseTheme> _themeSubject = BehaviorSubject<BaseTheme>();
 
   Stream<BaseTheme> get stream => _themeSubject.stream;
-
   BaseTheme get currentTheme => _themeSubject.value;
+
+  void changeTheme(BaseTheme theme) {
+    _themeSubject.sink.add(theme);
+    _persistTheme(theme is LightTheme ? LightTheme.name : DarkTheme.name);
+  }
+
+  // Theme persistence
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final String _prefKey = 'theme';
 
   Future<void> retrieveSavedTheme() async {
     final String savedValue = await _persistedTheme;
@@ -32,11 +37,6 @@ class ThemeBloc extends BaseBloc {
 
     final BaseTheme savedTheme = savedValue == LightTheme.name ? LightTheme() : DarkTheme();
     _themeSubject.sink.add(savedTheme);
-  }
-
-  void changeTheme(BaseTheme theme) {
-    _themeSubject.sink.add(theme);
-    _persistTheme(theme is LightTheme ? LightTheme.name : DarkTheme.name);
   }
   
   Future<bool> _persistTheme(String name) async {
