@@ -1,7 +1,7 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 /// Creates a card for blog articles.
 class NewsCard extends StatelessWidget {
@@ -43,12 +43,15 @@ class NewsCard extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               if (thumbnailSrc != null)
-              FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                image: thumbnailSrc,
-                fit: BoxFit.cover,
-                height: double.infinity,
+              CachedNetworkImage(
+                imageUrl: thumbnailSrc,
+                fadeInDuration: Duration(milliseconds: 300),
                 width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (BuildContext context, String url) {
+                  return Center(child: const CircularProgressIndicator());
+                },
               ),
               if (thumbnailSrc != null)
               Positioned.fill(

@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 /// Creates a card that represents a tourney.
 class TourneyCard extends StatelessWidget {
@@ -27,10 +27,15 @@ class TourneyCard extends StatelessWidget {
         width: width,
         height: height,
         color: const Color(0xFF333333),
-        child: FadeInImage.memoryNetwork(
-          placeholder: kTransparentImage,
-          image: src,
+        child: CachedNetworkImage(
+          imageUrl: src,
+          fadeInDuration: Duration(milliseconds: 300),
+          width: double.infinity,
+          height: double.infinity,
           fit: BoxFit.fill,
+          placeholder: (BuildContext context, String url) {
+            return Center(child: const CircularProgressIndicator());
+          },
         ),
       ),
     );
