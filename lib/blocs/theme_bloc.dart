@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swat_nation/base/base_bloc.dart';
-import 'package:swat_nation/themes/base_theme.dart';
+import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 

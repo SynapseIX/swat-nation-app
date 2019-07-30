@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'base_theme.dart';
+import 'package:swat_nation/base/base_theme.dart';
 
 /// Light theme.
 class LightTheme extends BaseTheme {
