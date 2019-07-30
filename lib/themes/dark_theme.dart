@@ -12,6 +12,7 @@ class DarkTheme extends BaseTheme {
       brightness: Brightness.dark,
       primaryColor: primaryColor,
       primaryColorBrightness: Brightness.dark,
+      scaffoldBackgroundColor: Colors.black,
     );
   }
 }

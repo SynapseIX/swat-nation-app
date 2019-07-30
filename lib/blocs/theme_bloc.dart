@@ -17,18 +17,21 @@ class ThemeBloc extends BaseBloc {
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  final BehaviorSubject<BaseTheme> _themeSubject = BehaviorSubject<BaseTheme>.seeded(LightTheme());
+  final BehaviorSubject<BaseTheme> _themeSubject = BehaviorSubject<BaseTheme>();
 
   Stream<BaseTheme> get stream => _themeSubject.stream;
 
-  Future<BaseTheme> get currentTheme async {
-    final String savedKey = await _persistedTheme;
+  BaseTheme get currentTheme => _themeSubject.value;
 
-    if (savedKey == null) {
-      return _themeSubject.value;
+  Future<void> retrieveSavedTheme() async {
+    final String savedValue = await _persistedTheme;
+
+    if (savedValue == null) {
+      return LightTheme();
     }
 
-    return savedKey == LightTheme.name ? LightTheme() : DarkTheme();
+    final BaseTheme savedTheme = savedValue == LightTheme.name ? LightTheme() : DarkTheme();
+    _themeSubject.sink.add(savedTheme);
   }
 
   void changeTheme(BaseTheme theme) {

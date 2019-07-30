@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/themes/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
@@ -23,12 +22,34 @@ class SettingsDrawer extends StatelessWidget {
           // About Us
           ListTile(
             title: Row(
-              children: const <Widget>[
+              children: <Widget>[
                 Icon(MdiIcons.information),
-                SizedBox(width: 8.0),
-                Text('About Us'),
-                Spacer(),
-                Icon(MdiIcons.chevronRight),
+                const SizedBox(width: 8.0),
+                const Text('About SWAT Nation'),
+                const Spacer(),
+                Icon(
+                  MdiIcons.chevronRight,
+                  color: Theme.of(context).hintColor,
+                ),
+              ],
+            ),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+
+          // Store
+          ListTile(
+            title: Row(
+              children: <Widget>[
+                Icon(MdiIcons.cart),
+                const SizedBox(width: 8.0),
+                const Text('Visit the Store'),
+                const Spacer(),
+                Icon(
+                  MdiIcons.chevronRight,
+                  color: Theme.of(context).hintColor,
+                ),
               ],
             ),
             onTap: () {
@@ -36,7 +57,8 @@ class SettingsDrawer extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          const Divider(indent: 16.0),
+
+          const Divider(),
           
           // Social
           ListTile(
@@ -52,7 +74,6 @@ class SettingsDrawer extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -66,7 +87,6 @@ class SettingsDrawer extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -80,7 +100,6 @@ class SettingsDrawer extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -94,7 +113,6 @@ class SettingsDrawer extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          const Divider(indent: 16.0),
           ListTile(
             title: Row(
               children: const <Widget>[
@@ -108,7 +126,8 @@ class SettingsDrawer extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          const Divider(indent: 16.0),
+
+          const Divider(),
 
           // Change theme
           ListTile(
@@ -118,15 +137,10 @@ class SettingsDrawer extends StatelessWidget {
                 const SizedBox(width: 8.0),
                 const Text('Dark Mode'),
                 const Spacer(),
-                FutureBuilder<BaseTheme>(
-                  future: themeBloc.currentTheme,
-                  builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
-                    return Switch(
-                      activeColor: Theme.of(context).primaryColor,
-                      value: snapshot.data is DarkTheme,
-                      onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
-                    );
-                  },
+                Switch(
+                  activeColor: Theme.of(context).primaryColor,
+                  value: themeBloc.currentTheme is DarkTheme,
+                  onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
                 ),
               ],
             ),
