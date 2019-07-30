@@ -30,6 +30,7 @@ dependencies:
 
   #FlutterFire
   firebase_core: ^0.4.0+8
+  cloud_firestore: ^0.12.9
 
   # Community Packages
   material_design_icons_flutter: ^3.2.3895
