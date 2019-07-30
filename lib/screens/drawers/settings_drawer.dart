@@ -21,18 +21,9 @@ class SettingsDrawer extends StatelessWidget {
 
           // About Us
           ListTile(
-            title: Row(
-              children: <Widget>[
-                Icon(MdiIcons.information),
-                const SizedBox(width: 8.0),
-                const Text('About SWAT Nation'),
-                const Spacer(),
-                Icon(
-                  MdiIcons.chevronRight,
-                  color: Theme.of(context).hintColor,
-                ),
-              ],
-            ),
+            leading: const Icon(MdiIcons.information),
+            title: const Text('About SWAT Nation'),
+            trailing: const Icon(MdiIcons.chevronRight),
             onTap: () {
               Navigator.of(context).pop();
             },
@@ -40,18 +31,9 @@ class SettingsDrawer extends StatelessWidget {
 
           // Store
           ListTile(
-            title: Row(
-              children: <Widget>[
-                Icon(MdiIcons.cart),
-                const SizedBox(width: 8.0),
-                const Text('Visit the Store'),
-                const Spacer(),
-                Icon(
-                  MdiIcons.chevronRight,
-                  color: Theme.of(context).hintColor,
-                ),
-              ],
-            ),
+            leading: const Icon(MdiIcons.cart),
+            title: const Text('Visit the Store'),
+            trailing: const Icon(MdiIcons.chevronRight),
             onTap: () {
               Navigator.of(context).pop();
             },
@@ -61,65 +43,40 @@ class SettingsDrawer extends StatelessWidget {
           
           // Social
           ListTile(
-            title: Row(
-              children: const <Widget>[
-                Icon(MdiIcons.web),
-                SizedBox(width: 8.0),
-                Text('Browse our Website'),
-              ],
-            ),
+            leading: const Icon(MdiIcons.web),
+            title: const Text('Browse our Website'),
             onTap: () {
               openURL(kWebsite);
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: Row(
-              children: const <Widget>[
-                Icon(MdiIcons.facebook),
-                SizedBox(width: 8.0),
-                Text('Join the Community'),
-              ],
-            ),
+            leading: const Icon(MdiIcons.facebookBox),
+            title: const Text('Join the Community'),
             onTap: () {
               openURL(kFacebookGroup);
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: Row(
-              children: const <Widget>[
-                Icon(MdiIcons.twitter),
-                SizedBox(width: 8.0),
-                Text('Follow us on Twitter'),
-              ],
-            ),
+            leading: const Icon(MdiIcons.twitter),
+            title: const Text('Follow us on Twitter'),
             onTap: () {
               openURL(kTwitter);
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: Row(
-              children: const <Widget>[
-                Icon(MdiIcons.instagram),
-                SizedBox(width: 8.0),
-                Text('Check our Instagram'),
-              ],
-            ),
+            leading: const Icon(MdiIcons.instagram),
+            title: const Text('Check our Instagram'),
             onTap: () {
               openURL(kInstagram);
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: Row(
-              children: const <Widget>[
-                Icon(MdiIcons.xbox),
-                SizedBox(width: 8.0),
-                Text('Join the Xbox Club'),
-              ],
-            ),
+            leading: const Icon(MdiIcons.xbox),
+            title: const Text('Join the Xbox Club'),
             onTap: () {
               openURL(kXboxClub);
               Navigator.of(context).pop();
@@ -130,18 +87,12 @@ class SettingsDrawer extends StatelessWidget {
 
           // Change theme
           ListTile(
-            title: Row(
-              children: <Widget>[
-                const Icon(MdiIcons.weatherNight),
-                const SizedBox(width: 8.0),
-                const Text('Dark Mode'),
-                const Spacer(),
-                Switch(
-                  activeColor: Theme.of(context).primaryColor,
-                  value: themeBloc.currentTheme is DarkTheme,
-                  onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
-                ),
-              ],
+            leading: const Icon(MdiIcons.weatherNight),
+            title: const Text('Dark Mode'),
+            trailing: Switch(
+              activeColor: Theme.of(context).primaryColor,
+              value: themeBloc.currentTheme is DarkTheme,
+              onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
             ),
           ),
         ],
@@ -182,7 +133,9 @@ class _NoAuthHeader extends StatelessWidget {
             ),
           ),
         ),
-        onTap: () => Navigator.of(context).pop(),
+        onTap: () {
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
