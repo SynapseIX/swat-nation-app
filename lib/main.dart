@@ -1,10 +1,6 @@
-import 'dart:io' show Platform;
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
-import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
@@ -12,15 +8,6 @@ import 'package:swat_nation/themes/light_theme.dart';
 void main() => runApp(App());
 
 class App extends StatefulWidget {
-  App() {
-    FirebaseApp.configure(
-      name: 'swat-nation',
-      options: FirebaseOptions(
-        googleAppID: Platform.isIOS ? kAppIdiOS : kAppIdAndroid,
-      ),
-    );
-  }
-
   @override
   State<StatefulWidget> createState() {
     return _AppState();
