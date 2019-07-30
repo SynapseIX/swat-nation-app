@@ -36,7 +36,6 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return StreamBuilder<BaseTheme>(
       stream: themeBloc.stream,
-      initialData: LightTheme(),
       builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
         final BaseTheme theme = snapshot.data is LightTheme
           ? LightTheme()
@@ -44,7 +43,7 @@ class _AppState extends State<App> {
 
         return MaterialApp(
           title: 'SWAT Nation',
-          theme: theme.getThemeData(),
+          theme: theme.themeData,
           home: MainScreen(),
         );
       },
