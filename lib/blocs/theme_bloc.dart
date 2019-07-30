@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swat_nation/base/base_bloc.dart';
-import 'package:swat_nation/themes/base_theme.dart';
+import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 
@@ -29,11 +29,8 @@ class ThemeBloc extends BaseBloc {
   final String _prefKey = 'theme';
 
   Future<void> retrieveSavedTheme() async {
-    final String savedValue = await _persistedTheme;
-
-    if (savedValue == null) {
-      return LightTheme();
-    }
+    final SharedPreferences prefs = await _prefs;
+    final String savedValue = prefs.get(_prefKey) ?? LightTheme.name;
 
     final BaseTheme savedTheme = savedValue == LightTheme.name ? LightTheme() : DarkTheme();
     _themeSubject.sink.add(savedTheme);
@@ -42,11 +39,6 @@ class ThemeBloc extends BaseBloc {
   Future<bool> _persistTheme(String name) async {
     final SharedPreferences prefs = await _prefs;
     return prefs.setString(_prefKey, name);
-  }
-  
-  Future<String> get _persistedTheme async {
-    final SharedPreferences prefs = await _prefs;
-    return prefs.get(_prefKey);
   }
 
   @override
