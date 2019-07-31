@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/constants.dart';
 
 /// Represents the sign in landing screen.
@@ -43,15 +42,15 @@ class _SignInScreenState extends State<SignInScreen> {
           }
         },
         child: SafeArea(
-          child: ListView(
-            children: <Widget>[
-              Padding(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Card(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         // Logo
                         Container(
@@ -73,15 +72,38 @@ class _SignInScreenState extends State<SignInScreen> {
 
                         const SizedBox(height: 8.0),
 
-                        // Text fields
-                        _EmailField(
-                          // TODO(itsprof): implement bloc
-                          bloc: null,
+                        // Email field
+                        TextField(
+                          autocorrect: false,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                           focusNode: emailNode,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            hintText: 'user@example.com',
+                            // errorText: 'TODO: use bloc',
+                          ),
+                          onSubmitted: (String text) {
+                            emailNode.nextFocus();
+                          },
+                          onChanged: (String text) => print('TODO: use bloc'),
                         ),
-                        _PasswordField(
-                          bloc: null,
+
+                        // Password field
+                        TextField(
+                          autocorrect: false,
+                          obscureText: true,
+                          textInputAction: TextInputAction.go,
                           focusNode: passwordNode,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            hintText: 'password',
+                            // errorText: 'TODO: use bloc',
+                          ),
+                          onSubmitted: (String text) {
+                            passwordNode.unfocus();
+                          },
+                          onChanged: (String text) => print('TODO: use bloc'),
                         ),
 
                         const SizedBox(height: 24.0),
@@ -131,58 +153,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _EmailField extends StatelessWidget {
-  const _EmailField({
-    @required this.bloc,
-    @required this.focusNode,
-  });
-  
-  final BaseBloc bloc;
-  final FocusNode focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      onChanged: (String text) => print('TODO: use bloc'),
-      keyboardType: TextInputType.emailAddress,
-      focusNode: focusNode,
-      decoration: InputDecoration(
-        labelText: 'Email',
-        hintText: 'user@example.com',
-        // errorText: 'TODO: use bloc',
-      ),
-    );
-  }
-}
-
-class _PasswordField extends StatelessWidget {
-  const _PasswordField({
-    @required this.bloc,
-    @required this.focusNode,
-  });
-  
-  final BaseBloc bloc;
-  final FocusNode focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      onChanged: (String text) => print('TODO: use bloc'),
-      autocorrect: false,
-      obscureText: true,
-      focusNode: focusNode,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        hintText: 'password',
-        // errorText: 'TODO: use bloc',
       ),
     );
   }
