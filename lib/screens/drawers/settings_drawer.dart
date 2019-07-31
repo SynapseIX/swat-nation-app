@@ -112,11 +112,14 @@ class _NoAuthHeader extends StatelessWidget {
             color: Color(0xFF333333),
             shape: BoxShape.circle,
           ),
-          child: CachedNetworkImage(
-            imageUrl: kLogo,
-            fadeInDuration: Duration(milliseconds: 300),
-            width: 60.0,
-            height: 60.0,
+          child: Hero(
+            tag: 'swat_nation_logo',
+            child: CachedNetworkImage(
+              imageUrl: kLogo,
+              fadeInDuration: Duration(milliseconds: 300),
+              width: 60.0,
+              height: 60.0,
+            ),
           ),
         ),
         title: Text(
