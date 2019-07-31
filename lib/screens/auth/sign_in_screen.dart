@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/blocs/sign_in_screen_bloc.dart';
 import 'package:swat_nation/constants.dart';
 
 /// Represents the sign in landing screen.
@@ -28,6 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final SignInScreenBloc bloc = SignInScreenBloc();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account / Sign In'),
@@ -73,37 +76,47 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(height: 8.0),
 
                         // Email field
-                        TextField(
-                          autocorrect: false,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          focusNode: emailNode,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'user@example.com',
-                            // errorText: 'TODO: use bloc',
-                          ),
-                          onSubmitted: (String text) {
-                            emailNode.nextFocus();
+                        StreamBuilder<String>(
+                          stream: bloc.emailStream,
+                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                            return TextField(
+                              autocorrect: false,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              focusNode: emailNode,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                hintText: 'user@example.com',
+                                errorText: snapshot.error,
+                              ),
+                              onSubmitted: (String text) {
+                                emailNode.nextFocus();
+                              },
+                              onChanged: bloc.onChangeEmail,
+                            );
                           },
-                          onChanged: (String text) => print('TODO: use bloc'),
                         ),
 
                         // Password field
-                        TextField(
-                          autocorrect: false,
-                          obscureText: true,
-                          textInputAction: TextInputAction.go,
-                          focusNode: passwordNode,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            hintText: 'password',
-                            // errorText: 'TODO: use bloc',
-                          ),
-                          onSubmitted: (String text) {
-                            passwordNode.unfocus();
+                        StreamBuilder<String>(
+                          stream: bloc.passwordStream,
+                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                            return TextField(
+                              autocorrect: false,
+                              obscureText: true,
+                              textInputAction: TextInputAction.go,
+                              focusNode: passwordNode,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                hintText: 'password',
+                                errorText: snapshot.error,
+                              ),
+                              onSubmitted: (String text) {
+                                passwordNode.unfocus();
+                              },
+                              onChanged: bloc.onChangePassword,
+                            );
                           },
-                          onChanged: (String text) => print('TODO: use bloc'),
                         ),
 
                         const SizedBox(height: 24.0),
@@ -112,13 +125,31 @@ class _SignInScreenState extends State<SignInScreen> {
                         Container(
                           width: double.infinity,
                           height: 40.0,
-                          child: RaisedButton(
-                            child: const Text('Sign In'),
-                            onPressed: () => print('TODO: use bloc'),
+                          child: StreamBuilder<bool>(
+                            stream: bloc.submitValidStream,
+                            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                              return RaisedButton(
+                                child: const Text('Sign In'),
+                                onPressed: snapshot.hasData
+                                  ? () {
+                                    print('TODO: Sign in to Firebase');
+                                    print('Email: ${bloc.emailValue}');
+                                    print('Password: ${bloc.passwordValue}');
+                                    if (emailNode.hasFocus) {
+                                      emailNode.unfocus();
+                                    }
+
+                                    if (passwordNode.hasFocus) {
+                                      passwordNode.unfocus();
+                                    }
+                                  }
+                                  : null,
+                              );
+                            },
                           ),
                         ),
 
-                        const SizedBox(height: 8.0),
+                        const SizedBox(height: 16.0),
 
                         // Create Account / Forgot Password
                         Row(
