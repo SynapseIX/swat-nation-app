@@ -46,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Card(
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
@@ -63,8 +63,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: CachedNetworkImage(
                             imageUrl: kLogo,
                             fadeInDuration: Duration(milliseconds: 300),
-                            width: 150.0,
-                            height: 150.0,
+                            width: 120.0,
+                            height: 120.0,
                           ),
                         ),
 
@@ -93,22 +93,30 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
 
+                        const SizedBox(height: 8.0),
+
                         // Create Account / Forgot Password
                         Row(
                           children: <Widget>[
-                            FlatButton(
-                              child: const Text('Create Account'),
-                              onPressed: () => print('TODO: implement'),
+                            GestureDetector(
+                              onTap: () => print('TODO: implement'),
+                              child: const Text(
+                                'Create Account',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                             ),
-                            const Spacer(),
-                            FlatButton(
-                              child: const Text('Forgot password?'),
-                              onPressed: () => print('TODO: implement'),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () => print('TODO: implement'),
+                              child: const Text(
+                                'Forgot Password?',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                             ),
                           ],
                         ),
 
-                        const SizedBox(height: 16.0),
+                        const SizedBox(height: 24.0),
 
                         // Login with Facebook button
                         FlatButton(
