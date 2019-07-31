@@ -46,13 +46,14 @@ class _SignInScreenState extends State<SignInScreen> {
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Card(
                   child: Container(
-                    margin: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        // Logo
                         Container(
                           margin: const EdgeInsets.only(top: 16.0),
                           decoration: const BoxDecoration(
@@ -66,8 +67,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 150.0,
                           ),
                         ),
-                        const SizedBox(height: 16.0),
-                        const Text('If you already have an account, please Sign In. Otherwise, create a new account by tapping Create Account. You can also use Facebook to login.'),
+
+                        const SizedBox(height: 8.0),
 
                         // Text fields
                         _EmailField(
@@ -83,7 +84,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(height: 24.0),
 
                         // Sign In button
-
                         Container(
                           width: double.infinity,
                           height: 40.0,
@@ -94,7 +94,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
 
                         // Create Account / Forgot Password
-
                         Row(
                           children: <Widget>[
                             FlatButton(
@@ -109,10 +108,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           ],
                         ),
 
-                        const SizedBox(height: 32.0),
+                        const SizedBox(height: 16.0),
 
                         // Login with Facebook button
-
                         FlatButton(
                           child: Image.asset('assets/images/continue_with_facebook.png'),
                           onPressed: () => print('TODO: implement'),
