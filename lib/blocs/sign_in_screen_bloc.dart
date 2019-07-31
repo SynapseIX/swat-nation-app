@@ -1,8 +1,8 @@
 import 'package:swat_nation/base/base_bloc.dart';
-import 'package:swat_nation/mixins/validator_mixin.dart';
+import 'package:swat_nation/mixins/email_password_validator.dart';
 
 /// BLoC containing logic to handle the sign in form.
-class SignInScreenBloc extends BaseBloc with ValidatorMixin {
+class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
   final BehaviorSubject<String> _emailSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _passwordSubject = BehaviorSubject<String>();
 
