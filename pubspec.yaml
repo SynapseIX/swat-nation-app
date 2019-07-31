@@ -30,6 +30,7 @@ dependencies:
 
   #FlutterFire
   firebase_core: ^0.4.0+8
+  firebase_auth: ^0.14.0
   cloud_firestore: ^0.12.9
 
   # Community Packages
