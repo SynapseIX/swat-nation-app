@@ -36,14 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
         title: const Text('Create Account / Sign In'),
       ),
       body: GestureDetector(
-        onTap: () {
-          if (emailNode.hasFocus) {
-            emailNode.unfocus();
-          }
-          if (passwordNode.hasFocus) {
-            passwordNode.unfocus();
-          }
-        },
+        onTap: () => _dismissKeyboard(),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -135,13 +128,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     print('TODO: Sign in to Firebase');
                                     print('Email: ${bloc.emailValue}');
                                     print('Password: ${bloc.passwordValue}');
-                                    if (emailNode.hasFocus) {
-                                      emailNode.unfocus();
-                                    }
-
-                                    if (passwordNode.hasFocus) {
-                                      passwordNode.unfocus();
-                                    }
+                                    _dismissKeyboard();
                                   }
                                   : null,
                               );
@@ -177,7 +164,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         // Login with Facebook button
                         FlatButton(
                           child: Image.asset('assets/images/continue_with_facebook.png'),
-                          onPressed: () => print('TODO: implement'),
+                          onPressed: () {
+                            print('TODO: implement');
+                            _dismissKeyboard();
+                          },
                         ),
                       ],
                     ),
@@ -189,5 +179,15 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
     );
+  }
+
+  void _dismissKeyboard() {
+    if (emailNode.hasFocus) {
+      emailNode.unfocus();
+    }
+
+    if (passwordNode.hasFocus) {
+      passwordNode.unfocus();
+    }
   }
 }
