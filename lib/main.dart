@@ -24,9 +24,11 @@ class _AppState extends State<App> {
     themeBloc = ThemeBloc.instance();
     themeBloc.retrieveSavedTheme();
 
-    SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-      DeviceOrientation.portraitUp,
-    ]);
+    SystemChrome.setPreferredOrientations(
+      <DeviceOrientation>[
+        DeviceOrientation.portraitUp,
+      ],
+    );
   }
 
   @override
