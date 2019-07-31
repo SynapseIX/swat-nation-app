@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:swat_nation/constants.dart';
 
-/// Mixin for validating email addresses and passwords
+/// Mixin for validating email addresses and passwords.
 class EmailPasswordValidator {
   final StreamTransformer<String, String> validateEmail = StreamTransformer<String, String>
     .fromHandlers(
