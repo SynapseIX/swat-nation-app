@@ -31,7 +31,7 @@ class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
       emailStream,
       passwordStream,
       confirmPasswordStream,
-      (String e, String p, String cp) => 0 == p.compareTo(cp),
+      (String e, String p, String cp) => p.compareTo(cp) == 0,
     );
 
   String get emailValue => _emailSubject.value;
