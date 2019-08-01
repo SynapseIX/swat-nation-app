@@ -17,7 +17,12 @@ class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
 
   Stream<String> get confirmPasswordStream => _confirmPasswordSubject
     .stream
-    .transform(validatePassword);
+    .transform(validatePassword)
+    .doOnData((String data) {
+      if (data.compareTo(passwordValue) != 0) {
+        _confirmPasswordSubject.addError('Passwords don\'t match');
+      }
+    });
   
   Stream<bool> get signInValidStream => Observable
     .combineLatest2(
