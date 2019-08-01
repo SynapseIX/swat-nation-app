@@ -2,7 +2,7 @@ import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/mixins/email_password_validator.dart';
 
 /// BLoC containing logic to handle the sign in form.
-class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
+class AuthScreensBloc extends BaseBloc with EmailPasswordValidator {
   final BehaviorSubject<String> _emailSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _passwordSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _confirmPasswordSubject = BehaviorSubject<String>();
@@ -36,7 +36,7 @@ class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
       emailStream,
       passwordStream,
       confirmPasswordStream,
-      (String e, String p, String cp) => p.compareTo(cp) == 0,
+      (String e, String p, String cp) => true,
     );
 
   String get emailValue => _emailSubject.value;
@@ -45,7 +45,7 @@ class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
 
   void Function(String) get onChangeEmail => _emailSubject.sink.add;
   void Function(String) get onChangePassword => _passwordSubject.sink.add;
-  void Function(String) get onChangeConfirmPassword => _passwordSubject.sink.add;
+  void Function(String) get onChangeConfirmPassword => _confirmPasswordSubject.sink.add;
   
   @override
   void dispose() {

@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/constants.dart';
 
-import 'create_account_screen.dart';
-
-/// Represents the sign in screen.
-class SignInScreen extends StatefulWidget {
+/// Represents the create account screen.
+class CreateAccountScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _SignInScreenState();
+  State createState() => _CreateAccountScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
   FocusNode emailNode;
   FocusNode passwordNode;
+  FocusNode confirmPasswordNode;
 
   @override
   void initState() {
     emailNode = FocusNode();
     passwordNode = FocusNode();
+    confirmPasswordNode = FocusNode();
     super.initState();
   }
 
@@ -26,16 +26,17 @@ class _SignInScreenState extends State<SignInScreen> {
   void dispose() {
     emailNode.dispose();
     passwordNode.dispose();
+    confirmPasswordNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final AuthScreensBloc bloc = AuthScreensBloc();
-
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign In'),
+        title: const Text('Create Account'),
       ),
       body: GestureDetector(
         onTap: () => _dismissKeyboard(),
@@ -99,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             return TextField(
                               autocorrect: false,
                               obscureText: true,
-                              textInputAction: TextInputAction.go,
+                              textInputAction: TextInputAction.next,
                               focusNode: passwordNode,
                               decoration: InputDecoration(
                                 labelText: 'Password',
@@ -107,27 +108,49 @@ class _SignInScreenState extends State<SignInScreen> {
                                 errorText: snapshot.error,
                               ),
                               onSubmitted: (String text) {
-                                passwordNode.unfocus();
+                                passwordNode.nextFocus();
                               },
                               onChanged: bloc.onChangePassword,
                             );
                           },
                         ),
 
+                        // Confirm password field
+                        StreamBuilder<String>(
+                          stream: bloc.confirmPasswordStream,
+                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                            return TextField(
+                              autocorrect: false,
+                              obscureText: true,
+                              textInputAction: TextInputAction.go,
+                              focusNode: confirmPasswordNode,
+                              decoration: InputDecoration(
+                                labelText: 'Confirm Password',
+                                hintText: 'confirm password',
+                                errorText: snapshot.error,
+                              ),
+                              onSubmitted: (String text) {
+                                confirmPasswordNode.unfocus();
+                              },
+                              onChanged: bloc.onChangeConfirmPassword,
+                            );
+                          },
+                        ),
+
                         const SizedBox(height: 24.0),
 
-                        // Sign In button
+                        // Create Account button
                         Container(
                           width: double.infinity,
                           height: 40.0,
                           child: StreamBuilder<bool>(
-                            stream: bloc.signInValidStream,
+                            stream: bloc.createAccountValidStream,
                             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                               return RaisedButton(
-                                child: const Text('Sign In'),
+                                child: const Text('Create Account'),
                                 onPressed: snapshot.hasData
                                   ? () {
-                                    print('TODO: Sign in to Firebase');
+                                    print('TODO: Register user on Firebase');
                                     print('Email: ${bloc.emailValue}');
                                     print('Password: ${bloc.passwordValue}');
                                     _dismissKeyboard();
@@ -136,47 +159,6 @@ class _SignInScreenState extends State<SignInScreen> {
                               );
                             },
                           ),
-                        ),
-
-                        const SizedBox(height: 16.0),
-
-                        // Create Account / Forgot Password
-                        Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                _dismissKeyboard();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<CreateAccountScreen>(
-                                    builder: (BuildContext context)=> CreateAccountScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'Create Account',
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () => print('TODO: implement'),
-                              child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 24.0),
-
-                        // Login with Facebook button
-                        FlatButton(
-                          child: Image.asset('assets/images/continue_with_facebook.png'),
-                          onPressed: () {
-                            print('TODO: implement');
-                            _dismissKeyboard();
-                          },
                         ),
                       ],
                     ),
@@ -197,6 +179,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if (passwordNode.hasFocus) {
       passwordNode.unfocus();
+    }
+
+    if (confirmPasswordNode.hasFocus) {
+      confirmPasswordNode.unfocus();
     }
   }
 }
