@@ -31,7 +31,7 @@ class SignInScreenBloc extends BaseBloc with EmailPasswordValidator {
       (String e, String p) => true,
     );
 
-  Stream<bool> get signUpValidStream => Observable
+  Stream<bool> get createAccountValidStream => Observable
     .combineLatest3(
       emailStream,
       passwordStream,
