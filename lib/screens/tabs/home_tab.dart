@@ -47,7 +47,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
             if (snapshot.hasData) {
               return SliverAppBar(
                 pinned: true,
-                centerTitle: true,
+                centerTitle: false,
                 title: GestureDetector(
                   onTap: () {
                     print('TODO: navigate to profile screen');
