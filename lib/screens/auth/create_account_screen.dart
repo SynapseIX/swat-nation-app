@@ -177,7 +177,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               autocorrect: false,
                               textInputAction: TextInputAction.go,
                               focusNode: usernameNode,
-                              maxLength: kUsernameMaxChararcters,
+                              maxLength: kDisplayNameMaxChararcters,
                               decoration: InputDecoration(
                                 labelText: 'Username',
                                 hintText: 'Username',

@@ -45,8 +45,9 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
           stream: AuthBloc.instance().onAuthStateChanged,
           builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
             if (snapshot.hasData) {
-              final String displayName = snapshot.data.displayName.length > 15
-                ? '${snapshot.data.displayName.substring(0, 15)}...'
+              final String displayName =
+                snapshot.data.displayName.length > kDisplayNameMaxChararcters
+                ? '${snapshot.data.displayName.substring(0, kDisplayNameMaxChararcters - 5)}...'
                 : snapshot.data.displayName;
 
               return SliverAppBar(
