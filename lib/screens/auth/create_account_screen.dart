@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/dialogs/dialog_helper.dart';
+import 'package:swat_nation/screens/main_screen.dart';
 
 /// Represents the create account screen.
 class CreateAccountScreen extends StatefulWidget {
@@ -10,6 +14,11 @@ class CreateAccountScreen extends StatefulWidget {
 }
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+
   AuthScreensBloc uiBloc;
 
   FocusNode emailNode;
@@ -31,11 +40,18 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    usernameController.dispose();
+
     uiBloc.dispose();
+
     emailNode.dispose();
     passwordNode.dispose();
     confirmPasswordNode.dispose();
     usernameNode.dispose();
+
     super.dispose();
   }
 
@@ -80,6 +96,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           stream: uiBloc.emailStream,
                           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                             return TextField(
+                              controller: emailController,
                               autocorrect: false,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -102,6 +119,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           stream: uiBloc.passwordStream,
                           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                             return TextField(
+                              controller: passwordController,
                               autocorrect: false,
                               obscureText: true,
                               textInputAction: TextInputAction.next,
@@ -124,6 +142,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           stream: uiBloc.confirmPasswordStream,
                           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                             return TextField(
+                              controller: confirmPasswordController,
                               autocorrect: false,
                               obscureText: true,
                               textInputAction: TextInputAction.next,
@@ -146,6 +165,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           stream: uiBloc.usernameStream,
                           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                             return TextField(
+                              controller: usernameController,
                               autocorrect: false,
                               obscureText: true,
                               textInputAction: TextInputAction.go,
@@ -175,12 +195,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               return RaisedButton(
                                 child: const Text('Create Account'),
                                 onPressed: snapshot.hasData
-                                  ? () {
-                                    print('TODO: Register user on Firebase');
-                                    print('Email: ${uiBloc.emailValue}');
-                                    print('Password: ${uiBloc.passwordValue}');
-                                    _dismissKeyboard();
-                                  }
+                                  ? () => _submitCreateAccount(context)
                                   : null,
                               );
                             },
@@ -194,6 +209,44 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _submitCreateAccount(BuildContext context) async {
+    final DialogHelper helper = DialogHelper.instance();
+    _dismissKeyboard();
+    
+    try {
+      helper.showWaitingDialog(context, 'Creating your account...');
+
+      final FirebaseUser user = await AuthBloc.instance().createAccount(
+        email: uiBloc.emailValue,
+        password: uiBloc.passwordValue,
+      );
+
+      final UserUpdateInfo info = UserUpdateInfo();
+      info.displayName = uiBloc.usernameValue;
+      await user.updateProfile(info);
+      await user.reload();
+
+      Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => MainScreen()),
+          (Route<dynamic> r) => false,
+        );
+    } catch (e) {
+      Navigator.of(context).pop();
+      helper.showErrorDialog(
+        context: context,
+        title: 'Can\'t Create Account',
+        message: e.message,
+      );
+    }
+    finally {
+      emailController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+      usernameController.clear();
+    }
   }
 
   void _dismissKeyboard() {

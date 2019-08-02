@@ -30,14 +30,20 @@ class _SignInScreenState extends State<SignInScreen> {
 
     emailNode = FocusNode();
     passwordNode = FocusNode();
+
     super.initState();
   }
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
     uiBloc.dispose();
+    
     emailNode.dispose();
     passwordNode.dispose();
+
     super.dispose();
   }
 
@@ -191,10 +197,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _submitSignIn(BuildContext context) async {
     final DialogHelper helper = DialogHelper.instance();
-
-    print('TODO: Sign in to Firebase');
-    print('Email: ${uiBloc.emailValue}');
-    print('Password: ${uiBloc.passwordValue}');
     _dismissKeyboard();
     
     try {
