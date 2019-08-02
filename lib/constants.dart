@@ -12,6 +12,9 @@ const String kLogo = 'https://static1.squarespace.com/static/5bfb2111372b9640779
 // Default profile picture
 const String kDefaultAvi = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/avatars%2Fmaster_chief_avi.jpg?alt=media&token=3a797114-7405-4115-b979-c9d29bfa8e82';
 
+// Default profile header
+const String kDefaultProfileHeader = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/profile%2Fprofile_header_background.jpg?alt=media&token=901e4f5e-fa6e-4320-8e94-3f3b129c0c17';
+
 // SWAT Nation social accounts
 const String kWebsite = 'https://swatnation.net';
 const String kFacebookGroup = 'https://facebook.com/groups/swat-nation';

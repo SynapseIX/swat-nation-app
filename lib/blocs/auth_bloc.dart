@@ -43,7 +43,6 @@ class AuthBloc extends BaseBloc {
         return authResult.user;
         break;
       case FacebookLoginStatus.cancelledByUser:
-        print('Canceled: ${fbLoginResult.errorMessage}');
         throw 'Login cancelled by user.';
         break;
       case FacebookLoginStatus.error:
