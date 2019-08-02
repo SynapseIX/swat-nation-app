@@ -167,7 +167,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             return TextField(
                               controller: usernameController,
                               autocorrect: false,
-                              obscureText: true,
                               textInputAction: TextInputAction.go,
                               focusNode: usernameNode,
                               decoration: InputDecoration(
@@ -225,6 +224,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       final UserUpdateInfo info = UserUpdateInfo();
       info.displayName = uiBloc.usernameValue;
+      info.photoUrl = kDefaultAvi;
+
       await user.updateProfile(info);
       await user.reload();
 

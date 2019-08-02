@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
+import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -37,10 +41,51 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     return CustomScrollView(
       key: const PageStorageKey<String>('home_tab_scroll_view'),
       slivers: <Widget>[
-        SliverAppBar(
-          pinned: true,
-          title: const Text('What\'s New?'),
+        StreamBuilder<FirebaseUser>(
+          stream: AuthBloc.instance().onAuthStateChanged,
+          builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+            if (snapshot.hasData) {
+              snapshot.data.reload();
+            }
+
+            return SliverAppBar(
+              pinned: true,
+              centerTitle: !snapshot.hasData,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  if (snapshot.hasData)
+                  Container(
+                    margin: const EdgeInsets.only(right: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF333333),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 2.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: CachedNetworkImage(
+                        imageUrl: snapshot.data.photoUrl ?? kLogo,
+                        width: 30.0,
+                        height: 30.0,
+                        fit: BoxFit.cover,
+                        fadeInDuration: Duration(milliseconds: 300),
+                      ),
+                    ),
+                  ),
+                  Text(snapshot.hasData
+                    ? 'Hello, ${snapshot.data.displayName}'
+                    : 'What\'s New?',
+                  ),
+                ],
+              ),
+            );
+          },
         ),
+
         // Upcoming Tournaments
         CardSection(
           header: TextHeader(
