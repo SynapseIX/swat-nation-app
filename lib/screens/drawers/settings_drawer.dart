@@ -266,7 +266,7 @@ class _AuthHeader extends StatelessWidget {
               ),
             ),
             title: Text(
-              'Welcome, ${user.displayName}',
+              '${user.displayName}',
               style: TextStyle(
                 fontSize: 17.0,
                 fontWeight: FontWeight.bold,
@@ -275,12 +275,16 @@ class _AuthHeader extends StatelessWidget {
             subtitle: Container(
               margin: const EdgeInsets.only(top: 8.0),
               child: const Text(
-                'Tap here to View and/or Edit your Profile! These are your tools of destruction to dominate the competition.',
+                'View Your Profile',
                 style: TextStyle(
                   fontWeight: FontWeight.w300,
                 ),
               ),
             ),
+            onTap: () {
+              Navigator.of(context).pop();
+              print('TODO: navigate to profile screen');
+            },
           ),
         ],
       ),
