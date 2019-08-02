@@ -48,32 +48,37 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               return SliverAppBar(
                 pinned: true,
                 centerTitle: !snapshot.hasData,
-                title: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(right: 8.0),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF333333),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 2.0,
-                          color: Colors.white,
+                title: GestureDetector(
+                  onTap: () {
+                    print('TODO: navigate to profile screen');
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(right: 8.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF333333),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 2.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30.0),
+                          child: CachedNetworkImage(
+                            imageUrl: snapshot.data.photoUrl ?? kLogo,
+                            width: 30.0,
+                            height: 30.0,
+                            fit: BoxFit.cover,
+                            fadeInDuration: Duration(milliseconds: 300),
+                          ),
                         ),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30.0),
-                        child: CachedNetworkImage(
-                          imageUrl: snapshot.data.photoUrl ?? kLogo,
-                          width: 30.0,
-                          height: 30.0,
-                          fit: BoxFit.cover,
-                          fadeInDuration: Duration(milliseconds: 300),
-                        ),
-                      ),
-                    ),
-                    Text('Hello, ${snapshot.data.displayName}'),
-                  ],
+                      Text('Hi, ${snapshot.data.displayName}!'),
+                    ],
+                  ),
                 ),
               );
             }
