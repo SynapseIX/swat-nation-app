@@ -1,10 +1,16 @@
+import 'dart:io' show Platform;
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/dialogs/dialog_helper.dart';
+import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 
 import 'create_account_screen.dart';
@@ -20,6 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   AuthScreensBloc uiBloc;
+  UserBloc userBloc;
 
   FocusNode emailNode;
   FocusNode passwordNode;
@@ -27,6 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     uiBloc = AuthScreensBloc();
+    userBloc = UserBloc();
 
     emailNode = FocusNode();
     passwordNode = FocusNode();
@@ -40,6 +48,7 @@ class _SignInScreenState extends State<SignInScreen> {
     passwordController.dispose();
 
     uiBloc.dispose();
+    userBloc.dispose();
     
     emailNode.dispose();
     passwordNode.dispose();
@@ -180,10 +189,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     // Login with Facebook button
                     FlatButton(
                       child: Image.asset('assets/images/continue_with_facebook.png'),
-                      onPressed: () {
-                        print('TODO: implement');
-                        _dismissKeyboard();
-                      },
+                      onPressed: () => _loginWithFacebook(context),
                     ),
                   ],
                 ),
@@ -202,10 +208,14 @@ class _SignInScreenState extends State<SignInScreen> {
     try {
       helper.showWaitingDialog(context, 'Signing In...');
 
-      await AuthBloc.instance().signIn(
+      final FirebaseUser user = await AuthBloc.instance().signIn(
         email: uiBloc.emailValue,
         password: uiBloc.passwordValue,
       );
+
+      final UserModel model = await userBloc.userByUid(user.uid);
+      model.platform = Platform.isIOS ? 'iOS' : 'Android';
+      await userBloc.updateUser(model);
 
       Navigator.of(context)
         .pushAndRemoveUntil(
@@ -223,6 +233,51 @@ class _SignInScreenState extends State<SignInScreen> {
     finally {
       emailController.clear();
       passwordController.clear();
+
+      uiBloc.onChangeEmail('');
+      uiBloc.onChangePassword('');
+    }
+  }
+
+  Future<void> _loginWithFacebook(BuildContext context) async {
+    final DialogHelper helper = DialogHelper.instance();
+    _dismissKeyboard();
+
+    try {
+      helper.showWaitingDialog(context, 'Logging In With Facebook...');
+
+      final FirebaseUser user = await AuthBloc.instance().loginWithFacebook();
+      final bool displayNameExists = await userBloc.displayNameExists(user.displayName);
+
+      final String platform = Platform.isIOS ? 'iOS' : 'Android';
+      
+      final UserModel model = await userBloc.userByUid(user.uid) ?? UserModel(
+        uid: user.uid,
+        displayName: user.displayName,
+        photoUrl: kDefaultAvi,
+        createdAt: Timestamp.now(), 
+        platform: platform,
+      );
+      model.platform = platform;
+
+      if (displayNameExists) {
+        await userBloc.updateUser(model);
+      } else {
+        await userBloc.createUser(model);
+      }
+
+      Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => MainScreen()),
+          (Route<dynamic> r) => false,
+        );
+    } catch (e) {
+      Navigator.of(context).pop();
+      helper.showErrorDialog(
+        context: context,
+        title: 'Can\'t Log In With Facebook',
+        message: e.message,
+      );
     }
   }
 

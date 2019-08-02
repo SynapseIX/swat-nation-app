@@ -145,7 +145,7 @@ class SettingsDrawer extends StatelessWidget {
                                 const SizedBox(height: 32.0),
                                 Container(
                                   width: double.infinity,
-                                  height: 30.0,
+                                  height: 40.0,
                                   child: RaisedButton(
                                     color: Colors.red,
                                     textColor: Colors.white,
@@ -159,7 +159,7 @@ class SettingsDrawer extends StatelessWidget {
                                 const SizedBox(height: 8.0),
                                 Container(
                                   width: double.infinity,
-                                  height: 30.0,
+                                  height: 40.0,
                                   child: RaisedButton(
                                     onPressed: () => Navigator.of(context).pop(),
                                     child: const Text('No, take me back'),

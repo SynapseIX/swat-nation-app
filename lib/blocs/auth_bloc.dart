@@ -33,24 +33,25 @@ class AuthBloc extends BaseBloc {
     final FacebookLoginResult fbLoginResult = await facebookLogin
       .logInWithReadPermissions(<String>['public_profile', 'email']);
 
-      switch (fbLoginResult.status) {
-        case FacebookLoginStatus.loggedIn:
-          final FacebookAccessToken accessToken = fbLoginResult.accessToken;
-          final AuthCredential credential = FacebookAuthProvider
-            .getCredential(accessToken: accessToken.token);
-          final AuthResult authResult = await _firebaseAuth.signInWithCredential(credential);
+    switch (fbLoginResult.status) {
+      case FacebookLoginStatus.loggedIn:
+        final FacebookAccessToken accessToken = fbLoginResult.accessToken;
+        final AuthCredential credential = FacebookAuthProvider
+          .getCredential(accessToken: accessToken.token);
+        final AuthResult authResult = await _firebaseAuth.signInWithCredential(credential);
 
-          return authResult.user;
+        return authResult.user;
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print('Canceled: ${fbLoginResult.errorMessage}');
+        throw 'Login cancelled by user.';
+        break;
+      case FacebookLoginStatus.error:
+        throw fbLoginResult.errorMessage;
+        break;
+      default:
+          return null;
           break;
-        case FacebookLoginStatus.cancelledByUser:
-          throw 'Login cancelled by user.';
-          break;
-        case FacebookLoginStatus.error:
-          throw 'An error has ocurred when logging in with Facebook.';
-          break;
-        default:
-            return null;
-            break;
       }
   }
 

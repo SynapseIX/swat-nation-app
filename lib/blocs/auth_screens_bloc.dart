@@ -6,7 +6,7 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
   final BehaviorSubject<String> _emailSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _passwordSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _confirmPasswordSubject = BehaviorSubject<String>();
-  final BehaviorSubject<String> _usernameSubject = BehaviorSubject<String>();
+  final BehaviorSubject<String> _displayNameSubject = BehaviorSubject<String>();
 
   Stream<String> get emailStream => _emailSubject
     .stream
@@ -25,9 +25,9 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
       }
     });
   
-  Stream<String> get usernameStream => _usernameSubject
+  Stream<String> get displayNameStream => _displayNameSubject
     .stream
-    .transform(validateUsername);
+    .transform(validateDisplayName);
   
   Stream<bool> get signInValidStream => Observable
     .combineLatest2(
@@ -41,24 +41,24 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
       emailStream,
       passwordStream,
       confirmPasswordStream,
-      usernameStream,
+      displayNameStream,
       (String e, String p, String cp, String u) => true,
     );
 
   String get emailValue => _emailSubject.value;
   String get passwordValue => _passwordSubject.value;
-  String get usernameValue => _usernameSubject.value;
+  String get displayNameValue => _displayNameSubject.value;
 
   void Function(String) get onChangeEmail => _emailSubject.sink.add;
   void Function(String) get onChangePassword => _passwordSubject.sink.add;
   void Function(String) get onChangeConfirmPassword => _confirmPasswordSubject.sink.add;
-  void Function(String) get onChangeUsername => _usernameSubject.sink.add;
+  void Function(String) get onChangeDisplayName => _displayNameSubject.sink.add;
   
   @override
   void dispose() {
     _emailSubject.close();
     _passwordSubject.close();
     _confirmPasswordSubject.close();
-    _usernameSubject.close();
+    _displayNameSubject.close();
   }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">SWAT Nation</string>
     <string name="facebook_app_id">425045791430364</string>
     <string name="fb_login_protocol_scheme">fb425045791430364</string>
 </resources>

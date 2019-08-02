@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:swat_nation/constants.dart';
 
-/// Mixin for validating email addresses and passwords.
+/// Mixin for validating email addresses, passwords, and usernames.
 class AuthScreensdValidator {
   final StreamTransformer<String, String> validateEmail = StreamTransformer<String, String>
     .fromHandlers(
@@ -33,7 +33,7 @@ class AuthScreensdValidator {
     }
   );
 
-  final StreamTransformer<String, String> validateUsername = StreamTransformer<String, String>
+  final StreamTransformer<String, String> validateDisplayName = StreamTransformer<String, String>
     .fromHandlers(
       handleData: (String username, EventSink<String> sink) {
         if (username.isNotEmpty) {
