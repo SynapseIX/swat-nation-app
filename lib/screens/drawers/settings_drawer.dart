@@ -14,172 +14,182 @@ class SettingsDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeBloc themeBloc = ThemeBloc.instance();
+    final Color scaffoldBackgroundColor = themeBloc.currentTheme is LightTheme
+      ? Colors.white
+      : const Color(0xFF333333);
     
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-          StreamBuilder<FirebaseUser>(
-            stream: AuthBloc.instance().onAuthStateChanged,
-            builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-              return DrawerHeader(
-                child: snapshot.hasData
+      child: Scaffold(
+        backgroundColor: scaffoldBackgroundColor,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: const Text('SWAT Nation'),
+          actions: const <Widget>[],
+        ),
+        body: ListView(
+          children: <Widget>[
+            StreamBuilder<FirebaseUser>(
+              stream: AuthBloc.instance().onAuthStateChanged,
+              builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+                return snapshot.hasData
                   ? _AuthHeader(snapshot.data)
-                  : _NoAuthHeader(),
-              );
-            },
-          ),
-
-          // About Us
-          ListTile(
-            leading: const Icon(MdiIcons.information),
-            title: const Text('About SWAT Nation'),
-            trailing: const Icon(MdiIcons.chevronRight),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-
-          // Store
-          ListTile(
-            leading: const Icon(MdiIcons.cart),
-            title: const Text('Visit the Store'),
-            trailing: const Icon(MdiIcons.chevronRight),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-
-          const Divider(),
-          
-          // Social
-          ListTile(
-            leading: const Icon(MdiIcons.web),
-            title: const Text('Browse our Website'),
-            onTap: () {
-              openURL(kWebsite);
-              Navigator.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: const Icon(MdiIcons.facebookBox),
-            title: const Text('Join the Community'),
-            onTap: () {
-              openURL(kFacebookGroup);
-              Navigator.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: const Icon(MdiIcons.twitter),
-            title: const Text('Follow us on Twitter'),
-            onTap: () {
-              openURL(kTwitter);
-              Navigator.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: const Icon(MdiIcons.instagram),
-            title: const Text('Check our Instagram'),
-            onTap: () {
-              openURL(kInstagram);
-              Navigator.of(context).pop();
-            },
-          ),
-          ListTile(
-            leading: const Icon(MdiIcons.xbox),
-            title: const Text('Join the Xbox Club'),
-            onTap: () {
-              openURL(kXboxClub);
-              Navigator.of(context).pop();
-            },
-          ),
-
-          const Divider(),
-
-          // Change theme
-          ListTile(
-            leading: const Icon(MdiIcons.weatherNight),
-            title: const Text('Dark Mode'),
-            trailing: Switch(
-              activeColor: Theme.of(context).primaryColor,
-              value: themeBloc.currentTheme is DarkTheme,
-              onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
+                  : _NoAuthHeader();
+              },
             ),
-          ),
 
-          // Sign out
-          StreamBuilder<FirebaseUser>(
-            stream: AuthBloc.instance().onAuthStateChanged,
-            builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-              if (snapshot.hasData) {
-                return ListTile(
-                  leading: const Icon(MdiIcons.logout),
-                  title: const Text('Sign Out...'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    showDialog<Dialog>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          child: Container(
-                            margin: const EdgeInsets.all(32.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF333333),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Hero(
-                                    tag: 'swat_nation_logo',
-                                    child: CachedNetworkImage(
-                                      imageUrl: kLogo,
-                                      fadeInDuration: Duration(milliseconds: 300),
-                                      width: 120.0,
-                                      height: 120.0,
+            // About Us
+            ListTile(
+              leading: const Icon(MdiIcons.information),
+              title: const Text('About SWAT Nation'),
+              trailing: const Icon(MdiIcons.chevronRight),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+
+            // Store
+            ListTile(
+              leading: const Icon(MdiIcons.cart),
+              title: const Text('Visit the Store'),
+              trailing: const Icon(MdiIcons.chevronRight),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+
+            const Divider(),
+            
+            // Social
+            ListTile(
+              leading: const Icon(MdiIcons.web),
+              title: const Text('Browse our Website'),
+              onTap: () {
+                openURL(kWebsite);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(MdiIcons.facebookBox),
+              title: const Text('Join the Community'),
+              onTap: () {
+                openURL(kFacebookGroup);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(MdiIcons.twitter),
+              title: const Text('Follow us on Twitter'),
+              onTap: () {
+                openURL(kTwitter);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(MdiIcons.instagram),
+              title: const Text('Check our Instagram'),
+              onTap: () {
+                openURL(kInstagram);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(MdiIcons.xbox),
+              title: const Text('Join the Xbox Club'),
+              onTap: () {
+                openURL(kXboxClub);
+                Navigator.of(context).pop();
+              },
+            ),
+
+            const Divider(),
+
+            // Change theme
+            ListTile(
+              leading: const Icon(MdiIcons.weatherNight),
+              title: const Text('Dark Mode'),
+              trailing: Switch(
+                activeColor: Theme.of(context).primaryColor,
+                value: themeBloc.currentTheme is DarkTheme,
+                onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
+              ),
+            ),
+
+            // Sign out
+            StreamBuilder<FirebaseUser>(
+              stream: AuthBloc.instance().onAuthStateChanged,
+              builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+                if (snapshot.hasData) {
+                  return ListTile(
+                    leading: const Icon(MdiIcons.logout),
+                    title: const Text('Sign Out...'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      showDialog<Dialog>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            child: Container(
+                              margin: const EdgeInsets.all(32.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF333333),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Hero(
+                                      tag: 'swat_nation_logo',
+                                      child: CachedNetworkImage(
+                                        imageUrl: kLogo,
+                                        fadeInDuration: Duration(milliseconds: 300),
+                                        width: 120.0,
+                                        height: 120.0,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 32.0),
-                                const Text('Are you sure you want to sign out?'),
-                                const SizedBox(height: 32.0),
-                                Container(
-                                  width: double.infinity,
-                                  height: 30.0,
-                                  child: RaisedButton(
-                                    color: Colors.red,
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      AuthBloc.instance().signOut();
-                                    },
-                                    child: const Text('Yes, sign me out'),
+                                  const SizedBox(height: 32.0),
+                                  const Text('Are you sure you want to sign out?'),
+                                  const SizedBox(height: 32.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      color: Colors.red,
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        AuthBloc.instance().signOut();
+                                      },
+                                      child: const Text('Yes, sign me out'),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Container(
-                                  width: double.infinity,
-                                  height: 30.0,
-                                  child: RaisedButton(
-                                    onPressed: () => Navigator.of(context).pop(),
-                                    child: const Text('No, take me back'),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: const Text('No, take me back'),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              }
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
 
-              return const SizedBox();
-            },
-          ),
-        ],
-      ),
+                return const SizedBox();
+              },
+            ),
+          ],
+        ),
+      )
     );
   }
 }
@@ -187,47 +197,49 @@ class SettingsDrawer extends StatelessWidget {
 class _NoAuthHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ListTile(
-        leading: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF333333),
-            shape: BoxShape.circle,
-          ),
-          child: Hero(
-            tag: 'swat_nation_logo',
-            child: CachedNetworkImage(
-              imageUrl: kLogo,
-              fadeInDuration: Duration(milliseconds: 300),
-              width: 60.0,
-              height: 60.0,
+    return DrawerHeader(
+      child: Center(
+        child: ListTile(
+          leading: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF333333),
+              shape: BoxShape.circle,
+            ),
+            child: Hero(
+              tag: 'swat_nation_logo',
+              child: CachedNetworkImage(
+                imageUrl: kLogo,
+                fadeInDuration: Duration(milliseconds: 300),
+                width: 60.0,
+                height: 60.0,
+              ),
             ),
           ),
-        ),
-        title: Text(
-          'Create Account / Sign In',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Container(
-          margin: const EdgeInsets.only(top: 8.0),
-          child: const Text(
-            'You\'re signed out of SWAT Nation. Sign in to register for tourneys, chat, and subscribe.',
+          title: Text(
+            'Create Account / Sign In',
             style: TextStyle(
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-        onTap: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).push(
-            MaterialPageRoute<SignInScreen>(
-              fullscreenDialog: true,
-              builder: (BuildContext context) => SignInScreen(),
+          subtitle: Container(
+            margin: const EdgeInsets.only(top: 8.0),
+            child: const Text(
+              'You\'re signed out of SWAT Nation. Sign in to register for tourneys, chat, and subscribe.',
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          );
-        },
+          ),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute<SignInScreen>(
+                fullscreenDialog: true,
+                builder: (BuildContext context) => SignInScreen(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -240,54 +252,39 @@ class _AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF333333),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  width: 2.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(40.0),
-                child: CachedNetworkImage(
-                  imageUrl: user.photoUrl,
-                  width: 40.0,
-                  height: 40.0,
-                  fit: BoxFit.cover,
-                  fadeInDuration: Duration(milliseconds: 300),
-                ),
-              ),
-            ),
-            title: Text(
-              '${user.displayName}',
-              style: TextStyle(
-                fontSize: 17.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Container(
-              margin: const EdgeInsets.only(top: 8.0),
-              child: const Text(
-                'View Your Profile',
-                style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-              print('TODO: navigate to profile screen');
-            },
-          ),
-        ],
+    return UserAccountsDrawerHeader(
+      accountName: Text(user.displayName),
+      accountEmail: Text(user.email),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(kDefaultProfileHeader),
+          fit: BoxFit.cover,
+        ),
       ),
+      currentAccountPicture: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF333333),
+          shape: BoxShape.circle,
+          border: Border.all(
+            width: 2.0,
+            color: Colors.white,
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(40.0),
+          child: CachedNetworkImage(
+            imageUrl: user.photoUrl,
+            width: 40.0,
+            height: 40.0,
+            fit: BoxFit.cover,
+            fadeInDuration: Duration(milliseconds: 300),
+          ),
+        ),
+      ),
+      onDetailsPressed: () {
+        Navigator.of(context).pop();
+        print('TODO: navigate to profile screen');
+      },
     );
   }
 }

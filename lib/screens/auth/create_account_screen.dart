@@ -1,10 +1,15 @@
+import 'dart:io'show Platform;
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/dialogs/dialog_helper.dart';
+import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 
 /// Represents the create account screen.
@@ -20,6 +25,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController usernameController = TextEditingController();
 
   AuthScreensBloc uiBloc;
+  UserBloc userBloc;
 
   FocusNode emailNode;
   FocusNode passwordNode;
@@ -29,6 +35,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   void initState() {
     uiBloc = AuthScreensBloc();
+    userBloc = UserBloc();
 
     emailNode = FocusNode();
     passwordNode = FocusNode();
@@ -46,6 +53,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     usernameController.dispose();
 
     uiBloc.dispose();
+    userBloc.dispose();
 
     emailNode.dispose();
     passwordNode.dispose();
@@ -162,23 +170,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                         // Username field
                         StreamBuilder<String>(
-                          stream: uiBloc.usernameStream,
+                          stream: uiBloc.displayNameStream,
                           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                             return TextField(
                               controller: usernameController,
                               autocorrect: false,
                               textInputAction: TextInputAction.go,
                               focusNode: usernameNode,
-                              maxLength: kUsernameMaxChararcters,
+                              maxLength: kDisplayNameMaxChararcters,
                               decoration: InputDecoration(
                                 labelText: 'Username',
                                 hintText: 'Username',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
-                                usernameNode.unfocus();
-                              },
-                              onChanged: uiBloc.onChangeUsername,
+                              onSubmitted: (String text) => _submitCreateAccount(context),
+                              onChanged: uiBloc.onChangeDisplayName,
                             );
                           },
                         ),
@@ -218,17 +224,36 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     try {
       helper.showWaitingDialog(context, 'Creating your account...');
 
+      final bool displayNameExists = await userBloc.displayNameExists(uiBloc.displayNameValue);
+      if (displayNameExists) {
+        Navigator.of(context).pop();
+        return helper.showErrorDialog(
+          context: context,
+          title: 'Can\'t Create Account',
+          message: 'Username itsprof is already taken!',
+        );
+      }
+
       final FirebaseUser user = await AuthBloc.instance().createAccount(
         email: uiBloc.emailValue,
         password: uiBloc.passwordValue,
       );
 
       final UserUpdateInfo info = UserUpdateInfo();
-      info.displayName = uiBloc.usernameValue;
+      info.displayName = uiBloc.displayNameValue;
       info.photoUrl = kDefaultAvi;
 
       await user.updateProfile(info);
       await user.reload();
+
+      final UserModel model = UserModel(
+        uid: user.uid,
+        displayName: uiBloc.displayNameValue,
+        photoUrl: kDefaultAvi,
+        createdAt: Timestamp.now(), 
+        platform: Platform.isIOS ? 'iOS' : 'Android',
+      );
+      await userBloc.createUser(model);
 
       Navigator.of(context)
         .pushAndRemoveUntil(
@@ -248,6 +273,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       passwordController.clear();
       confirmPasswordController.clear();
       usernameController.clear();
+
+      uiBloc.onChangeEmail('');
+      uiBloc.onChangePassword('');
+      uiBloc.onChangeConfirmPassword('');
+      uiBloc.onChangeDisplayName('');
     }
   }
 

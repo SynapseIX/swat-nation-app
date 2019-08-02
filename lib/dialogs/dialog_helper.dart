@@ -58,9 +58,13 @@ class DialogHelper {
                 const SizedBox(height: 16.0),
                 Text(message),
                 const SizedBox(height: 24.0),
-                RaisedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Dismiss'),
+                Container(
+                  width: double.infinity,
+                  height: 30.0,
+                  child: RaisedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Dismiss'),
+                  ),
                 ),
               ],
             ),

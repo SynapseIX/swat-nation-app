@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:swat_nation/base/base_bloc.dart';
 
 /// Authentication management BLoC.
@@ -25,6 +26,32 @@ class AuthBloc extends BaseBloc {
     );
 
     return result.user;
+  }
+
+  Future<FirebaseUser> loginWithFacebook() async {
+    final FacebookLogin facebookLogin = FacebookLogin();
+    final FacebookLoginResult fbLoginResult = await facebookLogin
+      .logInWithReadPermissions(<String>['public_profile', 'email']);
+
+    switch (fbLoginResult.status) {
+      case FacebookLoginStatus.loggedIn:
+        final FacebookAccessToken accessToken = fbLoginResult.accessToken;
+        final AuthCredential credential = FacebookAuthProvider
+          .getCredential(accessToken: accessToken.token);
+        final AuthResult authResult = await _firebaseAuth.signInWithCredential(credential);
+
+        return authResult.user;
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        throw 'Login cancelled by user.';
+        break;
+      case FacebookLoginStatus.error:
+        throw fbLoginResult.errorMessage;
+        break;
+      default:
+          return null;
+          break;
+      }
   }
 
   Future<FirebaseUser> createAccount({
