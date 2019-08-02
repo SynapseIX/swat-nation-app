@@ -41,7 +41,6 @@ class AuthScreensBloc extends BaseBloc with EmailPasswordValidator {
 
   String get emailValue => _emailSubject.value;
   String get passwordValue => _passwordSubject.value;
-  String get confirmPasswordValue => _confirmPasswordSubject.value;
 
   void Function(String) get onChangeEmail => _emailSubject.sink.add;
   void Function(String) get onChangePassword => _passwordSubject.sink.add;
