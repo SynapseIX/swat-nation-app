@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:swat_nation/constants.dart';
 
 /// Mixin for validating email addresses and passwords.
-class EmailPasswordValidator {
+class AuthScreensdValidator {
   final StreamTransformer<String, String> validateEmail = StreamTransformer<String, String>
     .fromHandlers(
       handleData: (String email, EventSink<String> sink) {
@@ -19,10 +19,10 @@ class EmailPasswordValidator {
 
   final StreamTransformer<String, String> validatePassword = StreamTransformer<String, String>.fromHandlers(
     handleData: (String password, EventSink<String> sink) {
-      final RegExp digitRegExp = RegExp(r'.*[0-9].*');
+      final RegExp digit = RegExp(r'.*[0-9].*');
 
       if (password.length >= kPasswordMinLength) {
-        if (digitRegExp.hasMatch(password)) {
+        if (digit.hasMatch(password)) {
           sink.add(password);
         } else {
           sink.addError('Password must have at least one number');  
@@ -32,4 +32,21 @@ class EmailPasswordValidator {
       }
     }
   );
+
+  final StreamTransformer<String, String> validateUsername = StreamTransformer<String, String>
+    .fromHandlers(
+      handleData: (String username, EventSink<String> sink) {
+        if (username.isNotEmpty) {
+          final RegExp noSpecialCharacters = RegExp(r'^[a-zA-Z0-9_]*$');
+
+          if (noSpecialCharacters.hasMatch(username))  {
+            sink.add(username);
+          } else {
+            sink.addError('No special characters allowed');
+          }
+        } else {
+          sink.addError('Username is required');
+        }
+      },
+    );
 }

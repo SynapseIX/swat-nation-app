@@ -138,6 +138,7 @@ class _NoAuthHeader extends StatelessWidget {
           ),
         ),
         onTap: () {
+          Navigator.of(context).pop();
           Navigator.of(context).push(
             MaterialPageRoute<SignInScreen>(
               fullscreenDialog: true,

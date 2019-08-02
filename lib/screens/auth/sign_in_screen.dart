@@ -5,6 +5,7 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/dialogs/dialog_helper.dart';
+import 'package:swat_nation/screens/main_screen.dart';
 
 import 'create_account_screen.dart';
 
@@ -18,11 +19,15 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  AuthScreensBloc uiBloc;
+
   FocusNode emailNode;
   FocusNode passwordNode;
 
   @override
   void initState() {
+    uiBloc = AuthScreensBloc();
+
     emailNode = FocusNode();
     passwordNode = FocusNode();
     super.initState();
@@ -30,6 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
+    uiBloc.dispose();
     emailNode.dispose();
     passwordNode.dispose();
     super.dispose();
@@ -37,8 +43,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthScreensBloc uiBloc = AuthScreensBloc();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign In'),
@@ -110,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             hintText: 'password',
                             errorText: snapshot.error,
                           ),
-                          onSubmitted: (String text) => _submitSignIn(context, uiBloc),
+                          onSubmitted: (String text) => _submitSignIn(context),
                           onChanged: uiBloc.onChangePassword,
                         );
                       },
@@ -128,7 +132,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           return RaisedButton(
                             child: const Text('Sign In'),
                             onPressed: snapshot.hasData
-                              ? () => _submitSignIn(context, uiBloc)
+                              ? () => _submitSignIn(context)
                               : null,
                           );
                         },
@@ -185,23 +189,27 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Future<void> _submitSignIn(BuildContext context, AuthScreensBloc bloc) async {
+  Future<void> _submitSignIn(BuildContext context) async {
     final DialogHelper helper = DialogHelper.instance();
 
     print('TODO: Sign in to Firebase');
-    print('Email: ${bloc.emailValue}');
-    print('Password: ${bloc.passwordValue}');
+    print('Email: ${uiBloc.emailValue}');
+    print('Password: ${uiBloc.passwordValue}');
     _dismissKeyboard();
     
     try {
       helper.showWaitingDialog(context, 'Signing In...');
 
       await AuthBloc.instance().signIn(
-        email: bloc.emailValue,
-        password: bloc.passwordValue,
+        email: uiBloc.emailValue,
+        password: uiBloc.passwordValue,
       );
 
-      Navigator.of(context).pop();
+      Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => MainScreen()),
+          (Route<dynamic> r) => false,
+        );
     } catch (e) {
       Navigator.of(context).pop();
       helper.showErrorDialog(
