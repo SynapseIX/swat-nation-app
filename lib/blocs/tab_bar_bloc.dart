@@ -2,9 +2,7 @@ import 'package:swat_nation/base/base_bloc.dart';
 
 /// BLoC that allows managing tab switching.
 class TabBarBloc extends BaseBloc {
-  factory TabBarBloc.instance() {
-    return _bloc;
-  }
+  factory TabBarBloc.instance() => _bloc;
 
   TabBarBloc._internal();
 

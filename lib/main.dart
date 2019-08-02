@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/screens/main_screen.dart';
@@ -22,6 +23,12 @@ class _AppState extends State<App> {
     super.initState();
     themeBloc = ThemeBloc.instance();
     themeBloc.retrieveSavedTheme();
+
+    SystemChrome.setPreferredOrientations(
+      <DeviceOrientation>[
+        DeviceOrientation.portraitUp,
+      ],
+    );
   }
 
   @override
