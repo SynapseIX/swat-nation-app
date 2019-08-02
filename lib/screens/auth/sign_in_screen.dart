@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/dialogs/dialog_helper.dart';
 
 import 'create_account_screen.dart';
 
@@ -12,6 +15,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   FocusNode emailNode;
   FocusNode passwordNode;
 
@@ -31,7 +37,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthScreensBloc bloc = AuthScreensBloc();
+    final AuthScreensBloc uiBloc = AuthScreensBloc();
 
     return Scaffold(
       appBar: AppBar(
@@ -68,9 +74,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
                     // Email field
                     StreamBuilder<String>(
-                      stream: bloc.emailStream,
+                      stream: uiBloc.emailStream,
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         return TextField(
+                          controller: emailController,
                           autocorrect: false,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
@@ -83,16 +90,17 @@ class _SignInScreenState extends State<SignInScreen> {
                           onSubmitted: (String text) {
                             emailNode.nextFocus();
                           },
-                          onChanged: bloc.onChangeEmail,
+                          onChanged: uiBloc.onChangeEmail,
                         );
                       },
                     ),
 
                     // Password field
                     StreamBuilder<String>(
-                      stream: bloc.passwordStream,
+                      stream: uiBloc.passwordStream,
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         return TextField(
+                          controller: passwordController,
                           autocorrect: false,
                           obscureText: true,
                           textInputAction: TextInputAction.go,
@@ -102,10 +110,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             hintText: 'password',
                             errorText: snapshot.error,
                           ),
-                          onSubmitted: (String text) {
-                            passwordNode.unfocus();
-                          },
-                          onChanged: bloc.onChangePassword,
+                          onSubmitted: (String text) => _submitSignIn(context, uiBloc),
+                          onChanged: uiBloc.onChangePassword,
                         );
                       },
                     ),
@@ -117,17 +123,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       width: double.infinity,
                       height: 40.0,
                       child: StreamBuilder<bool>(
-                        stream: bloc.signInValidStream,
+                        stream: uiBloc.signInValidStream,
                         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                           return RaisedButton(
                             child: const Text('Sign In'),
                             onPressed: snapshot.hasData
-                              ? () {
-                                print('TODO: Sign in to Firebase');
-                                print('Email: ${bloc.emailValue}');
-                                print('Password: ${bloc.passwordValue}');
-                                _dismissKeyboard();
-                              }
+                              ? () => _submitSignIn(context, uiBloc)
                               : null,
                           );
                         },
@@ -182,6 +183,37 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _submitSignIn(BuildContext context, AuthScreensBloc bloc) async {
+    final DialogHelper helper = DialogHelper.instance();
+
+    print('TODO: Sign in to Firebase');
+    print('Email: ${bloc.emailValue}');
+    print('Password: ${bloc.passwordValue}');
+    _dismissKeyboard();
+    
+    try {
+      helper.showWaitingDialog(context, 'Signing In...');
+
+      await AuthBloc.instance().signIn(
+        email: bloc.emailValue,
+        password: bloc.passwordValue,
+      );
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      Navigator.of(context).pop();
+      helper.showErrorDialog(
+        context: context,
+        title: 'Can\'t Sign In',
+        message: e.message,
+      );
+    }
+    finally {
+      emailController.clear();
+      passwordController.clear();
+    }
   }
 
   void _dismissKeyboard() {

@@ -6,9 +6,7 @@ import 'package:swat_nation/themes/light_theme.dart';
 
 /// BLoC that allows to change the application theme.
 class ThemeBloc extends BaseBloc {
-  factory ThemeBloc.instance() {
-    return _bloc;
-  }
+  factory ThemeBloc.instance() => _bloc;
 
   ThemeBloc._internal();
   static final ThemeBloc _bloc = ThemeBloc._internal();
