@@ -37,10 +37,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: FutureBuilder<FirebaseUser>(
           future: authBloc.currentUser,
           builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-            return Text(widget.model.uid == snapshot.data.uid
-              ? 'My Profile'
-              : 'Member Profile',
-            );
+            const Widget defaultTitle = Text('Member Profile');
+
+            if (snapshot.hasData) {
+              return widget.model.uid == snapshot.data.uid
+                ? const Text('My Profile')
+                : defaultTitle;
+            }
+
+            return defaultTitle;
           },
         ),
       ),

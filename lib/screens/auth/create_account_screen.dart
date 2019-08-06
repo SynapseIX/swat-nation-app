@@ -90,7 +90,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             tag: 'swat_nation_logo',
                             child: CachedNetworkImage(
                               imageUrl: kLogo,
-                              fadeInDuration: Duration(milliseconds: 300),
+                              fadeInDuration: const Duration(milliseconds: 300),
                               width: 120.0,
                               height: 120.0,
                             ),

@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
+import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
@@ -215,7 +219,7 @@ class _NoAuthHeader extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(
+          title: const Text(
             'Create Account / Sign In',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -252,12 +256,22 @@ class _AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserBloc userBloc = UserBloc();
+
     return DrawerHeader(
       padding: EdgeInsets.zero,
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
+          final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
+          final UserModel model = UserModel.documentSnapshot(doc);
+
           Navigator.of(context).pop();
-          print('TODO: navigate to profile screen');
+          Navigator.of(context).push(
+            MaterialPageRoute<ProfileScreen>(
+              builder: (BuildContext context) => ProfileScreen(model: model),
+              fullscreenDialog: true,
+            ),
+          );
         },
         child: Stack(
           children: <Widget>[

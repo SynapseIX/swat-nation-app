@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -31,6 +35,23 @@ class HomeTab extends StatefulWidget implements BaseTab {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
+  AuthBloc authBloc;
+  UserBloc userBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    authBloc = AuthBloc.instance();
+    userBloc = UserBloc();
+  }
+
+  @override
+  void dispose() {
+    authBloc.dispose();
+    userBloc.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -42,7 +63,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
       key: const PageStorageKey<String>('home_tab_scroll_view'),
       slivers: <Widget>[
         StreamBuilder<FirebaseUser>(
-          stream: AuthBloc.instance().onAuthStateChanged,
+          stream: authBloc.onAuthStateChanged,
           builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
             if (snapshot.hasData) {
               final String loadingDisplayName = snapshot.data.displayName ?? '...';
@@ -56,8 +77,17 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                 centerTitle: false,
                 automaticallyImplyLeading: false,
                 title: GestureDetector(
-                  onTap: () {
-                    print('TODO: navigate to profile screen');
+                  onTap: () async {
+                    final FirebaseUser user = await authBloc.currentUser;
+                    final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
+                    final UserModel model = UserModel.documentSnapshot(doc);
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute<ProfileScreen>(
+                        builder: (BuildContext context) => ProfileScreen(model: model),
+                        fullscreenDialog: true,
+                      ),
+                    );
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
