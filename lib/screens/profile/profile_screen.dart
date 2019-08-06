@@ -38,11 +38,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
         return Scaffold(
           appBar: AppBar(
-            title: snapshot.hasData && widget.model.uid == snapshot .data.uid
+            title: snapshot.hasData && widget.model.uid == snapshot.data.uid
               ? const Text('My Profile')
               : const Text('Member Profile'),
             actions: <Widget>[
-              if (snapshot.hasData && widget.model.uid == snapshot .data.uid)
+              if (snapshot.hasData && widget.model.uid == snapshot.data.uid)
               IconButton(
                 icon: Icon(MdiIcons.accountEdit),
                 onPressed: () {
