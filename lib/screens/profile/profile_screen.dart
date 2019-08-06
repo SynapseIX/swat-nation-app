@@ -36,13 +36,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder<FirebaseUser>(
       future: authBloc.currentUser,
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+        final bool me = snapshot.hasData && widget.model.uid == snapshot.data.uid;
+
         return Scaffold(
           appBar: AppBar(
-            title: snapshot.hasData && widget.model.uid == snapshot.data.uid
+            title: me
               ? const Text('My Profile')
               : const Text('Member Profile'),
             actions: <Widget>[
-              if (snapshot.hasData && widget.model.uid == snapshot.data.uid)
+              if (me)
               IconButton(
                 icon: Icon(MdiIcons.accountEdit),
                 onPressed: () {
