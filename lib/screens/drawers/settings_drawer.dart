@@ -143,7 +143,7 @@ class SettingsDrawer extends StatelessWidget {
                                       tag: 'swat_nation_logo',
                                       child: CachedNetworkImage(
                                         imageUrl: kLogo,
-                                        fadeInDuration: Duration(milliseconds: 300),
+                                        fadeInDuration: const Duration(milliseconds: 300),
                                         width: 120.0,
                                         height: 120.0,
                                       ),
@@ -209,7 +209,7 @@ class _NoAuthHeader extends StatelessWidget {
               tag: 'swat_nation_logo',
               child: CachedNetworkImage(
                 imageUrl: kLogo,
-                fadeInDuration: Duration(milliseconds: 300),
+                fadeInDuration: const Duration(milliseconds: 300),
                 width: 60.0,
                 height: 60.0,
               ),
@@ -252,43 +252,96 @@ class _AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CachedNetworkImage(
-          imageUrl: kDefaultProfileHeader,
-          fit: BoxFit.cover,
-          fadeInDuration: Duration(milliseconds: 300),
-        ),
-        UserAccountsDrawerHeader(
-          accountName: Text(user.displayName),
-          accountEmail: Text(user.email),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-          ),
-          currentAccountPicture: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF333333),
-              shape: BoxShape.circle,
-              border: Border.all(
-                width: 2.0,
-                color: Colors.white,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40.0),
+    return DrawerHeader(
+      padding: EdgeInsets.zero,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pop();
+          print('TODO: navigate to profile screen');
+        },
+        child: Stack(
+          children: <Widget>[
+            // Header Image
+            Hero(
+              tag: 'profile_header',
               child: CachedNetworkImage(
-                imageUrl: user.photoUrl,
+                imageUrl: kDefaultProfileHeader,
+                width: double.infinity,
+                height: double.infinity,
                 fit: BoxFit.cover,
-                fadeInDuration: Duration(milliseconds: 300),
+                fadeInDuration: const Duration(milliseconds: 300),
+                placeholder: (BuildContext context, String url) {
+                  return Center(child: const CircularProgressIndicator());
+                },
               ),
             ),
-          ),
-          onDetailsPressed: () {
-            Navigator.of(context).pop();
-            print('TODO: navigate to profile screen');
-          },
+
+            // Overlay
+            Container(
+              color: Colors.black45,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Profile picture
+                  Hero(
+                    tag: 'profile_picture',
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF333333),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 3.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40.0),
+                        child: CachedNetworkImage(
+                          imageUrl: user.photoUrl,
+                          width: 60.0,
+                          height: 60.0,
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 300),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8.0),
+
+                  // Display name
+                  Text(
+                    user.displayName,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  // Email
+                  Text(
+                    user.email,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

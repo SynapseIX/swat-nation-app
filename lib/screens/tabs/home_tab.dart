@@ -54,6 +54,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               return SliverAppBar(
                 pinned: true,
                 centerTitle: false,
+                automaticallyImplyLeading: false,
                 title: GestureDetector(
                   onTap: () {
                     print('TODO: navigate to profile screen');
@@ -94,6 +95,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
             return SliverAppBar(
               pinned: true,
+              automaticallyImplyLeading: false,
               title: const Text('What\'s New?'),
             );
           },
