@@ -44,20 +44,10 @@ class UserBloc extends BaseBloc {
   Future<bool> displayNameExists(String displayName) async {
     final QuerySnapshot snapshot = await _firestore
       .collection(collection)
+      .where('displayName', isEqualTo: displayName)
       .getDocuments();
 
-    final List<DocumentSnapshot> docs = snapshot.documents;
-    if (docs.isEmpty) {
-      return false;
-    }
-
-    try {
-      return docs.singleWhere(
-        (DocumentSnapshot snapshot) => snapshot.data['displayName'] == displayName,
-      ).exists;
-    } catch (e) {
-      return false;
-    }
+    return snapshot.documents.isNotEmpty;
   }
 
   @override
