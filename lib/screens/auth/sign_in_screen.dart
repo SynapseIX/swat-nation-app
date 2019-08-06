@@ -213,9 +213,12 @@ class _SignInScreenState extends State<SignInScreen> {
         password: uiBloc.passwordValue,
       );
 
-      final UserModel model = await userBloc.userByUid(user.uid);
-      model.platform = Platform.isIOS ? 'iOS' : 'Android';
-      await userBloc.updateUser(model);
+      await userBloc.update(
+        uid: user.uid,
+        data: <String, dynamic>{
+          'platform': Platform.isIOS ? 'iOS' : 'Android',
+        },
+      );
 
       Navigator.of(context)
         .pushAndRemoveUntil(
@@ -251,19 +254,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
       final String platform = Platform.isIOS ? 'iOS' : 'Android';
       
-      final UserModel model = await userBloc.userByUid(user.uid) ?? UserModel(
-        uid: user.uid,
-        displayName: user.displayName,
-        photoUrl: kDefaultAvi,
-        createdAt: Timestamp.now(), 
-        platform: platform,
-      );
+      final DocumentSnapshot doc = await userBloc.userByUid(user.uid);
+      final UserModel model = doc != null
+        ? UserModel.documentSnapshot(doc)
+        : UserModel(
+          uid: user.uid,
+          displayName: user.displayName,
+          photoUrl: kDefaultAvi,
+          createdAt: Timestamp.now(),
+        );
       model.platform = platform;
 
       if (displayNameExists) {
-        await userBloc.updateUser(model);
+        await userBloc.update(
+          uid: user.uid,
+          data: model.toMap(),
+        );
       } else {
-        await userBloc.createUser(model);
+        await userBloc.create(model);
       }
 
       Navigator.of(context)

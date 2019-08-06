@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/models/user_model.dart';
 
@@ -9,57 +10,49 @@ class UserBloc extends BaseBloc {
 
   Stream<QuerySnapshot> get allUsers => _firestore.collection(collection).snapshots();
 
-  Future<UserModel> userByUid(String uid) async {
+  Future<DocumentSnapshot> userByUid(String uid) async {
     final QuerySnapshot snapshot = await _firestore
       .collection(collection)
+      .where('uid', isEqualTo: uid)
       .getDocuments();
-    final List<DocumentSnapshot> documents = snapshot.documents;
+    final List<DocumentSnapshot> docs = snapshot.documents;
     
-    try {
-      final DocumentSnapshot document = documents.singleWhere(
-        (DocumentSnapshot snapshot) => snapshot.data['uid'] == uid,
-      );
-
-      return UserModel.documentSnapshot(document);
-    } catch (e) {
-      return null;
-    }
+    return docs.isNotEmpty
+      ? docs.first
+      : null;
   }
 
-  Future<DocumentReference> createUser(UserModel model) async {
+  Future<DocumentReference> create(UserModel model) async {
     return _firestore
       .collection(collection)
       .add(model.toMap());
   }
 
-  Future<void> updateUser(UserModel model) async {
-    final QuerySnapshot snapshot = await _firestore
-      .collection(collection)
-      .getDocuments();
-    final List<DocumentSnapshot> documents = snapshot.documents;
-
-    final DocumentSnapshot document = documents.singleWhere(
-      (DocumentSnapshot snapshot) => snapshot.data['uid'] == model.uid,
+  Future<void> update({
+    @required String uid,
+    @required Map<String, dynamic> data,
+  }) async {
+    final DocumentSnapshot doc = await userByUid(uid);
+    final DocumentReference ref = doc.reference;
+    
+    return ref.setData(
+      data,
+      merge: true,
     );
-
-    return _firestore
-      .collection(collection)
-      .document(document.documentID)
-      .setData(model.toMap());
   }
 
   Future<bool> displayNameExists(String displayName) async {
     final QuerySnapshot snapshot = await _firestore
       .collection(collection)
       .getDocuments();
-    final List<DocumentSnapshot> documents = snapshot.documents;
+    final List<DocumentSnapshot> docs = snapshot.documents;
 
-    if (documents.isEmpty) {
+    if (docs.isEmpty) {
       return false;
     }
 
     try {
-      return documents.singleWhere(
+      return docs.singleWhere(
         (DocumentSnapshot snapshot) => snapshot.data['displayName'] == displayName,
       ).exists;
     } catch (e) {

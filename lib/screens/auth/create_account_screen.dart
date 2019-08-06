@@ -253,7 +253,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         createdAt: Timestamp.now(), 
         platform: Platform.isIOS ? 'iOS' : 'Android',
       );
-      await userBloc.createUser(model);
+      await userBloc.create(model);
 
       Navigator.of(context)
         .pushAndRemoveUntil(
