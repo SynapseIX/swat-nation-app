@@ -9,6 +9,8 @@ class UserModel {
     this.photoUrl,
     this.platform,
     this.createdAt,
+    this.gamertag,
+    this.twitter,
     this.bio,
   });
 
@@ -18,6 +20,8 @@ class UserModel {
     photoUrl = document.data['photoUrl'];
     platform = document.data['platform'];
     createdAt = document.data['createdAt'];
+    gamertag = document.data['gamertag'];
+    twitter = document.data['twitter'];
     bio = document.data['bio'];
   }
   
@@ -26,6 +30,8 @@ class UserModel {
   String photoUrl;
   String platform;
   Timestamp createdAt;
+  String gamertag;
+  String twitter;
   String bio;
 
   Map<String, dynamic> toMap() {
@@ -35,6 +41,8 @@ class UserModel {
       'photoUrl': photoUrl,
       'platform': platform,
       'createdAt': createdAt,
+      'gamertag': gamertag,
+      'twitter': twitter,
       'bio': bio,
     };
   }
