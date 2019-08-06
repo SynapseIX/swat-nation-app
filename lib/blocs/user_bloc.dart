@@ -6,13 +6,13 @@ import 'package:swat_nation/models/user_model.dart';
 /// BLoC that contains logic to manage users in Firestore.
 class UserBloc extends BaseBloc {
   final Firestore _firestore = Firestore.instance;
-  final String collection = 'users';
+  final String userCollection = 'users';
 
-  Stream<QuerySnapshot> get allUsers => _firestore.collection(collection).snapshots();
+  Stream<QuerySnapshot> get allUsers => _firestore.collection(userCollection).snapshots();
 
   Future<DocumentSnapshot> userByUid(String uid) async {
     final QuerySnapshot snapshot = await _firestore
-      .collection(collection)
+      .collection(userCollection)
       .where('uid', isEqualTo: uid)
       .getDocuments();
 
@@ -24,7 +24,7 @@ class UserBloc extends BaseBloc {
 
   Future<DocumentReference> create(UserModel model) async {
     return _firestore
-      .collection(collection)
+      .collection(userCollection)
       .add(model.toMap());
   }
 
@@ -43,7 +43,7 @@ class UserBloc extends BaseBloc {
 
   Future<bool> displayNameExists(String displayName) async {
     final QuerySnapshot snapshot = await _firestore
-      .collection(collection)
+      .collection(userCollection)
       .where('displayName', isEqualTo: displayName)
       .getDocuments();
 
