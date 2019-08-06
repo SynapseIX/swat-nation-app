@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/models/user_model.dart';
 
@@ -32,24 +33,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: FutureBuilder<FirebaseUser>(
-          future: authBloc.currentUser,
-          builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-            const Widget defaultTitle = Text('Member Profile');
-
-            if (snapshot.hasData) {
-              return widget.model.uid == snapshot.data.uid
-                ? const Text('My Profile')
-                : defaultTitle;
-            }
-
-            return defaultTitle;
-          },
-        ),
-      ),
-      body: Center(child: const Text('Under construction...')),
+    return FutureBuilder<FirebaseUser>(
+      future: authBloc.currentUser,
+      builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+        return Scaffold(
+          appBar: AppBar(
+            title: snapshot.hasData && widget.model.uid == snapshot .data.uid
+              ? const Text('My Profile')
+              : const Text('Member Profile'),
+            actions: <Widget>[
+              if (snapshot.hasData && widget.model.uid == snapshot .data.uid)
+              IconButton(
+                icon: Icon(MdiIcons.accountEdit),
+                onPressed: () {
+                  print('TODO: navigate to edit profile screen');
+                },
+              ),
+            ],
+          ),
+          body: Center(child: const Text('Under construction...')),
+        );
+      },
     );
   }
 }
