@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:swat_nation/base/base_model.dart';
 
 /// Represents a user instance.
-class UserModel {
+class UserModel extends BaseModel {
   UserModel({
     @required this.uid,
-    this.displayName,
-    this.photoUrl,
+    @required this.displayName,
+    @required this.photoUrl,
+    @required this.createdAt,
     this.platform,
-    this.createdAt,
     this.gamertag,
     this.twitter,
     this.bio,
@@ -18,8 +19,8 @@ class UserModel {
     uid = document.data['uid'];
     displayName = document.data['displayName'];
     photoUrl = document.data['photoUrl'];
-    platform = document.data['platform'];
     createdAt = document.data['createdAt'];
+    platform = document.data['platform'];
     gamertag = document.data['gamertag'];
     twitter = document.data['twitter'];
     bio = document.data['bio'];
@@ -34,13 +35,14 @@ class UserModel {
   String twitter;
   String bio;
 
+  @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uid': uid,
       'displayName': displayName,
       'photoUrl': photoUrl,
-      'platform': platform,
       'createdAt': createdAt,
+      'platform': platform,
       'gamertag': gamertag,
       'twitter': twitter,
       'bio': bio,

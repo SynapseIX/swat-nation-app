@@ -15,8 +15,8 @@ class UserBloc extends BaseBloc {
       .collection(collection)
       .where('uid', isEqualTo: uid)
       .getDocuments();
+
     final List<DocumentSnapshot> docs = snapshot.documents;
-    
     return docs.isNotEmpty
       ? docs.first
       : null;
@@ -45,8 +45,8 @@ class UserBloc extends BaseBloc {
     final QuerySnapshot snapshot = await _firestore
       .collection(collection)
       .getDocuments();
-    final List<DocumentSnapshot> docs = snapshot.documents;
 
+    final List<DocumentSnapshot> docs = snapshot.documents;
     if (docs.isEmpty) {
       return false;
     }
