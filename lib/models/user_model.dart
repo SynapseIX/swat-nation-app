@@ -13,7 +13,7 @@ class UserModel extends BaseModel {
     this.gamertag,
     this.twitter,
     this.bio,
-    this.private,
+    this.private = false,
   });
 
   UserModel.documentSnapshot(DocumentSnapshot document) {
