@@ -13,6 +13,7 @@ class UserModel extends BaseModel {
     this.gamertag,
     this.twitter,
     this.bio,
+    this.private,
   });
 
   UserModel.documentSnapshot(DocumentSnapshot document) {
@@ -24,6 +25,7 @@ class UserModel extends BaseModel {
     gamertag = document.data['gamertag'];
     twitter = document.data['twitter'];
     bio = document.data['bio'];
+    private = document.data['private'];
   }
   
   String uid;
@@ -34,6 +36,7 @@ class UserModel extends BaseModel {
   String gamertag;
   String twitter;
   String bio;
+  bool private;
 
   @override
   Map<String, dynamic> toMap() {
@@ -46,6 +49,7 @@ class UserModel extends BaseModel {
       'gamertag': gamertag,
       'twitter': twitter,
       'bio': bio,
+      'private': private,
     };
   }
 }
