@@ -109,7 +109,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                             width: 30.0,
                             height: 30.0,
                             fit: BoxFit.cover,
-                            fadeInDuration: Duration(milliseconds: 300),
+                            fadeInDuration: const Duration(milliseconds: 300),
                           ),
                         ),
                       ),
