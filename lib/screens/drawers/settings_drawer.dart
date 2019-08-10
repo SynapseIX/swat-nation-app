@@ -154,7 +154,15 @@ class SettingsDrawer extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 32.0),
+                                  const SizedBox(height: 16.0),
+                                  const Text(
+                                    'Sign Out',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22.0,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
                                   const Text('Are you sure you want to sign out?'),
                                   const SizedBox(height: 32.0),
                                   Container(
