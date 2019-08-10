@@ -29,11 +29,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   AuthBloc authBloc;
+  UserModel user;
 
   @override
   void initState() {
     super.initState();
     authBloc = AuthBloc.instance();
+    user = widget.model;
   }
 
   @override
@@ -47,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder<FirebaseUser>(
       future: authBloc.currentUser,
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-        final bool me = snapshot.hasData && widget.model.uid == snapshot.data.uid;
+        final bool me = snapshot.hasData && user.uid == snapshot.data.uid;
 
         return Scaffold(
           appBar: AppBar(
@@ -67,9 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          body: me || !widget.model.private
-            ? _PublicBody(widget.model)
-            : _PrivateBody(widget.model),
+          body: me || !user.private
+            ? _PublicBody(user)
+            : _PrivateBody(user),
         );
       },
     );
