@@ -9,6 +9,7 @@ class UserModel extends BaseModel {
     @required this.displayName,
     @required this.photoUrl,
     @required this.createdAt,
+    this.verified = false,
     this.platform,
     this.gamertag,
     this.twitter,
@@ -21,6 +22,7 @@ class UserModel extends BaseModel {
     displayName = document.data['displayName'];
     photoUrl = document.data['photoUrl'];
     createdAt = document.data['createdAt'];
+    verified = document.data['verified'];
     platform = document.data['platform'];
     gamertag = document.data['gamertag'];
     twitter = document.data['twitter'];
@@ -33,6 +35,7 @@ class UserModel extends BaseModel {
   String photoUrl;
   String platform;
   Timestamp createdAt;
+  bool verified;
   String gamertag;
   String twitter;
   String bio;
@@ -45,6 +48,7 @@ class UserModel extends BaseModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'createdAt': createdAt,
+      'verified': verified,
       'platform': platform,
       'gamertag': gamertag,
       'twitter': twitter,
