@@ -44,7 +44,7 @@ class ArtCard extends StatelessWidget {
               children: <Widget>[
                 CachedNetworkImage(
                   imageUrl: src,
-                  fadeInDuration: Duration(milliseconds: 300),
+                  fadeInDuration: const Duration(milliseconds: 300),
                   placeholder: (BuildContext context, String url) {
                     return Center(child: const CircularProgressIndicator());
                   },

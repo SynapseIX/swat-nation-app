@@ -133,13 +133,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // Upcoming Tournaments
         CardSection(
-          header: TextHeader(
+          header: const TextHeader(
             'Upcoming\nTournaments',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
             key: const PageStorageKey<String>('upcoming_tourneys_list'),
@@ -161,13 +161,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Community Highlight
-        TextHeader(
+        const TextHeader(
           'Community\nHighlight',
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           sliver: true,
         ),
         const ClipCard(
@@ -180,13 +180,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // Announcements
         CardSection(
-          header: TextHeader(
+          header: const TextHeader(
             'Announcements',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
             key: const PageStorageKey<String>('latest_news_list'),
@@ -216,13 +216,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // #swatisart
         CardSection(
-          header: TextHeader(
+          header: const TextHeader(
             '#swatisart',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
             key: const PageStorageKey<String>('swat_is_art_list'),

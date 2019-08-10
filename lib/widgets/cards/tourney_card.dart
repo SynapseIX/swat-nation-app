@@ -29,7 +29,7 @@ class TourneyCard extends StatelessWidget {
         color: const Color(0xFF333333),
         child: CachedNetworkImage(
           imageUrl: src,
-          fadeInDuration: Duration(milliseconds: 300),
+          fadeInDuration: const Duration(milliseconds: 300),
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.fill,

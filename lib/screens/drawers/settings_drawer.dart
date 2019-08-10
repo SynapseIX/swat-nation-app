@@ -69,7 +69,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.web),
               title: const Text('Browse our Website'),
               onTap: () {
-                openURL(kWebsite);
+                openUrl(kWebsite);
                 Navigator.of(context).pop();
               },
             ),
@@ -77,7 +77,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.facebookBox),
               title: const Text('Join the Community'),
               onTap: () {
-                openURL(kFacebookGroup);
+                openUrl(kFacebookGroup);
                 Navigator.of(context).pop();
               },
             ),
@@ -85,7 +85,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.twitter),
               title: const Text('Follow us on Twitter'),
               onTap: () {
-                openURL(kTwitter);
+                openUrl(kTwitter);
                 Navigator.of(context).pop();
               },
             ),
@@ -93,7 +93,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.instagram),
               title: const Text('Check our Instagram'),
               onTap: () {
-                openURL(kInstagram);
+                openUrl(kInstagram);
                 Navigator.of(context).pop();
               },
             ),
@@ -101,7 +101,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.xbox),
               title: const Text('Join the Xbox Club'),
               onTap: () {
-                openURL(kXboxClub);
+                openUrl(kXboxClub);
                 Navigator.of(context).pop();
               },
             ),
