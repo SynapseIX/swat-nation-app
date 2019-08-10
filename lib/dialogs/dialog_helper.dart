@@ -9,7 +9,10 @@ class DialogHelper {
 
   static final DialogHelper _instance = DialogHelper._internal();
 
-  Future<Dialog> showWaitingDialog(BuildContext context, String title) {
+  Future<Dialog> showWaitingDialog({
+    @required BuildContext context,
+    String title = 'Waiting...',
+  }) {
     return showDialog<Dialog>(
       context: context,
       barrierDismissible: false,

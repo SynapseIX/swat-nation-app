@@ -87,7 +87,7 @@ class _PublicHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 200.0,
+      height: model.bio != null ? 270.0 : 210.0,
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
@@ -167,10 +167,29 @@ class _PublicHeader extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w300,
+                  fontStyle: FontStyle.italic,
                 ),
               ),
               
+              if (model.bio != null)
               const SizedBox(height: 8.0),
+              if (model.bio != null)
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 8.0,
+                  left: 16.0,
+                  right: 16.0,
+                ),
+                child: Text(
+                  model.bio,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16.0),
               
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

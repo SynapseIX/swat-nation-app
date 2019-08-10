@@ -8,6 +8,7 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
@@ -78,10 +79,16 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                 automaticallyImplyLeading: false,
                 title: GestureDetector(
                   onTap: () async {
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Fetching profile...',
+                    );
+                    
                     final FirebaseUser user = await authBloc.currentUser;
                     final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
                     final UserModel model = UserModel.documentSnapshot(doc);
 
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute<ProfileScreen>(
                         builder: (BuildContext context) => ProfileScreen(model: model),

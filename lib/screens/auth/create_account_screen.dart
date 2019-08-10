@@ -222,7 +222,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     _dismissKeyboard();
     
     try {
-      helper.showWaitingDialog(context, 'Creating your account...');
+      helper.showWaitingDialog(
+        context: context,
+        title: 'Creating your account...',
+      );
 
       final bool displayNameExists = await userBloc.displayNameExists(uiBloc.displayNameValue);
       if (displayNameExists) {

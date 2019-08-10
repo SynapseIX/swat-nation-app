@@ -206,7 +206,10 @@ class _SignInScreenState extends State<SignInScreen> {
     _dismissKeyboard();
     
     try {
-      helper.showWaitingDialog(context, 'Signing In...');
+      helper.showWaitingDialog(
+        context: context,
+        title: 'Signing In...',
+      );
 
       final FirebaseUser user = await AuthBloc.instance().signIn(
         email: uiBloc.emailValue,
@@ -247,7 +250,10 @@ class _SignInScreenState extends State<SignInScreen> {
     _dismissKeyboard();
 
     try {
-      helper.showWaitingDialog(context, 'Logging In With Facebook...');
+      helper.showWaitingDialog(
+        context: context,
+        title: 'Logging In With Facebook...',
+      );
 
       final FirebaseUser user = await AuthBloc.instance().loginWithFacebook();
       final bool displayNameExists = await userBloc.displayNameExists(user.displayName);

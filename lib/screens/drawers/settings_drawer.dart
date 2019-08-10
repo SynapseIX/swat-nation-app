@@ -7,6 +7,7 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
@@ -262,9 +263,15 @@ class _AuthHeader extends StatelessWidget {
       padding: EdgeInsets.zero,
       child: GestureDetector(
         onTap: () async {
+          DialogHelper.instance().showWaitingDialog(
+            context: context,
+            title: 'Fetching profile...',
+          );
+
           final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
           final UserModel model = UserModel.documentSnapshot(doc);
 
+          Navigator.of(context).pop();
           Navigator.of(context).pop();
           Navigator.of(context).push(
             MaterialPageRoute<ProfileScreen>(
