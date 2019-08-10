@@ -133,13 +133,27 @@ class _PublicHeader extends StatelessWidget {
               
               const SizedBox(height: 8.0),
               
-              Text(
-                model.displayName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    model.displayName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (model.verified)
+                  Container(
+                    margin: const EdgeInsets.only(left: 4.0),
+                    child: Icon(
+                      MdiIcons.checkDecagram,
+                      color: Colors.lightBlue,
+                      size: 20.0,
+                    ),
+                  ),
+                ],
               ),
               
               const SizedBox(height: 8.0),
@@ -287,13 +301,27 @@ class _PrivateHeader extends StatelessWidget {
               ),
               const SizedBox(height: 8.0),
               
-              Text(
-                model.displayName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    model.displayName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (model.verified)
+                  Container(
+                    margin: const EdgeInsets.only(left: 4.0),
+                    child: Icon(
+                      MdiIcons.checkDecagram,
+                      color: Colors.lightBlue,
+                      size: 20.0,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
