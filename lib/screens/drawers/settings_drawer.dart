@@ -13,6 +13,7 @@ import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/common/verified_badge.dart';
 
 class SettingsDrawer extends StatelessWidget {
   @override
@@ -273,8 +274,36 @@ class _AuthHeader extends StatelessWidget {
           final UserModel model = UserModel.fromSnapshot(snapshot.data);
 
           return UserAccountsDrawerHeader(
-            accountName: Text(user.displayName),
-            accountEmail: Text(user.email),
+            accountName: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  user.displayName,
+                  style: const TextStyle(
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(1.0, 1.0),
+                      ),
+                    ],
+                  ),
+                ),
+                if (model.verified)
+                Container(
+                  margin: const EdgeInsets.only(left: 4.0),
+                  child: const VerifiedBadge(),
+                ),
+              ],
+            ),
+            accountEmail: Text(
+              user.email,
+              style: const TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(1.0, 1.0),
+                  ),
+                ],
+              ),
+            ),
             currentAccountPicture: Container(
               decoration: BoxDecoration(
                 color: const Color(0xFF333333),

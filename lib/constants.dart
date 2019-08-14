@@ -24,3 +24,4 @@ const String kXboxClub = 'https://account.xbox.com/en-us/clubs/profile?clubid=33
 
 // Profile
 const String kGamertag = 'https://account.xbox.com/en-us/profile?gamertag=';
+const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people know that an account of public interest is authentic.';
