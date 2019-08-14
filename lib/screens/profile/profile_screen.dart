@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             actions: <Widget>[
               if (me)
               IconButton(
-                icon: Icon(MdiIcons.accountEdit),
+                icon: const Icon(MdiIcons.accountEdit),
                 onPressed: () {
                   print('TODO: navigate to edit profile screen');
                 },

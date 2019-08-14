@@ -77,7 +77,7 @@ class ClipCard extends StatelessWidget {
                       Text(
                         duration,
                         textAlign: TextAlign.end,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
                         ),
