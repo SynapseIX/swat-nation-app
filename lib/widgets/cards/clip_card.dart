@@ -43,7 +43,7 @@ class ClipCard extends StatelessWidget {
                 Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl: src,
-                    fadeInDuration: Duration(milliseconds: 300),
+                    fadeInDuration: const Duration(milliseconds: 300),
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,

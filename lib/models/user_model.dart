@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_model.dart';
-import 'package:swat_nation/constants.dart';
 
 /// Represents a user instance.
 class UserModel extends BaseModel {
@@ -10,7 +9,7 @@ class UserModel extends BaseModel {
     @required this.displayName,
     @required this.photoUrl,
     @required this.createdAt,
-    this.headerUrl = kDefaultProfileHeader,
+    this.headerUrl,
     this.verified = false,
     this.platform,
     this.gamertag,

@@ -67,7 +67,7 @@ class ArtCard extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,

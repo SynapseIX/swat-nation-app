@@ -122,7 +122,7 @@ class _PublicHeader extends StatelessWidget {
                   ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40.0),
+                  borderRadius: BorderRadius.circular(60.0),
                   child: CachedNetworkImage(
                     imageUrl: model.photoUrl,
                     width: 60.0,
