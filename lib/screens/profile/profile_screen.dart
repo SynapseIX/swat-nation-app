@@ -358,7 +358,7 @@ class _PrivateHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(32.0),
       decoration: BoxDecoration(
-        color: Colors.deepPurple,
+        color: Colors.black,
         image: DecorationImage(
           image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,

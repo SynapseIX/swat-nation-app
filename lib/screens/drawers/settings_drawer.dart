@@ -325,7 +325,7 @@ class _AuthHeader extends StatelessWidget {
               ),
             ),
             decoration: BoxDecoration(
-              color: Colors.deepPurple,
+              color: Colors.black,
               image: DecorationImage(
                 image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
                 fit: BoxFit.cover,
