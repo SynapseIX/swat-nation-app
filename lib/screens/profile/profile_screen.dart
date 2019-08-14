@@ -197,7 +197,7 @@ class _PublicHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 20.0,
                     ),
-                    const SizedBox(width: 4.0),
+                    const SizedBox(width: 8.0),
                     Text(
                       model.gamertag,
                       style: const TextStyle(
@@ -229,7 +229,7 @@ class _PublicHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 20.0,
                     ),
-                    const SizedBox(width: 4.0),
+                    const SizedBox(width: 8.0),
                     Text(
                       model.twitter,
                       style: const TextStyle(
@@ -261,7 +261,7 @@ class _PublicHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 20.0,
                     ),
-                    const SizedBox(width: 4.0),
+                    const SizedBox(width: 8.0),
                     Text(
                       model.mixer,
                       style: const TextStyle(
@@ -293,7 +293,7 @@ class _PublicHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 20.0,
                     ),
-                    const SizedBox(width: 4.0),
+                    const SizedBox(width: 8.0),
                     Text(
                       model.twitch,
                       style: const TextStyle(
@@ -324,7 +324,7 @@ class _PublicHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 20.0,
                     ),
-                    SizedBox(width: 4.0),
+                    SizedBox(width: 8.0),
                     Text(
                       'SWAT Stats',
                       style: TextStyle(
