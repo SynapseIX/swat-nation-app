@@ -155,6 +155,7 @@ class _PublicHeader extends StatelessWidget {
                     'Joined ${humanizeTimestamp(model.createdAt, 'MMMM yyyy')}',
                     style: const TextStyle(
                       color: Colors.white,
+                      fontStyle: FontStyle.italic,
                       shadows: <Shadow>[
                         Shadow(
                           offset: Offset(1.0, 1.0),
@@ -169,7 +170,7 @@ class _PublicHeader extends StatelessWidget {
 
           if (model.bio != null)
           Container(
-            margin: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+            margin: const EdgeInsets.only(top: 16.0),
             child: Text(
               model.bio,
               style: const TextStyle(
@@ -189,7 +190,7 @@ class _PublicHeader extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 16.0),
                 Row(
                   children: <Widget>[
                     const Icon(
