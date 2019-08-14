@@ -306,7 +306,7 @@ class _AuthHeader extends StatelessWidget {
                 ),
               ),
             ),
-            onDetailsPressed: () async {
+            onDetailsPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).push(
                 MaterialPageRoute<ProfileScreen>(
