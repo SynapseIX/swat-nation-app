@@ -20,7 +20,7 @@ class UserModel extends BaseModel {
     this.private = false,
   });
 
-  UserModel.documentSnapshot(DocumentSnapshot document) {
+  UserModel.fromSnapshot(DocumentSnapshot document) {
     uid = document.data['uid'];
     displayName = document.data['displayName'];
     photoUrl = document.data['photoUrl'];

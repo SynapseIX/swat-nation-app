@@ -86,7 +86,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                     
                     final FirebaseUser user = await authBloc.currentUser;
                     final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
-                    final UserModel model = UserModel.documentSnapshot(doc);
+                    final UserModel model = UserModel.fromSnapshot(doc);
 
                     Navigator.of(context).pop();
                     Navigator.of(context).push(

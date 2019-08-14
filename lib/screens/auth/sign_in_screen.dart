@@ -262,7 +262,7 @@ class _SignInScreenState extends State<SignInScreen> {
       
       final DocumentSnapshot doc = await userBloc.userByUid(user.uid);
       final UserModel model = doc != null
-        ? UserModel.documentSnapshot(doc)
+        ? UserModel.fromSnapshot(doc)
         : UserModel(
           uid: user.uid,
           displayName: user.displayName,

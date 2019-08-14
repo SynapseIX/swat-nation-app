@@ -200,7 +200,7 @@ class _PublicHeader extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(
+                        const Icon(
                           MdiIcons.xbox,
                           color: Colors.white,
                         ),

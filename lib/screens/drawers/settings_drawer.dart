@@ -270,7 +270,7 @@ class _AuthHeader extends StatelessWidget {
       future: userBloc.userByUid(user.uid),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasData) {
-          final UserModel model = UserModel.documentSnapshot(snapshot.data);
+          final UserModel model = UserModel.fromSnapshot(snapshot.data);
 
           return UserAccountsDrawerHeader(
             accountName: Text(user.displayName),
