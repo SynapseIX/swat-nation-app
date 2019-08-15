@@ -11,5 +11,9 @@ class LightTheme extends BaseTheme {
     primaryColor: primaryColor,
     primaryColorBrightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xFFEDEDED),
+    appBarTheme: AppBarTheme(
+      brightness: Brightness.dark,
+      color: primaryColor,
+    ),
   );
 }

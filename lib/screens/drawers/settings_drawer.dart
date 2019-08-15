@@ -19,13 +19,9 @@ class SettingsDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeBloc themeBloc = ThemeBloc.instance();
-    final Color scaffoldBackgroundColor = themeBloc.currentTheme is LightTheme
-      ? Colors.white
-      : const Color(0xFF333333);
     
     return Drawer(
       child: Scaffold(
-        backgroundColor: scaffoldBackgroundColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,

@@ -3,10 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
-import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
@@ -54,9 +52,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
-              ? const Color(0xFF333333)
-              : Theme.of(context).primaryColor,
             title: me
               ? const Text('My Profile')
               : const Text('Member Profile'),
