@@ -17,6 +17,7 @@ class TabBarBloc extends BaseBloc {
 
   @override
   void dispose() {
+    print('TabBarBloc disposed');
     _tabBarSubject.close();
   }
 }

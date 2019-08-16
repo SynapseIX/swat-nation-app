@@ -56,6 +56,7 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
   
   @override
   void dispose() {
+    print('AuthScreensBloc disposed');
     _emailSubject.close();
     _passwordSubject.close();
     _confirmPasswordSubject.close();

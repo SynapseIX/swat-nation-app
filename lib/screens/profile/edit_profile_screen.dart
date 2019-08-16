@@ -73,7 +73,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     bioNode.dispose();
 
     bloc.dispose();
-
     super.dispose();
   }
 

@@ -72,6 +72,6 @@ class AuthBloc extends BaseBloc {
 
   @override
   void dispose() {
-    print('Auth BLoC disposed');
+    print('AuthBloc disposed');
   }
 }

@@ -19,6 +19,7 @@ class EditProfileBloc extends BaseBloc with AuthScreensdValidator {
 
   @override
   void dispose() {
+    print('EditProfileBloc disposed');
     _displayNameSubject.close();
     _privacySubject.close();
   }
