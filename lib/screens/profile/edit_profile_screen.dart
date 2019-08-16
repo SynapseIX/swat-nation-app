@@ -22,6 +22,8 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final Map<String, dynamic> data = <String, dynamic>{};
+
   final TextEditingController displayNameController = TextEditingController();
   final TextEditingController gamertagController = TextEditingController();
   final TextEditingController twitterController = TextEditingController();
@@ -36,17 +38,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final FocusNode twitchNode = FocusNode();
   final FocusNode bioNode = FocusNode();
 
-  UserModel user;
   EditProfileBloc bloc;
 
   @override
   void initState() {
     super.initState();
-
-    user = UserModel.blank();
     
     bloc = EditProfileBloc();
     bloc.onChangeDisplayName(widget.model.displayName);
+    bloc.onChangePrivacy(widget.model.private);
 
     displayNameController.text = widget.model.displayName;
     gamertagController.text = widget.model.gamertag;
@@ -291,10 +291,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   Spacer(),
-                  Switch(
-                    value: widget.model.private,
-                    onChanged: (bool value) => user.private = value,
-                    activeColor: Theme.of(context).primaryColor,
+                  StreamBuilder<bool>(
+                    stream: bloc.privacyStream,
+                    initialData: false,
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      return Switch(
+                        value: snapshot.data,
+                        onChanged: bloc.onChangePrivacy,
+                        activeColor: Theme.of(context).primaryColor,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -331,21 +337,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       title: 'Saving changes...'
     );
 
-    final UserBloc bloc = UserBloc();
-
+    final UserBloc userBloc = UserBloc();
     final UserModel model = widget.model;
-    user.uid = model.uid;
-    user.createdAt = model.createdAt;
-    user.verified = model.verified;
-
-    final Map<String, dynamic> data = <String, dynamic>{};
 
     final FirebaseUser firebaseUser = await AuthBloc.instance().currentUser;
     final UserUpdateInfo info = UserUpdateInfo();
 
     // Display name
     final String displayName = displayNameController.text;
-    user.displayName = displayName;
+    model.displayName = displayName;
     info.displayName = displayName;
     data['displayName'] = displayName;
 
@@ -353,54 +353,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final String gamertag = gamertagController.text.isNotEmpty
       ? gamertagController.text
       : null;
-    user.gamertag = gamertag;
+    model.gamertag = gamertag;
     data['gamertag'] = gamertag;
 
     // Twitter
     final String twitter = twitterController.text.isNotEmpty
       ? twitterController.text
       : null;
-    user.twitter = twitter;
+    model.twitter = twitter;
     data['twitter'] = twitter;
 
     // Mixer
     final String mixer = mixerController.text.isNotEmpty
       ? mixerController.text
       : null;
-    user.mixer = mixer;
+    model.mixer = mixer;
     data['mixer'] = mixer;
 
     // Twitch
     final String twitch = twitchController.text.isNotEmpty
       ? twitchController.text
       : null;
-    user.twitch = twitch;
+    model.twitch = twitch;
     data['twitch'] = twitch;
 
     // Twitch
     final String bio = bioController.text.isNotEmpty
       ? bioController.text
       : null;
-    user.bio = bio;
+    model.bio = bio;
     data['bio'] = bio;
 
     // Privacy
-    data['private'] = user.private ?? widget.model.private;
+    model.private = bloc.privacyValue;
+    data['private'] = bloc.privacyValue;
 
     await firebaseUser.updateProfile(info);
     await firebaseUser.reload();
 
     // TODO(itsprof): validate
-    user.photoUrl = model.photoUrl;
+    data['photoUrl'] = model.photoUrl;
 
-    await bloc.update(
-      uid: user.uid,
+    await userBloc.update(
+      uid: model.uid,
       data: data,
     );
 
     Navigator.of(context)
       ..pop()
-      ..pop(user);
+      ..pop(model);
   }
 
   void _dismissKeyboard() {
