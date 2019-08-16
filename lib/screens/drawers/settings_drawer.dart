@@ -325,10 +325,6 @@ class _AuthHeader extends StatelessWidget {
               image: DecorationImage(
                 image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  const Color(0x88000000),
-                  BlendMode.overlay,
-                ),
               ),
             ),
             onDetailsPressed: () {

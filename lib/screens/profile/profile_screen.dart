@@ -99,10 +99,6 @@ class _PublicHeader extends StatelessWidget {
         image: DecorationImage(
           image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            const Color(0xC0000000),
-            BlendMode.overlay,
-          ),
         ),
       ),
       child: Column(
@@ -369,10 +365,6 @@ class _PrivateHeader extends StatelessWidget {
         image: DecorationImage(
           image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            const Color(0xC0000000),
-            BlendMode.overlay,
-          ),
         ),
       ),
       child: Row(
