@@ -72,6 +72,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     twitchNode.dispose();
     bioNode.dispose();
 
+    bloc.dispose();
+
     super.dispose();
   }
 
@@ -343,23 +345,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     // Display name
     final String displayName = displayNameController.text;
-    if (displayName.isNotEmpty) {
-      user.displayName = displayName;
-      info.displayName = displayName;
-      data['displayName'] = displayName;
-    }
+    user.displayName = displayName;
+    info.displayName = displayName;
+    data['displayName'] = displayName;
 
     // Gamertag
-    final String gamertag = gamertagController.text;
-    if (gamertag.isNotEmpty) {
-      user.gamertag = gamertag;
-      data['gamertag'] = gamertag;
-    }
+    final String gamertag = gamertagController.text.isNotEmpty
+      ? gamertagController.text
+      : null;
+    user.gamertag = gamertag;
+    data['gamertag'] = gamertag;
+
+    // Twitter
+    final String twitter = twitterController.text.isNotEmpty
+      ? twitterController.text
+      : null;
+    user.twitter = twitter;
+    data['twitter'] = twitter;
+
+    // Mixer
+    final String mixer = mixerController.text.isNotEmpty
+      ? mixerController.text
+      : null;
+    user.mixer = mixer;
+    data['mixer'] = mixer;
+
+    // Twitch
+    final String twitch = twitchController.text.isNotEmpty
+      ? twitchController.text
+      : null;
+    user.twitch = twitch;
+    data['twitch'] = twitch;
+
+    // Twitch
+    final String bio = bioController.text.isNotEmpty
+      ? bioController.text
+      : null;
+    user.bio = bio;
+    data['bio'] = bio;
 
     // Privacy
-    data['private'] = user.private;
-
-    print('New user:\n$user');
+    data['private'] = user.private ?? widget.model.private;
 
     await firebaseUser.updateProfile(info);
     await firebaseUser.reload();

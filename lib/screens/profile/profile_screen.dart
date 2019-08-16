@@ -171,9 +171,11 @@ class _PublicHeader extends StatelessWidget {
 
           if (model.bio != null)
           Container(
+            width: double.infinity,
             margin: const EdgeInsets.only(top: 16.0),
             child: Text(
               model.bio,
+              textAlign: TextAlign.start,
               style: const TextStyle(
                 color: Colors.white,
                 shadows: <Shadow>[
