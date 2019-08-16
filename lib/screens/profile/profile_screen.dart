@@ -314,37 +314,39 @@ class _PublicHeader extends StatelessWidget {
               ],
             ),
           ),
-          if (model.gamertag != null)
-          GestureDetector(
-            onTap: () => print('TODO: implement'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: const <Widget>[
-                    Icon(
-                      MdiIcons.chartLine,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    SizedBox(width: 8.0),
-                    Text(
-                      'SWAT Stats',
-                      style: TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+
+          // TODO(itsprof): uncomment when functionality done
+          // if (model.gamertag != null)
+          // GestureDetector(
+          //   onTap: () => print('TODO: implement'),
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: <Widget>[
+          //       const SizedBox(height: 8.0),
+          //       Row(
+          //         children: const <Widget>[
+          //           Icon(
+          //             MdiIcons.chartLine,
+          //             color: Colors.white,
+          //             size: 20.0,
+          //           ),
+          //           SizedBox(width: 8.0),
+          //           Text(
+          //             'SWAT Stats',
+          //             style: TextStyle(
+          //               color: Colors.white,
+          //               shadows: <Shadow>[
+          //                 Shadow(
+          //                   offset: Offset(1.0, 1.0),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
