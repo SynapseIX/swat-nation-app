@@ -7,12 +7,7 @@ import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
-import 'package:swat_nation/widgets/cards/art_card.dart';
-import 'package:swat_nation/widgets/cards/clip_card.dart';
-import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
-import 'package:swat_nation/widgets/headers/text_header.dart';
-import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
 /// Represents the user profile screen.
 class ProfileScreen extends StatefulWidget {
@@ -55,14 +50,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: me
               ? const Text('My Profile')
               : const Text('Member Profile'),
-            actions: me
-              ? <Widget>[
-                IconButton(
-                  icon: const Icon(MdiIcons.accountEdit),
-                  onPressed: () => print('TODO: navigate to edit profile'),
-                ),
-              ]
-              : <Widget>[],
+            actions: <Widget>[
+              if (me)
+              IconButton(
+                icon: const Icon(MdiIcons.accountEdit),
+                onPressed: () => print('TODO: navigate to edit profile'),
+              ),
+            ]
           ),
           body: me || !user.private
             ? _PublicBody(user)
@@ -425,58 +419,8 @@ class _PublicBody extends StatelessWidget {
     return ListView(
       key: const PageStorageKey<String>('profile_list_view'),
       children: <Widget>[
-        // Header
+        // Profile header
         _PublicHeader(model),
-
-        // Achievements
-        CardSection(
-          header: const TextHeader(
-            'Achievements',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          ),
-          cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('achievements_list'),
-            cards: const <Widget>[
-              ArtCard(
-                src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/ff67587a4391b3631be38a6451efb3a5/5DCE9C0C/t51.2885-15/e35/66643368_348677349143588_4294471077142937309_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
-                title: 'Discover this week\'s art piece',
-                latest: true,
-              ),
-              ArtCard(
-                src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/d597da5de8367c86096e08c3aa1ed170/5DC96E35/t51.2885-15/e35/64512363_679881242458756_3019127877216873297_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
-              ),
-              ArtCard(
-                src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/4ecba250bd68ab8a490520166394c662/5DD7BE5F/t51.2885-15/e35/62226051_119169212650113_1736816173290500060_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
-              ),
-              ArtCard(
-                src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/c5c035ad46a6a1de1ca801e61d90548a/5DB5C211/t51.2885-15/e35/60992093_133834111145995_3306220303878915064_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
-              ),
-              ArtCard(
-                src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/bfe8658a9c4cc957185c727a2cc26355/5DE8CF0F/t51.2885-15/e35/60445222_161679824865759_5397388580991524804_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
-              ),
-            ],
-          ),
-        ),
-
-        // Clips
-        const TextHeader(
-          'Clips',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-        ),
-        const ClipCard(
-          src: 'https://picsum.photos/640/360?random=1',
-          duration: '28s',
-          author: 'Gameplay by\n@itsprof',
-          padding: EdgeInsets.all(8.0),
-        ),
       ],
     );
   }
@@ -491,7 +435,9 @@ class _PrivateBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        // Profile header
         _PrivateHeader(model),
+
         Expanded(
           child: Center(
             child: Column(
@@ -499,10 +445,15 @@ class _PrivateBody extends StatelessWidget {
               children: const <Widget>[
                 Icon(
                   MdiIcons.lock,
-                  size: 60.0,
+                  size: 120.0,
                 ),
                 SizedBox(height: 16.0),
-                Text('This is a private profile'),
+                Text(
+                  'This profile is private',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                  ),
+                ),
               ],
             ),
           ),
