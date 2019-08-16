@@ -35,6 +35,8 @@ class UserModel extends BaseModel {
     bio = document.data['bio'];
     private = document.data['private'];
   }
+
+  UserModel.blank();
   
   String uid;
   String displayName;
@@ -49,6 +51,25 @@ class UserModel extends BaseModel {
   String twitch;
   String bio;
   bool private;
+
+  @override
+  String toString() {
+    return '''
+    uid: $uid
+    displayName: $displayName
+    photoUrl: $photoUrl
+    createdAt: $createdAt
+    headerUrl: $headerUrl
+    verified: $verified
+    platform: $platform
+    gamertag" $gamertag
+    twitter: $twitter
+    mixer: $mixer
+    twitch: $twitch
+    bio: $bio
+    private: $private
+    ''';
+  }
 
   @override
   Map<String, dynamic> toMap() {

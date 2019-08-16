@@ -77,11 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    if (updatedUser != null) {
-      setState(() {
-        user = updatedUser;
-      });
-    }
+    setState(() {
+      user = updatedUser;
+    });
   }
 }
 

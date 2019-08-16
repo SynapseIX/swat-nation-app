@@ -240,13 +240,14 @@ class _NoAuthHeader extends StatelessWidget {
             ),
           ),
           onTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).push(
-              MaterialPageRoute<SignInScreen>(
-                fullscreenDialog: true,
-                builder: (BuildContext context) => SignInScreen(),
-              ),
-            );
+            Navigator.of(context)
+              ..pop()
+              ..push(
+                MaterialPageRoute<SignInScreen>(
+                  fullscreenDialog: true,
+                  builder: (BuildContext context) => SignInScreen(),
+                ),
+              );
           },
         ),
       ),
@@ -328,13 +329,14 @@ class _AuthHeader extends StatelessWidget {
               ),
             ),
             onDetailsPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(
-                MaterialPageRoute<ProfileScreen>(
-                  builder: (BuildContext context) => ProfileScreen(model: model),
-                  fullscreenDialog: true,
-                ),
-              );
+              Navigator.of(context)
+                ..pop()
+                ..push(
+                  MaterialPageRoute<ProfileScreen>(
+                    builder: (BuildContext context) => ProfileScreen(model: model),
+                    fullscreenDialog: true,
+                  ),
+                );
             },
           );
         }

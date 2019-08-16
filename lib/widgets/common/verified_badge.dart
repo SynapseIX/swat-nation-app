@@ -14,12 +14,13 @@ class VerifiedBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Scaffold.of(context).hideCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text(kVerifiedCopy),
-          ),
-        );
+        Scaffold.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(kVerifiedCopy),
+            ),
+          );
       },
       child: Stack(
         alignment: Alignment.center,

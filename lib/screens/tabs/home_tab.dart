@@ -88,13 +88,14 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                     final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
                     final UserModel model = UserModel.fromSnapshot(doc);
 
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                      MaterialPageRoute<ProfileScreen>(
-                        builder: (BuildContext context) => ProfileScreen(model: model),
-                        fullscreenDialog: true,
-                      ),
-                    );
+                    Navigator.of(context)
+                      ..pop()
+                      ..push(
+                        MaterialPageRoute<ProfileScreen>(
+                          builder: (BuildContext context) => ProfileScreen(model: model),
+                          fullscreenDialog: true,
+                        ),
+                      );
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
