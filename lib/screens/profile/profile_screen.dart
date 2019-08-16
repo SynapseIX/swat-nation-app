@@ -9,6 +9,8 @@ import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
+import 'edit_profile_screen.dart';
+
 /// Represents the user profile screen.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -54,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (me)
               IconButton(
                 icon: const Icon(MdiIcons.accountEdit),
-                onPressed: () => print('TODO: navigate to edit profile'),
+                onPressed: () => _navigateToEdit(),
               ),
             ]
           ),
@@ -64,6 +66,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  Future<void> _navigateToEdit() async {
+    final UserModel updatedUser = await Navigator.of(context).push(
+      MaterialPageRoute<UserModel>(
+        builder: (BuildContext context) {
+          return EditProfileScreen(model: user);
+        },
+      ),
+    );
+
+    if (updatedUser != null) {
+      setState(() {
+        user = updatedUser;
+      });
+    }
   }
 }
 
