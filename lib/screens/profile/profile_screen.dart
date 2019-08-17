@@ -11,6 +11,7 @@ import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
+import 'package:swat_nation/widgets/common/chip_button.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
@@ -110,7 +111,7 @@ class _PublicHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
         color: Colors.black,
         image: DecorationImage(
@@ -137,11 +138,11 @@ class _PublicHeader extends StatelessWidget {
                   ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40.0),
+                  borderRadius: BorderRadius.circular(80.0),
                   child: CachedNetworkImage(
                     imageUrl: user.photoUrl,
-                    width: 40.0,
-                    height: 40.0,
+                    width: 80.0,
+                    height: 80.0,
                     fit: BoxFit.cover,
                     fadeInDuration: const Duration(milliseconds: 300),
                   ),
@@ -209,167 +210,6 @@ class _PublicHeader extends StatelessWidget {
               ),
             ),
           ),
-
-          if (user.gamertag != null)
-          GestureDetector(
-            onTap: () => openUrl('$kGamertag${user.twitter}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 16.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.xbox,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      user.gamertag,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (user.twitter != null)
-          GestureDetector(
-            onTap: () => openUrl('https://twitter.com/${user.twitter}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.twitter,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      user.twitter,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (user.mixer != null)
-          GestureDetector(
-            onTap: () => openUrl('https://mixer.com/${user.mixer}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.mixer,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      user.mixer,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (user.twitch != null)
-          GestureDetector(
-            onTap: () => openUrl('https://twitch.tv/${user.twitch}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.twitch,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      user.twitch,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // TODO(itsprof): uncomment when functionality done
-          // if (model.gamertag != null)
-          // GestureDetector(
-          //   onTap: () => print('TODO: implement'),
-          //   child: Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: <Widget>[
-          //       const SizedBox(height: 8.0),
-          //       Row(
-          //         children: const <Widget>[
-          //           Icon(
-          //             MdiIcons.chartLine,
-          //             color: Colors.white,
-          //             size: 20.0,
-          //           ),
-          //           SizedBox(width: 8.0),
-          //           Text(
-          //             'SWAT Stats',
-          //             style: TextStyle(
-          //               color: Colors.white,
-          //               shadows: <Shadow>[
-          //                 Shadow(
-          //                   offset: Offset(1.0, 1.0),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -469,6 +309,45 @@ class _PublicBody extends StatelessWidget {
         // Profile header
         _PublicHeader(user: user),
 
+        // Socials
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 16.0,
+            runSpacing: 4.0,
+            children: <Widget>[
+              if (user.gamertag != null)
+              ChipButton(
+                avatar: const Icon(MdiIcons.xbox),
+                label: Text(user.gamertag),
+                onTap: () => openUrl('$kGamertag${user.gamertag}'),
+              ),
+
+              if (user.twitter != null)
+              ChipButton(
+                avatar: const Icon(MdiIcons.twitter),
+                label: Text(user.twitter),
+                onTap: () => openUrl('https://twitter.com/${user.twitter}'),
+              ),
+
+              if (user.mixer != null)
+              ChipButton(
+                avatar: const Icon(MdiIcons.mixer),
+                label: Text(user.mixer),
+                onTap: () => openUrl('https://mixer.com/${user.mixer}'),
+              ),
+
+              if (user.twitch != null)
+              ChipButton(
+                avatar: const Icon(MdiIcons.twitch),
+                label: Text(user.twitch),
+                onTap: () => openUrl('https://twitch.tv/${user.twitch}'),
+              ),
+            ],
+          ),
+        ),
+
         // Clips
         StreamBuilder<List<ClipModel>>(
           stream: bloc.allClipsForUser(user.uid),
@@ -498,7 +377,7 @@ class _PublicBody extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 28.0,
                     ),
-                    margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+                    margin: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                   ),
                   cardList: HorizontalCardList(
                     cards: data
