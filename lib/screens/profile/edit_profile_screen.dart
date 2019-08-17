@@ -1,13 +1,16 @@
+import 'dart:io' show File, Platform;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/edit_profile_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the edit profile screen.
 class EditProfileScreen extends StatefulWidget {
@@ -39,6 +42,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final FocusNode bioNode = FocusNode();
 
   EditProfileBloc bloc;
+
+  File photoFile;
+  File headerFile;
 
   @override
   void initState() {
@@ -94,12 +100,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Stack(
                   children: <Widget>[
                     // Header background
-                    CachedNetworkImage(
-                      imageUrl: widget.model.headerUrl ?? kDefaultProfileHeader,
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 300),
+                    _HeaderBackground(
+                      headerFile: headerFile,
+                      headerUrl: widget.model.headerUrl,
                     ),
 
                     // Overlay
@@ -114,7 +117,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           MdiIcons.image,
                           color: Colors.white,
                         ),
-                        onPressed: () => print('TODO: show image picker'),
+                        onPressed: () => _showImagePicker(
+                          context: context,
+                          title: 'Update Background',
+                          cameraCallBack: () {
+                            setState(() async {
+                              headerFile = await ImagePicker.pickImage(
+                                source: ImageSource.camera,
+                              );
+                            });
+                          },
+                          galleryCallback: () async {
+                            setState(() async {
+                              headerFile = await ImagePicker.pickImage(
+                                source: ImageSource.gallery,
+                              );
+                            });
+                          },
+                        ),
                       ),
                     ),
 
@@ -124,26 +144,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () => print('TODO: show image picker'),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF333333),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  width: 3.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100.0),
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.model.photoUrl,
-                                  width: 100.0,
-                                  height: 100.0,
-                                  fit: BoxFit.cover,
-                                  fadeInDuration: const Duration(milliseconds: 300),
-                                ),
-                              ),
+                            onTap: () => _showImagePicker(
+                              context: context,
+                              title: 'Update Profile Picture',
+                              cameraCallBack: () {
+                                setState(() async {
+                                  photoFile = await ImagePicker.pickImage(
+                                    source: ImageSource.camera,
+                                  );
+                                });
+                              },
+                              galleryCallback: () async {
+                                setState(() async {
+                                  photoFile = await ImagePicker.pickImage(
+                                    source: ImageSource.gallery,
+                                  );
+                                });
+                              },
+                            ),
+                            child: _ProfilePicture(
+                              photoFile: photoFile,
+                              photoUrl: widget.model.photoUrl,
                             ),
                           ),
                           const SizedBox(height: 8.0),
@@ -330,6 +351,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  Future<void> _showImagePicker({
+    @required BuildContext context,
+    @required VoidCallback galleryCallback,
+    @required VoidCallback cameraCallBack,
+    String title,
+  }) {
+    return showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                title ?? 'Select a Source',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ListTile(
+                leading: const Icon(MdiIcons.camera),
+                title: const Text('Take Picture'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  cameraCallBack();
+                },
+              ),
+              ListTile(
+                leading: const Icon(MdiIcons.imageAlbum),
+                title: Text(
+                  Platform.isIOS ? 'Camera Roll' : 'Gallery'
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  galleryCallback();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _saveChanges(BuildContext context) async {
     DialogHelper.instance().showWaitingDialog(
       context: context,
@@ -390,8 +458,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     await firebaseUser.updateProfile(info);
     await firebaseUser.reload();
 
-    // TODO(itsprof): validate
-    data['photoUrl'] = model.photoUrl;
+    if (photoFile != null) {
+      // TODO(itsprof): implement
+    } else {
+      data['photoUrl'] = model.photoUrl;
+    }
+
+    if (headerFile != null) {
+      // TODO(itsprof): implement
+    } else {
+      data['headerUrl'] = model.headerUrl;
+    }
 
     await userBloc.update(
       uid: model.uid,
@@ -405,5 +482,93 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _dismissKeyboard() {
     FocusScope.of(context).requestFocus(FocusNode());
+  }
+}
+
+class _ProfilePicture extends StatelessWidget {
+  const _ProfilePicture({
+    this.photoUrl,
+    this.photoFile,
+  });
+  
+  final String photoUrl;
+  final File photoFile;
+
+
+  @override
+  Widget build(BuildContext context) {
+    Widget image;
+    if (photoFile != null) {
+      image = Image.file(
+        photoFile,
+        width: 100.0,
+        height: 100.0,
+        fit: BoxFit.cover
+      );
+    } else if (photoUrl != null) {
+      image = CachedNetworkImage(
+        imageUrl: photoUrl,
+        width: 100.0,
+        height: 100.0,
+        fit: BoxFit.cover,
+        fadeInDuration: const Duration(milliseconds: 300),
+      );
+    } else {
+      image = Container(
+        width: 100.0,
+        height: 100.0,
+        color: Colors.lightBlue,
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF333333),
+        shape: BoxShape.circle,
+        border: Border.all(
+          width: 3.0,
+          color: Colors.white,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100.0),
+        child: image,
+      ),
+    );
+  }
+}
+
+class _HeaderBackground extends StatelessWidget {
+  const _HeaderBackground({
+    this.headerUrl,
+    this.headerFile,
+  });
+
+  final String headerUrl;
+  final File headerFile;
+
+  @override
+  Widget build(BuildContext context) {
+
+    Widget image;
+
+    if (headerFile != null) {
+      image = Image.file(
+        headerFile,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.fitWidth,
+      );
+    } else {
+      image = CachedNetworkImage(
+        imageUrl: headerUrl ?? kDefaultProfileHeader,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        fadeInDuration: const Duration(milliseconds: 300),
+      );
+    }
+
+    return image;
   }
 }

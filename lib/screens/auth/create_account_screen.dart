@@ -8,9 +8,9 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the create account screen.
 class CreateAccountScreen extends StatefulWidget {

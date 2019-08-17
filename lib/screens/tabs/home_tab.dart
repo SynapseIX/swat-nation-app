@@ -8,7 +8,6 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
@@ -18,6 +17,7 @@ import 'package:swat_nation/widgets/cards/news_card.dart';
 import 'package:swat_nation/widgets/cards/tourney_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
