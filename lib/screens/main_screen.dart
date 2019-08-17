@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
+import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/screens/drawers/settings_drawer.dart';
 import 'package:swat_nation/screens/tabs/chat_tab.dart';
 import 'package:swat_nation/screens/tabs/finder_tab.dart';
 import 'package:swat_nation/screens/tabs/home_tab.dart';
 import 'package:swat_nation/screens/tabs/ranking_tab.dart';
 import 'package:swat_nation/screens/tabs/tourneys_tab.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 
 /// Main screen that holds the bottom navigation bar.
 class MainScreen extends StatefulWidget {
@@ -61,6 +63,9 @@ class _MainScreenState extends State<MainScreen> {
             child: tabs[snapshot.data],
           ),
           bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
+              ? const Color(0xFF111111)
+              : Colors.white,
             currentIndex: snapshot.data,
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Theme.of(context).primaryColor,

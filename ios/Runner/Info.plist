@@ -41,6 +41,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app needs this if you want to change your profile picture or header background.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The app needs this if you want to take a picture to use as your profile picture.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The app needs this if you want to record a video for your profile.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

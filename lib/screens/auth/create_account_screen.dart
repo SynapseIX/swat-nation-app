@@ -8,9 +8,9 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the create account screen.
 class CreateAccountScreen extends StatefulWidget {
@@ -90,7 +90,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             tag: 'swat_nation_logo',
                             child: CachedNetworkImage(
                               imageUrl: kLogo,
-                              fadeInDuration: Duration(milliseconds: 300),
+                              fadeInDuration: const Duration(milliseconds: 300),
                               width: 120.0,
                               height: 120.0,
                             ),
@@ -222,7 +222,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     _dismissKeyboard();
     
     try {
-      helper.showWaitingDialog(context, 'Creating your account...');
+      helper.showWaitingDialog(
+        context: context,
+        title: 'Creating your account...',
+      );
 
       final bool displayNameExists = await userBloc.displayNameExists(uiBloc.displayNameValue);
       if (displayNameExists) {

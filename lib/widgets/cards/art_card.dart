@@ -44,7 +44,7 @@ class ArtCard extends StatelessWidget {
               children: <Widget>[
                 CachedNetworkImage(
                   imageUrl: src,
-                  fadeInDuration: Duration(milliseconds: 300),
+                  fadeInDuration: const Duration(milliseconds: 300),
                   placeholder: (BuildContext context, String url) {
                     return Center(child: const CircularProgressIndicator());
                   },
@@ -67,7 +67,7 @@ class ArtCard extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,

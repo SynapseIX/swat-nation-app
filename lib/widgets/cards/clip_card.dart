@@ -43,7 +43,7 @@ class ClipCard extends StatelessWidget {
                 Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl: src,
-                    fadeInDuration: Duration(milliseconds: 300),
+                    fadeInDuration: const Duration(milliseconds: 300),
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -77,7 +77,7 @@ class ClipCard extends StatelessWidget {
                       Text(
                         duration,
                         textAlign: TextAlign.end,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
                         ),

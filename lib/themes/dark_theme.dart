@@ -11,5 +11,9 @@ class DarkTheme extends BaseTheme {
     primaryColor: primaryColor,
     primaryColorBrightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black,
+    appBarTheme: const AppBarTheme(
+      brightness: Brightness.dark,
+      color: Color(0xFF111111),
+    ),
   );
 }

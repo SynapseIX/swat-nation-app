@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -13,6 +17,7 @@ import 'package:swat_nation/widgets/cards/news_card.dart';
 import 'package:swat_nation/widgets/cards/tourney_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
@@ -31,6 +36,23 @@ class HomeTab extends StatefulWidget implements BaseTab {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
+  AuthBloc authBloc;
+  UserBloc userBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    authBloc = AuthBloc.instance();
+    userBloc = UserBloc();
+  }
+
+  @override
+  void dispose() {
+    authBloc.dispose();
+    userBloc.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -42,7 +64,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
       key: const PageStorageKey<String>('home_tab_scroll_view'),
       slivers: <Widget>[
         StreamBuilder<FirebaseUser>(
-          stream: AuthBloc.instance().onAuthStateChanged,
+          stream: authBloc.onAuthStateChanged,
           builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
             if (snapshot.hasData) {
               final String loadingDisplayName = snapshot.data.displayName ?? '...';
@@ -54,9 +76,26 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               return SliverAppBar(
                 pinned: true,
                 centerTitle: false,
+                automaticallyImplyLeading: false,
                 title: GestureDetector(
-                  onTap: () {
-                    print('TODO: navigate to profile screen');
+                  onTap: () async {
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Fetching profile...',
+                    );
+                    
+                    final FirebaseUser user = await authBloc.currentUser;
+                    final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
+                    final UserModel model = UserModel.fromSnapshot(doc);
+
+                    Navigator.of(context)
+                      ..pop()
+                      ..push(
+                        MaterialPageRoute<ProfileScreen>(
+                          builder: (BuildContext context) => ProfileScreen(model: model),
+                          fullscreenDialog: true,
+                        ),
+                      );
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -78,7 +117,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                             width: 30.0,
                             height: 30.0,
                             fit: BoxFit.cover,
-                            fadeInDuration: Duration(milliseconds: 300),
+                            fadeInDuration: const Duration(milliseconds: 300),
                           ),
                         ),
                       ),
@@ -94,6 +133,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
             return SliverAppBar(
               pinned: true,
+              automaticallyImplyLeading: false,
               title: const Text('What\'s New?'),
             );
           },
@@ -101,13 +141,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // Upcoming Tournaments
         CardSection(
-          header: TextHeader(
+          header: const TextHeader(
             'Upcoming\nTournaments',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
             key: const PageStorageKey<String>('upcoming_tourneys_list'),
@@ -129,13 +169,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Community Highlight
-        TextHeader(
+        const TextHeader(
           'Community\nHighlight',
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           sliver: true,
         ),
         const ClipCard(
@@ -148,13 +188,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // Announcements
         CardSection(
-          header: TextHeader(
+          header: const TextHeader(
             'Announcements',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
             key: const PageStorageKey<String>('latest_news_list'),
@@ -184,13 +224,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // #swatisart
         CardSection(
-          header: TextHeader(
+          header: const TextHeader(
             '#swatisart',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 28.0,
             ),
-            margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
           ),
           cardList: HorizontalCardList(
             key: const PageStorageKey<String>('swat_is_art_list'),

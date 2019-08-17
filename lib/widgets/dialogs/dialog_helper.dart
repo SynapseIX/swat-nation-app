@@ -9,7 +9,10 @@ class DialogHelper {
 
   static final DialogHelper _instance = DialogHelper._internal();
 
-  Future<Dialog> showWaitingDialog(BuildContext context, String title) {
+  Future<Dialog> showWaitingDialog({
+    @required BuildContext context,
+    String title = 'Waiting...',
+  }) {
     return showDialog<Dialog>(
       context: context,
       barrierDismissible: false,
@@ -53,7 +56,7 @@ class DialogHelper {
                 const SizedBox(height: 16.0),
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16.0),
                 Text(message),

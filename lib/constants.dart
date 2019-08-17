@@ -5,6 +5,7 @@ const String kAppIdAndroid = '1:688037325190:android:67e68583ed1a2d49';
 // Account constants
 const int kPasswordMinLength = 6;
 const int kDisplayNameMaxChararcters = 15;
+const int kMaxBioLength = 140;
 
 // SWAT Nation logo
 const String kLogo = 'https://static1.squarespace.com/static/5bfb2111372b964077959077/t/5bfcbd661ae6cf259c75a2ad/1563085290045/?format=500w';
@@ -21,3 +22,7 @@ const String kFacebookGroup = 'https://facebook.com/groups/swat-nation';
 const String kTwitter = 'https://twitter.com/haloswatnation';
 const String kInstagram = 'https://instagram.com/haloswatnation';
 const String kXboxClub = 'https://account.xbox.com/en-us/clubs/profile?clubid=3379832045537319';
+
+// Profile
+const String kGamertag = 'https://account.xbox.com/en-us/profile?gamertag=';
+const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people know that an account of public interest is authentic.';

@@ -9,9 +9,9 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/dialogs/dialog_helper.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 import 'create_account_screen.dart';
 
@@ -82,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         tag: 'swat_nation_logo',
                         child: CachedNetworkImage(
                           imageUrl: kLogo,
-                          fadeInDuration: Duration(milliseconds: 300),
+                          fadeInDuration: const Duration(milliseconds: 300),
                           width: 120.0,
                           height: 120.0,
                         ),
@@ -206,7 +206,10 @@ class _SignInScreenState extends State<SignInScreen> {
     _dismissKeyboard();
     
     try {
-      helper.showWaitingDialog(context, 'Signing In...');
+      helper.showWaitingDialog(
+        context: context,
+        title: 'Signing In...',
+      );
 
       final FirebaseUser user = await AuthBloc.instance().signIn(
         email: uiBloc.emailValue,
@@ -247,7 +250,10 @@ class _SignInScreenState extends State<SignInScreen> {
     _dismissKeyboard();
 
     try {
-      helper.showWaitingDialog(context, 'Logging In With Facebook...');
+      helper.showWaitingDialog(
+        context: context,
+        title: 'Logging In With Facebook...',
+      );
 
       final FirebaseUser user = await AuthBloc.instance().loginWithFacebook();
       final bool displayNameExists = await userBloc.displayNameExists(user.displayName);
@@ -256,7 +262,7 @@ class _SignInScreenState extends State<SignInScreen> {
       
       final DocumentSnapshot doc = await userBloc.userByUid(user.uid);
       final UserModel model = doc != null
-        ? UserModel.documentSnapshot(doc)
+        ? UserModel.fromSnapshot(doc)
         : UserModel(
           uid: user.uid,
           displayName: user.displayName,

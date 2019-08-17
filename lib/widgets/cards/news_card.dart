@@ -45,7 +45,7 @@ class NewsCard extends StatelessWidget {
               if (thumbnailSrc != null)
               CachedNetworkImage(
                 imageUrl: thumbnailSrc,
-                fadeInDuration: Duration(milliseconds: 300),
+                fadeInDuration: const Duration(milliseconds: 300),
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,

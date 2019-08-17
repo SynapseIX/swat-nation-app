@@ -1,26 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
+import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/common/verified_badge.dart';
 
 class SettingsDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeBloc themeBloc = ThemeBloc.instance();
-    final Color scaffoldBackgroundColor = themeBloc.currentTheme is LightTheme
-      ? Colors.white
-      : const Color(0xFF333333);
     
     return Drawer(
       child: Scaffold(
-        backgroundColor: scaffoldBackgroundColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -65,7 +66,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.web),
               title: const Text('Browse our Website'),
               onTap: () {
-                openURL(kWebsite);
+                openUrl(kWebsite);
                 Navigator.of(context).pop();
               },
             ),
@@ -73,7 +74,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.facebookBox),
               title: const Text('Join the Community'),
               onTap: () {
-                openURL(kFacebookGroup);
+                openUrl(kFacebookGroup);
                 Navigator.of(context).pop();
               },
             ),
@@ -81,7 +82,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.twitter),
               title: const Text('Follow us on Twitter'),
               onTap: () {
-                openURL(kTwitter);
+                openUrl(kTwitter);
                 Navigator.of(context).pop();
               },
             ),
@@ -89,7 +90,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.instagram),
               title: const Text('Check our Instagram'),
               onTap: () {
-                openURL(kInstagram);
+                openUrl(kInstagram);
                 Navigator.of(context).pop();
               },
             ),
@@ -97,7 +98,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.xbox),
               title: const Text('Join the Xbox Club'),
               onTap: () {
-                openURL(kXboxClub);
+                openUrl(kXboxClub);
                 Navigator.of(context).pop();
               },
             ),
@@ -143,13 +144,21 @@ class SettingsDrawer extends StatelessWidget {
                                       tag: 'swat_nation_logo',
                                       child: CachedNetworkImage(
                                         imageUrl: kLogo,
-                                        fadeInDuration: Duration(milliseconds: 300),
+                                        fadeInDuration: const Duration(milliseconds: 300),
                                         width: 120.0,
                                         height: 120.0,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 32.0),
+                                  const SizedBox(height: 16.0),
+                                  const Text(
+                                    'Sign Out',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22.0,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
                                   const Text('Are you sure you want to sign out?'),
                                   const SizedBox(height: 32.0),
                                   Container(
@@ -209,13 +218,13 @@ class _NoAuthHeader extends StatelessWidget {
               tag: 'swat_nation_logo',
               child: CachedNetworkImage(
                 imageUrl: kLogo,
-                fadeInDuration: Duration(milliseconds: 300),
+                fadeInDuration: const Duration(milliseconds: 300),
                 width: 60.0,
                 height: 60.0,
               ),
             ),
           ),
-          title: Text(
+          title: const Text(
             'Create Account / Sign In',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -231,13 +240,14 @@ class _NoAuthHeader extends StatelessWidget {
             ),
           ),
           onTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).push(
-              MaterialPageRoute<SignInScreen>(
-                fullscreenDialog: true,
-                builder: (BuildContext context) => SignInScreen(),
-              ),
-            );
+            Navigator.of(context)
+              ..pop()
+              ..push(
+                MaterialPageRoute<SignInScreen>(
+                  fullscreenDialog: true,
+                  builder: (BuildContext context) => SignInScreen(),
+                ),
+              );
           },
         ),
       ),
@@ -252,39 +262,91 @@ class _AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UserAccountsDrawerHeader(
-      accountName: Text(user.displayName),
-      accountEmail: Text(user.email),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(kDefaultProfileHeader),
-          fit: BoxFit.cover,
-        ),
-      ),
-      currentAccountPicture: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF333333),
-          shape: BoxShape.circle,
-          border: Border.all(
-            width: 2.0,
-            color: Colors.white,
+    final UserBloc userBloc = UserBloc();
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: userBloc.userByUid(user.uid),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasData) {
+          final UserModel model = UserModel.fromSnapshot(snapshot.data);
+
+          return UserAccountsDrawerHeader(
+            accountName: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  user.displayName,
+                  style: const TextStyle(
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(1.0, 1.0),
+                      ),
+                    ],
+                  ),
+                ),
+                if (model.verified)
+                Container(
+                  margin: const EdgeInsets.only(left: 4.0),
+                  child: const VerifiedBadge(),
+                ),
+              ],
+            ),
+            accountEmail: Text(
+              user.email,
+              style: const TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(1.0, 1.0),
+                  ),
+                ],
+              ),
+            ),
+            currentAccountPicture: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF333333),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  width: 3.0,
+                  color: Colors.white,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(40.0),
+                child: CachedNetworkImage(
+                  imageUrl: user.photoUrl,
+                  width: 40.0,
+                  height: 40.0,
+                  fit: BoxFit.cover,
+                  fadeInDuration: const Duration(milliseconds: 300),
+                ),
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
+                fit: BoxFit.cover,
+              ),
+            ),
+            onDetailsPressed: () {
+              Navigator.of(context)
+                ..pop()
+                ..push(
+                  MaterialPageRoute<ProfileScreen>(
+                    builder: (BuildContext context) => ProfileScreen(model: model),
+                    fullscreenDialog: true,
+                  ),
+                );
+            },
+          );
+        }
+        
+        return DrawerHeader(
+          child: Center(
+            child: const CircularProgressIndicator(),
           ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(40.0),
-          child: CachedNetworkImage(
-            imageUrl: user.photoUrl,
-            width: 40.0,
-            height: 40.0,
-            fit: BoxFit.cover,
-            fadeInDuration: Duration(milliseconds: 300),
-          ),
-        ),
-      ),
-      onDetailsPressed: () {
-        Navigator.of(context).pop();
-        print('TODO: navigate to profile screen');
-      },
+        );
+      }
     );
   }
 }

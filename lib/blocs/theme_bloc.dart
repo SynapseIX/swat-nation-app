@@ -41,6 +41,7 @@ class ThemeBloc extends BaseBloc {
 
   @override
   void dispose() {
+    print('ThemeBloc disposed');
     _themeSubject.close();
   }
 }
