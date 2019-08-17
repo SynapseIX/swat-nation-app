@@ -402,7 +402,7 @@ class _PublicBody extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 28.0,
                     ),
-                    margin: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                    margin: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
                   ),
                   cardList: HorizontalCardList(
                     cards: data
