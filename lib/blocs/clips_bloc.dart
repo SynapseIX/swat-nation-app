@@ -21,20 +21,18 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
       .transform(transformClips);
   }
 
-  Future<DocumentReference> create(ClipModel model) {
-    return _firestore
-      .collection(clipsCollection)
-      .add(model.toMap());
-  }
-
-  Stream<ClipModel> randomClip() {
-    return _firestore
+  Stream<ClipModel> get randomClip => _firestore
       .collection(clipsCollection)
       .where('random', isGreaterThanOrEqualTo: 0)
       .orderBy('random')
       .limit(1)
       .snapshots()
       .transform(transformRandomClip);
+
+  Future<DocumentReference> create(ClipModel model) {
+    return _firestore
+      .collection(clipsCollection)
+      .add(model.toMap());
   }
 
   @override

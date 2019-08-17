@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
+import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
 import 'package:swat_nation/widgets/cards/tourney_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
@@ -37,18 +40,21 @@ class HomeTab extends StatefulWidget implements BaseTab {
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   AuthBloc authBloc;
   UserBloc userBloc;
+  ClipsBloc clipsBloc;
 
   @override
   void initState() {
     super.initState();
     authBloc = AuthBloc.instance();
     userBloc = UserBloc();
+    clipsBloc = ClipsBloc();
   }
 
   @override
   void dispose() {
     authBloc.dispose();
     userBloc.dispose();
+    clipsBloc.dispose();
     super.dispose();
   }
   
@@ -168,7 +174,35 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Community Highlight
-        // TODO(itsprof): implement
+        StreamBuilder<ClipModel>(
+          stream: clipsBloc.randomClip,
+          builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
+            if (!snapshot.hasData) {
+              return const SliverToBoxAdapter(child: SizedBox());
+            }
+
+            return SliverToBoxAdapter(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const TextHeader(
+                    'Community\nHighlight',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28.0,
+                      ),
+                      margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+                  ),
+                  ClipCard(
+                    key: UniqueKey(),
+                    model: snapshot.data,
+                    padding: const EdgeInsets.all(8.0),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
 
         // Announcements
         CardSection(
