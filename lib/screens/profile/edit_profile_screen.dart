@@ -520,7 +520,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _dismissKeyboard() {
-    FocusScope.of(context).requestFocus(FocusNode());
+    if (displayNameNode.hasFocus) {
+      displayNameNode.unfocus();
+    }
+
+    if (gamertagNode.hasFocus) {
+      gamertagNode.unfocus();
+    }
+
+    if (twitterNode.hasFocus) {
+      twitterNode.unfocus();
+    }
+
+    if (mixerNode.hasFocus) {
+      mixerNode.unfocus();
+    }
+
+    if (twitchNode.hasFocus) {
+      twitchNode.unfocus();
+    }
+
+    if (bioNode.hasFocus) {
+      bioNode.unfocus();
+    }
   }
 }
 
