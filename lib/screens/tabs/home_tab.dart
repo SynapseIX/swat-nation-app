@@ -145,6 +145,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Upcoming Tournaments
+        // TODO(itsprof): implement
         CardSection(
           header: const TextHeader(
             'Upcoming\nTournaments',
@@ -205,6 +206,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Announcements
+        // TODO(itsprof): implement
         CardSection(
           header: const TextHeader(
             'Announcements',
@@ -241,6 +243,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // #swatisart
+        // TODO(itsprof): implement
         CardSection(
           header: const TextHeader(
             '#swatisart',
