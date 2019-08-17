@@ -11,7 +11,6 @@ import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
-import 'package:swat_nation/widgets/common/chip_button.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
