@@ -15,6 +15,7 @@ class EditProfileBloc extends BaseBloc with AuthScreensdValidator {
   void Function(String) get onChangeDisplayName => _displayNameSubject.sink.add;
   void Function(bool) get onChangePrivacy => _privacySubject.sink.add;
 
+  String get displayNameValue => _displayNameSubject.value;
   bool get privacyValue => _privacySubject.value;
 
   @override

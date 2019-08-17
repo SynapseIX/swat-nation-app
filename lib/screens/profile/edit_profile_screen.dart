@@ -2,6 +2,7 @@ import 'dart:io' show File, Platform;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:swat_nation/blocs/edit_profile_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the edit profile screen.
@@ -54,7 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     bloc.onChangeDisplayName(widget.model.displayName);
     bloc.onChangePrivacy(widget.model.private);
 
-    displayNameController.text = widget.model.displayName;
+    displayNameController.text = bloc.displayNameValue;
     gamertagController.text = widget.model.gamertag;
     twitterController.text = widget.model.twitter;
     mixerController.text = widget.model.mixer;
@@ -120,18 +122,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: () => _showImagePicker(
                           context: context,
                           title: 'Update Background',
-                          cameraCallBack: () {
-                            setState(() async {
-                              headerFile = await ImagePicker.pickImage(
-                                source: ImageSource.camera,
-                              );
+                          cameraCallBack: () async {
+                            final File pickedImage = await ImagePicker.pickImage(
+                              source: ImageSource.camera,
+                              imageQuality: 70,
+                            );
+
+                            setState(() {
+                              headerFile = pickedImage;  
                             });
                           },
                           galleryCallback: () async {
-                            setState(() async {
-                              headerFile = await ImagePicker.pickImage(
-                                source: ImageSource.gallery,
-                              );
+                            final File pickedImage = await ImagePicker.pickImage(
+                              source: ImageSource.gallery,
+                              imageQuality: 70,
+                            );
+
+                            setState(() {
+                              headerFile = pickedImage;  
                             });
                           },
                         ),
@@ -147,18 +155,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             onTap: () => _showImagePicker(
                               context: context,
                               title: 'Update Profile Picture',
-                              cameraCallBack: () {
-                                setState(() async {
-                                  photoFile = await ImagePicker.pickImage(
-                                    source: ImageSource.camera,
-                                  );
+                              cameraCallBack: () async {
+                                final File pickedImage = await ImagePicker.pickImage(
+                                  source: ImageSource.camera,
+                                  imageQuality: 70,
+                                );
+
+                                setState(() {
+                                  photoFile = pickedImage;
                                 });
                               },
                               galleryCallback: () async {
-                                setState(() async {
-                                  photoFile = await ImagePicker.pickImage(
-                                    source: ImageSource.gallery,
-                                  );
+                                final File pickedImage = await ImagePicker.pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 70,
+                                );
+                                
+                                setState(() {
+                                  photoFile = pickedImage;
                                 });
                               },
                             ),
@@ -192,7 +206,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 stream: bloc.displayNameStream,
                 builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                   return TextField(
-                    controller: displayNameController,
                     focusNode: displayNameNode,
                     maxLength: kDisplayNameMaxChararcters,
                     autocorrect: false,
@@ -280,7 +293,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: bioController,
                 focusNode: bioNode,
                 maxLength: kMaxBioLength,
-                maxLines: 3,
+                maxLines: iPhoneX(context) ? 3 : 4,
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
@@ -411,7 +424,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final UserUpdateInfo info = UserUpdateInfo();
 
     // Display name
-    final String displayName = displayNameController.text;
+    final String displayName = bloc.displayNameValue;
     model.displayName = displayName;
     info.displayName = displayName;
     data['displayName'] = displayName;
@@ -454,21 +467,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Privacy
     model.private = bloc.privacyValue;
     data['private'] = bloc.privacyValue;
-
-    await firebaseUser.updateProfile(info);
-    await firebaseUser.reload();
-
+      
     if (photoFile != null) {
-      // TODO(itsprof): implement
+      final StorageReference pictureRef = FirebaseStorage
+        .instance
+        .ref()
+        .child('profiles')
+        .child(model.uid)
+        .child('profile.jpeg');
+      final StorageUploadTask uploadTask = pictureRef.putFile(photoFile);
+      await uploadTask.onComplete;
+      
+      final String photoUrl = await pictureRef.getDownloadURL();
+      info.photoUrl = photoUrl;
+      model.photoUrl = photoUrl;
+      data['photoUrl'] = photoUrl;
     } else {
       data['photoUrl'] = model.photoUrl;
     }
 
     if (headerFile != null) {
-      // TODO(itsprof): implement
+      final StorageReference headerRef = FirebaseStorage
+          .instance
+          .ref()
+          .child('profiles')
+          .child(model.uid)
+          .child('header.jpeg');
+
+      final StorageUploadTask uploadTask = headerRef.putFile(headerFile);
+      await uploadTask.onComplete;
+      
+      final String headerUrl = await headerRef.getDownloadURL();
+      model.headerUrl = headerUrl;
+      data['headerUrl'] = headerUrl;
     } else {
       data['headerUrl'] = model.headerUrl;
     }
+
+    await firebaseUser.updateProfile(info);
+    await firebaseUser.reload();
 
     await userBloc.update(
       uid: model.uid,
