@@ -206,6 +206,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 stream: bloc.displayNameStream,
                 builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                   return TextField(
+                    controller: displayNameController,
                     focusNode: displayNameNode,
                     maxLength: kDisplayNameMaxChararcters,
                     autocorrect: false,
@@ -220,6 +221,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onSubmitted: (String text) {
                       displayNameNode.nextFocus();
                     },
+
                   );
                 },
               ),
