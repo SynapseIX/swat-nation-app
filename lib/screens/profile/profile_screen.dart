@@ -6,8 +6,12 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/utils/date_helper.dart';
+import 'package:swat_nation/utils/uri_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
+import 'package:swat_nation/widgets/headers/text_header.dart';
+import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
 import 'edit_profile_screen.dart';
 
@@ -58,11 +62,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: const Icon(MdiIcons.accountEdit),
                 onPressed: () => _navigateToEdit(),
               ),
+              if (!me)
+              IconButton(
+                icon: const Icon(MdiIcons.alert),
+                // TODO(itsprof): implement report user
+                onPressed: () {},
+              ),
             ]
           ),
           body: me || !user.private
-            ? _PublicBody(user)
-            : _PrivateBody(user),
+            ? _PublicBody(model: user, me: me)
+            : _PrivateBody(model: user),
         );
       },
     );
@@ -432,24 +442,47 @@ class _PrivateHeader extends StatelessWidget {
 }
 
 class _PublicBody extends StatelessWidget {
-  const _PublicBody(this.model);
+  const _PublicBody({
+    @required this.model,
+    this.me = false,
+  });
 
   final UserModel model;
+  final bool me;
 
   @override
   Widget build(BuildContext context) {
+    print(getXboxDvrVideoUrl('https://gamerdvr.com/xbox/load/video/https%3A%2F%2Fgameclipscontent-d3025.xboxlive.com%2Fxuid-2535433106935609-private%2Ffd821a10-0ecf-4284-9878-a53707e14d47.MP4%3Fsv%3D2015-12-11%26sr%3Db%26si%3DDefaultAccess%26sig%3Do%252FSwbNAj0d%252FjKxm%252FvS9WinvTzFIygOXcLP6zMxMvcJw%253D%26__gda__%3D1566076689_d1328bacf08ce6a38f9dc8875867c71c.mp4'));
+    
     return ListView(
       key: const PageStorageKey<String>('profile_list_view'),
       children: <Widget>[
         // Profile header
         _PublicHeader(model),
+
+        // Clips
+        CardSection(
+          header: const TextHeader(
+            'Clips',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 28.0,
+            ),
+            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+          ),
+          cardList: HorizontalCardList(
+            cards: const <Widget>[],
+          ),
+        ),
       ],
     );
   }
 }
 
 class _PrivateBody extends StatelessWidget {
-  const _PrivateBody(this.model);
+  const _PrivateBody({
+    @required this.model,
+  });
 
   final UserModel model;
 
