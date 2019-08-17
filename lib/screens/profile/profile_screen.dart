@@ -6,7 +6,6 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/utils/date_helper.dart';
-import 'package:swat_nation/utils/uri_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
@@ -452,7 +451,7 @@ class _PublicBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(getXboxDvrVideoUrl('https://gamerdvr.com/xbox/load/video/https%3A%2F%2Fgameclipscontent-d3025.xboxlive.com%2Fxuid-2535433106935609-private%2Ffd821a10-0ecf-4284-9878-a53707e14d47.MP4%3Fsv%3D2015-12-11%26sr%3Db%26si%3DDefaultAccess%26sig%3Do%252FSwbNAj0d%252FjKxm%252FvS9WinvTzFIygOXcLP6zMxMvcJw%253D%26__gda__%3D1566076689_d1328bacf08ce6a38f9dc8875867c71c.mp4'));
+    print(kMaxRandomValue);
     
     return ListView(
       key: const PageStorageKey<String>('profile_list_view'),

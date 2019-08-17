@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 // Firebase App IDs
 const String kAppIdiOS = '1:688037325190:ios:27b7368339d68b43';
 const String kAppIdAndroid = '1:688037325190:android:67e68583ed1a2d49';
@@ -26,3 +28,6 @@ const String kXboxClub = 'https://account.xbox.com/en-us/clubs/profile?clubid=33
 // Profile
 const String kGamertag = 'https://account.xbox.com/en-us/profile?gamertag=';
 const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people know that an account of public interest is authentic.';
+
+// Clips
+final int kMaxRandomValue = math.pow(2, 53);
