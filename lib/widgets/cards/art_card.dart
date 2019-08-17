@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 /// Creates a card that represents an art piece.
 class ArtCard extends StatelessWidget {
   const ArtCard({
-    @required this.src,
     Key key,
+    @required this.src,
     this.title,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,

@@ -12,7 +12,6 @@ import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
-import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
 import 'package:swat_nation/widgets/cards/tourney_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
@@ -169,22 +168,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Community Highlight
-        const TextHeader(
-          'Community\nHighlight',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          sliver: true,
-        ),
-        const ClipCard(
-          src: 'https://picsum.photos/640/360?random=1',
-          duration: '28s',
-          author: 'Gameplay by\n@itsprof',
-          padding: EdgeInsets.all(8.0),
-          sliver: true,
-        ),
+        // TODO(itsprof): implement
 
         // Announcements
         CardSection(

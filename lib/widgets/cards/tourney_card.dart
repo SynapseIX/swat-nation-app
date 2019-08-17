@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 /// Creates a card that represents a tourney.
 class TourneyCard extends StatelessWidget {
   const TourneyCard({
-    @required this.src,
     Key key,
+    @required this.src,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
     this.width = 356.0,

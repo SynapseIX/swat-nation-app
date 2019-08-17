@@ -8,12 +8,14 @@ class ClipModel extends BaseModel {
     @required this.userId,
     @required this.videoUrl,
     @required this.random,
+    @required this.createdAt,
   });
 
   ClipModel.fromSnapshot(DocumentSnapshot document) {
     userId = document.data['userId'];
     videoUrl = document.data['videoUrl'];
     random = document.data['random'];
+    createdAt = document.data['createdAt'];
   }
 
   ClipModel.blank();
@@ -21,13 +23,15 @@ class ClipModel extends BaseModel {
   String userId;
   String videoUrl;
   int random;
+  Timestamp createdAt;
 
   @override
   String toString() {
     return '''
-    userId: $userId,
-    videoUrl: $videoUrl,
-    random: $random,
+    userId: $userId
+    videoUrl: $videoUrl
+    random: $random
+    createdAt: $createdAt
     ''';
   }
   
@@ -37,6 +41,7 @@ class ClipModel extends BaseModel {
       'userId': userId,
       'videoUrl': videoUrl,
       'random': random,
+      'createdAt': createdAt,
     };
   }
 }

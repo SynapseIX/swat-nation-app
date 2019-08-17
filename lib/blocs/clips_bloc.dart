@@ -27,10 +27,10 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
       .add(model.toMap());
   }
 
-  Stream<ClipModel> randomClip(int random) {
+  Stream<ClipModel> randomClip() {
     return _firestore
       .collection(clipsCollection)
-      .where('random', isGreaterThanOrEqualTo: random)
+      .where('random', isGreaterThanOrEqualTo: 0)
       .orderBy('random')
       .limit(1)
       .snapshots()

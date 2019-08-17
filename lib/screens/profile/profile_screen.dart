@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
@@ -28,18 +31,21 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   AuthBloc authBloc;
+  ClipsBloc clipsBloc;
   UserModel user;
 
   @override
   void initState() {
     super.initState();
     authBloc = AuthBloc.instance();
+    clipsBloc = ClipsBloc();
     user = widget.model;
   }
 
   @override
   void dispose() {
     authBloc.dispose();
+    clipsBloc.dispose();
     super.dispose();
   }
 
@@ -70,8 +76,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ]
           ),
           body: me || !user.private
-            ? _PublicBody(model: user, me: me)
-            : _PrivateBody(model: user),
+            ? _PublicBody(bloc: clipsBloc, user: user, me: me)
+            : _PrivateBody(user: user),
         );
       },
     );
@@ -95,9 +101,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class _PublicHeader extends StatelessWidget {
-  const _PublicHeader(this.model);
+  const _PublicHeader({
+    @required this.user,
+  });
 
-  final UserModel model;
+  final UserModel user;
   
   @override
   Widget build(BuildContext context) {
@@ -106,7 +114,7 @@ class _PublicHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black,
         image: DecorationImage(
-          image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
+          image: CachedNetworkImageProvider(user.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             const Color(0x88000000),
@@ -131,7 +139,7 @@ class _PublicHeader extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40.0),
                   child: CachedNetworkImage(
-                    imageUrl: model.photoUrl,
+                    imageUrl: user.photoUrl,
                     width: 40.0,
                     height: 40.0,
                     fit: BoxFit.cover,
@@ -147,7 +155,7 @@ class _PublicHeader extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        model.displayName,
+                        user.displayName,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -159,7 +167,7 @@ class _PublicHeader extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (model.verified)
+                      if (user.verified)
                       Container(
                         margin: const EdgeInsets.only(left: 4.0),
                         child: const VerifiedBadge(),
@@ -168,7 +176,7 @@ class _PublicHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    'Joined ${humanizeTimestamp(model.createdAt, 'MMMM yyyy')}',
+                    'Joined ${humanizeTimestamp(user.createdAt, 'MMMM yyyy')}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
@@ -184,12 +192,12 @@ class _PublicHeader extends StatelessWidget {
             ],
           ),
 
-          if (model.bio != null)
+          if (user.bio != null)
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(top: 16.0),
             child: Text(
-              model.bio,
+              user.bio,
               textAlign: TextAlign.start,
               style: const TextStyle(
                 color: Colors.white,
@@ -202,9 +210,9 @@ class _PublicHeader extends StatelessWidget {
             ),
           ),
 
-          if (model.gamertag != null)
+          if (user.gamertag != null)
           GestureDetector(
-            onTap: () => openUrl('$kGamertag${model.twitter}'),
+            onTap: () => openUrl('$kGamertag${user.twitter}'),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -218,7 +226,7 @@ class _PublicHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      model.gamertag,
+                      user.gamertag,
                       style: const TextStyle(
                         color: Colors.white,
                         shadows: <Shadow>[
@@ -234,9 +242,9 @@ class _PublicHeader extends StatelessWidget {
             ),
           ),
 
-          if (model.twitter != null)
+          if (user.twitter != null)
           GestureDetector(
-            onTap: () => openUrl('https://twitter.com/${model.twitter}'),
+            onTap: () => openUrl('https://twitter.com/${user.twitter}'),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -250,7 +258,7 @@ class _PublicHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      model.twitter,
+                      user.twitter,
                       style: const TextStyle(
                         color: Colors.white,
                         shadows: <Shadow>[
@@ -266,9 +274,9 @@ class _PublicHeader extends StatelessWidget {
             ),
           ),
 
-          if (model.mixer != null)
+          if (user.mixer != null)
           GestureDetector(
-            onTap: () => openUrl('https://mixer.com/${model.mixer}'),
+            onTap: () => openUrl('https://mixer.com/${user.mixer}'),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -282,7 +290,7 @@ class _PublicHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      model.mixer,
+                      user.mixer,
                       style: const TextStyle(
                         color: Colors.white,
                         shadows: <Shadow>[
@@ -298,9 +306,9 @@ class _PublicHeader extends StatelessWidget {
             ),
           ),
 
-          if (model.twitch != null)
+          if (user.twitch != null)
           GestureDetector(
-            onTap: () => openUrl('https://twitch.tv/${model.twitch}'),
+            onTap: () => openUrl('https://twitch.tv/${user.twitch}'),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -314,7 +322,7 @@ class _PublicHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      model.twitch,
+                      user.twitch,
                       style: const TextStyle(
                         color: Colors.white,
                         shadows: <Shadow>[
@@ -369,9 +377,11 @@ class _PublicHeader extends StatelessWidget {
 }
 
 class _PrivateHeader extends StatelessWidget {
-  const _PrivateHeader(this.model);
+  const _PrivateHeader({
+    @required this.user,
+  });
 
-  final UserModel model;
+  final UserModel user;
   
   @override
   Widget build(BuildContext context) {
@@ -380,7 +390,7 @@ class _PrivateHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black,
         image: DecorationImage(
-          image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
+          image: CachedNetworkImageProvider(user.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             const Color(0x88000000),
@@ -402,7 +412,7 @@ class _PrivateHeader extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(40.0),
               child: CachedNetworkImage(
-                imageUrl: model.photoUrl,
+                imageUrl: user.photoUrl,
                 width: 40.0,
                 height: 40.0,
                 fit: BoxFit.cover,
@@ -415,7 +425,7 @@ class _PrivateHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                model.displayName,
+                user.displayName,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18.0,
@@ -427,7 +437,7 @@ class _PrivateHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              if (model.verified)
+              if (user.verified)
               Container(
                 margin: const EdgeInsets.only(left: 4.0),
                 child: const VerifiedBadge(),
@@ -442,36 +452,67 @@ class _PrivateHeader extends StatelessWidget {
 
 class _PublicBody extends StatelessWidget {
   const _PublicBody({
-    @required this.model,
+    @required this.bloc,
+    @required this.user,
     this.me = false,
   });
 
-  final UserModel model;
+  final ClipsBloc bloc;
+  final UserModel user;
   final bool me;
 
   @override
   Widget build(BuildContext context) {
-    print(kMaxRandomValue);
-    
     return ListView(
       key: const PageStorageKey<String>('profile_list_view'),
       children: <Widget>[
         // Profile header
-        _PublicHeader(model),
+        _PublicHeader(user: user),
 
         // Clips
-        CardSection(
-          header: const TextHeader(
-            'Clips',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          ),
-          cardList: HorizontalCardList(
-            cards: const <Widget>[],
-          ),
+        StreamBuilder<List<ClipModel>>(
+          stream: bloc.allClipsForUser(user.uid),
+          builder: (BuildContext context, AsyncSnapshot<List<ClipModel>> snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox();
+            }
+
+            final List<ClipModel> data = snapshot.data;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CardSection(
+                  header: TextHeader(
+                    'Clips',
+                    actions: me
+                      ? <Widget>[
+                        IconButton(
+                          icon: Icon(MdiIcons.plusCircleOutline),
+                          // TODO(itsprof): implement
+                          onPressed: () {},
+                        )
+                      ]
+                      : <Widget>[],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28.0,
+                    ),
+                    margin: const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+                  ),
+                  cardList: HorizontalCardList(
+                    cards: data
+                      .map((ClipModel model) {
+                        return ClipCard(
+                          key: UniqueKey(),
+                          model: model,
+                        );
+                      }).toList(),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -480,17 +521,17 @@ class _PublicBody extends StatelessWidget {
 
 class _PrivateBody extends StatelessWidget {
   const _PrivateBody({
-    @required this.model,
+    @required this.user,
   });
 
-  final UserModel model;
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         // Profile header
-        _PrivateHeader(model),
+        _PrivateHeader(user: user),
 
         Expanded(
           child: Center(

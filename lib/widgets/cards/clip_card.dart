@@ -1,13 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/models/clip_model.dart';
 
 /// Creates a card that represents a clip.
-class ClipCard extends StatelessWidget {
+class ClipCard extends StatefulWidget {
   const ClipCard({
-    @required this.src,
-    @required this.duration,
-    @required this.author,
     Key key,
+    @required this.model,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
     this.width = double.infinity,
@@ -15,9 +13,7 @@ class ClipCard extends StatelessWidget {
     this.sliver = false,
   }) : super(key: key);
 
-  final String src;
-  final String duration;
-  final String author;
+  final ClipModel model;
   final EdgeInsets margin;
   final EdgeInsets padding;
   final double width;
@@ -25,86 +21,32 @@ class ClipCard extends StatelessWidget {
   final bool sliver;
 
   @override
+  _ClipCardState createState() => _ClipCardState();
+}
+
+class _ClipCardState extends State<ClipCard> {
+  @override
   Widget build(BuildContext context) {
     final Widget card = AspectRatio(
       aspectRatio: 16.0 / 9.0,
       child: Container(
-        margin: margin,
-        padding: padding,
-        width: width,
-        height: height,
+        margin: widget.margin,
+        padding: widget.padding,
+        width: widget.width,
+        height: widget.height,
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
+          // TODO(itsprof): implement video player
           child: Container(
+            width: double.infinity,
+            height: double.infinity,
             color: Colors.grey,
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: CachedNetworkImage(
-                    imageUrl: src,
-                    fadeInDuration: const Duration(milliseconds: 300),
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (BuildContext context, String url) {
-                      return Center(child: const CircularProgressIndicator());
-                    },
-                  ),
-                ),
-                Container(
-                  color: Colors.black45,
-                  child: Center(
-                    child: Icon(
-                      Icons.play_circle_outline,
-                      size: 80.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 8.0,
-                  left: 8.0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.timer,
-                        size: 15.0,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 4.0),
-                      Text(
-                        duration,
-                        textAlign: TextAlign.end,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 8.0,
-                  right: 8.0,
-                  child: Text(
-                    author,
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
     );
 
-    return sliver ? SliverToBoxAdapter(child: card) : card;
+    return widget.sliver ? SliverToBoxAdapter(child: card) : card;
   }
 }
