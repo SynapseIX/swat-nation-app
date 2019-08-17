@@ -318,31 +318,57 @@ class _PublicBody extends StatelessWidget {
             runSpacing: 4.0,
             children: <Widget>[
               if (user.gamertag != null)
-              ChipButton(
-                avatar: const Icon(MdiIcons.xbox),
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.xbox),
                 label: Text(user.gamertag),
-                onTap: () => openUrl('$kGamertag${user.gamertag}'),
+                onPressed: () => openUrl('$kGamertag${user.gamertag}'),
               ),
 
               if (user.twitter != null)
-              ChipButton(
-                avatar: const Icon(MdiIcons.twitter),
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.twitter),
                 label: Text(user.twitter),
-                onTap: () => openUrl('https://twitter.com/${user.twitter}'),
+                onPressed: () => openUrl('https://twitter.com/${user.twitter}'),
               ),
 
               if (user.mixer != null)
-              ChipButton(
-                avatar: const Icon(MdiIcons.mixer),
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.mixer),
                 label: Text(user.mixer),
-                onTap: () => openUrl('https://mixer.com/${user.mixer}'),
+                onPressed: () => openUrl('https://mixer.com/${user.mixer}'),
               ),
 
               if (user.twitch != null)
-              ChipButton(
-                avatar: const Icon(MdiIcons.twitch),
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.twitch),
                 label: Text(user.twitch),
-                onTap: () => openUrl('https://twitch.tv/${user.twitch}'),
+                onPressed: () => openUrl('https://twitch.tv/${user.twitch}'),
+              ),
+            ],
+          ),
+        ),
+
+        // Requests
+        if (me)
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Expanded(
+                child: RaisedButton(
+                  child: const Text('Change Email'),
+                  // TODO(itsprof): implement
+                  onPressed: () {},
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: RaisedButton(
+                  child: const Text('Reset Password'),
+                  // TODO(itsprof): implement
+                  onPressed: () {},
+                ),
               ),
             ],
           ),
