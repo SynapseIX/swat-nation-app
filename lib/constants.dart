@@ -26,4 +26,5 @@ const String kGamertag = 'https://account.xbox.com/en-us/profile?gamertag=';
 const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people know that an account of public interest is authentic.';
 
 // Clips
+const String kDefaultClipThumbnail = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fthumbnail.webp?alt=media&token=d6a53308-b3f2-4146-a371-6b852da0232f';
 final int kMaxRandomValue = math.pow(2, 53);
