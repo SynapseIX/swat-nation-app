@@ -88,9 +88,9 @@ class ClipCard extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
+                          fontSize: 22.0
                         ),
                       ),
-                      // const SizedBox(height: 8.0),
                       FutureBuilder<DocumentSnapshot>(
                         future: userBloc.userByUid(model.author),
                         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -103,7 +103,7 @@ class ClipCard extends StatelessWidget {
                               maxLines: 1,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 14.0,
+                                fontSize: 18.0,
                               ),
                             );
                           }

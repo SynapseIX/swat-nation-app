@@ -43,7 +43,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
         (ClipModel data) {
           _randomClipSubject.add(data);
         },
-        onError: (String error) {
+        onError: (Object error) {
           _firestore
             .collection(clipsCollection)
             .where('random', isLessThanOrEqualTo: seed)
