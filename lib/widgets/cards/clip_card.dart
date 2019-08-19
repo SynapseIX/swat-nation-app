@@ -58,6 +58,9 @@ class ClipCard extends StatelessWidget {
                         height: double.infinity,
                         fadeInDuration: const Duration(milliseconds: 300),
                         fit: BoxFit.cover,
+                        placeholder: (BuildContext context, String url) {
+                          return Center(child: const CircularProgressIndicator());
+                        },
                       );
                     }
 
