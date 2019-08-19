@@ -72,9 +72,9 @@ class ClipCard extends StatelessWidget {
                 ),
                 Center(
                   child: const Icon(
-                    MdiIcons.playCircleOutline,
+                    MdiIcons.play,
                     color: Colors.white,
-                    size: 60.0,
+                    size: 50.0,
                   ),
                 ),
                 Positioned(
@@ -91,7 +91,7 @@ class ClipCard extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 22.0
+                          fontSize: 20.0
                         ),
                       ),
                       FutureBuilder<DocumentSnapshot>(
@@ -106,7 +106,7 @@ class ClipCard extends StatelessWidget {
                               maxLines: 1,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                               ),
                             );
                           }
