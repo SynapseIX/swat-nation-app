@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/mixins/clip_transformer.dart';
