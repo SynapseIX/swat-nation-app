@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swat_nation/models/clip_model.dart';
 
 /// Creates a card that represents a clip.
-class ClipCard extends StatefulWidget {
+class ClipCard extends StatelessWidget {
   const ClipCard({
     Key key,
     @required this.model,
@@ -21,19 +21,14 @@ class ClipCard extends StatefulWidget {
   final bool sliver;
 
   @override
-  _ClipCardState createState() => _ClipCardState();
-}
-
-class _ClipCardState extends State<ClipCard> {
-  @override
   Widget build(BuildContext context) {
     final Widget card = AspectRatio(
       aspectRatio: 16.0 / 9.0,
       child: Container(
-        margin: widget.margin,
-        padding: widget.padding,
-        width: widget.width,
-        height: widget.height,
+        margin: margin,
+        padding: padding,
+        width: width,
+        height: height,
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -47,6 +42,6 @@ class _ClipCardState extends State<ClipCard> {
       ),
     );
 
-    return widget.sliver ? SliverToBoxAdapter(child: card) : card;
+    return sliver ? SliverToBoxAdapter(child: card) : card;
   }
 }

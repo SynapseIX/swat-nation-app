@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,7 +49,9 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     super.initState();
     authBloc = AuthBloc.instance();
     userBloc = UserBloc();
+    
     clipsBloc = ClipsBloc();
+    clipsBloc.fetchRandomClip(Random().nextInt(kMaxRandomValue));
   }
 
   @override
@@ -176,7 +180,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
         // Community Highlight
         StreamBuilder<ClipModel>(
-          stream: clipsBloc.randomClip,
+          stream: clipsBloc.randomClipStream,
           builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
             if (!snapshot.hasData) {
               return const SliverToBoxAdapter(child: SizedBox());
