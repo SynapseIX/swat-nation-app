@@ -5,43 +5,49 @@ import 'package:swat_nation/base/base_model.dart';
 /// Represents a video clip.
 class ClipModel extends BaseModel {
   ClipModel({
-    @required this.userId,
+    @required this.author,
     @required this.videoUrl,
     @required this.random,
     @required this.createdAt,
+    this.thumbnailUrl,
   });
 
   ClipModel.fromSnapshot(DocumentSnapshot document) {
-    userId = document.data['userId'];
+    author = document.data['author'];
+    videoUrl = document.data['videoUrl'];
     videoUrl = document.data['videoUrl'];
     random = document.data['random'];
     createdAt = document.data['createdAt'];
+    thumbnailUrl = document.data['thumbnailUrl'];
   }
 
   ClipModel.blank();
   
-  String userId;
+  String author;
   String videoUrl;
   int random;
   Timestamp createdAt;
+  String thumbnailUrl;
 
   @override
   String toString() {
     return '''
-    userId: $userId
+    author: $author
     videoUrl: $videoUrl
     random: $random
     createdAt: $createdAt
+    thumbnail: $thumbnailUrl
     ''';
   }
   
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'userId': userId,
+      'author': author,
       'videoUrl': videoUrl,
       'random': random,
       'createdAt': createdAt,
+      'thumbnailUrl': thumbnailUrl,
     };
   }
 }

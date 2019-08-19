@@ -36,7 +36,7 @@ class ClipCard extends StatelessWidget {
           child: Container(
             width: double.infinity,
             height: double.infinity,
-            color: Colors.grey,
+            color: Colors.lightBlue,
           ),
         ),
       ),
