@@ -20,7 +20,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
   Stream<List<ClipModel>> allClipsForUser(String uid) {
     return _firestore
       .collection(clipsCollection)
-      .where('userId', isEqualTo: uid)
+      .where('author', isEqualTo: uid)
       .snapshots()
       .transform(transformClips);
   }
