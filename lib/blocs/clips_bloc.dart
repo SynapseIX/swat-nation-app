@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swat_nation/base/base_bloc.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/mixins/clip_transformer.dart';
 import 'package:swat_nation/models/clip_model.dart';
 
@@ -23,6 +26,18 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
       .where('author', isEqualTo: uid)
       .snapshots()
       .transform(transformClips);
+  }
+
+  Future<DocumentSnapshot> clipByUid(String uid) async {
+    final QuerySnapshot snapshot = await _firestore
+      .collection(clipsCollection)
+      .where('uid', isEqualTo: uid)
+      .getDocuments();
+
+    final List<DocumentSnapshot> docs = snapshot.documents;
+    return docs.isNotEmpty
+      ? docs.first
+      : null;
   }
 
   Future<DocumentReference> create(ClipModel model) {
@@ -58,6 +73,20 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
             );
         }
       );
+  }
+
+  Future<void> reseed(ClipModel model) async {
+    if (Random().nextInt(kReseedValue) == 0) {
+      final DocumentSnapshot doc = await clipByUid(model.uid);
+      final DocumentReference ref = doc.reference;
+      
+      return ref.setData(
+        <String, dynamic>{
+          'random': Random().nextInt(kMaxRandomValue),
+        },
+        merge: true,
+      );
+    }
   }
 
   @override

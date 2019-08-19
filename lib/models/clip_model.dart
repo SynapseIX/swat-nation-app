@@ -5,6 +5,7 @@ import 'package:swat_nation/base/base_model.dart';
 /// Represents a video clip.
 class ClipModel extends BaseModel {
   ClipModel({
+    @required this.uid,
     @required this.author,
     @required this.link,
     @required this.random,
@@ -13,6 +14,7 @@ class ClipModel extends BaseModel {
   });
 
   ClipModel.fromSnapshot(DocumentSnapshot document) {
+    uid = document.reference.documentID;
     author = document.data['author'];
     link = document.data['link'];
     random = document.data['random'];
@@ -22,6 +24,7 @@ class ClipModel extends BaseModel {
 
   ClipModel.blank();
   
+  String uid;
   String author;
   String link;
   int random;
@@ -31,6 +34,7 @@ class ClipModel extends BaseModel {
   @override
   String toString() {
     return '''
+    uid: $uid
     author: $author
     link: $link
     random: $random
@@ -42,6 +46,7 @@ class ClipModel extends BaseModel {
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'uid': uid,
       'author': author,
       'link': link,
       'random': random,

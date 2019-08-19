@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 // Firebase App IDs
 const String kAppIdiOS = '1:688037325190:ios:27b7368339d68b43';
 const String kAppIdAndroid = '1:688037325190:android:67e68583ed1a2d49';
@@ -27,4 +25,5 @@ const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people
 
 // Clips
 const String kDefaultClipThumbnail = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fthumbnail.webp?alt=media&token=d6a53308-b3f2-4146-a371-6b852da0232f';
-final int kMaxRandomValue = math.pow(2, 32);
+const int kReseedValue = 1000;
+const int kMaxRandomValue = 10000;
