@@ -26,6 +26,8 @@ dependencies:
 
   # Dart Lang
   intl: ^0.15.8
+  http: ^0.12.0+2
+  html: ^0.14.0+2
 
   # Plugins
   shared_preferences: ^0.5.3+4

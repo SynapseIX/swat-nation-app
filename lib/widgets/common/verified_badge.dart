@@ -18,7 +18,7 @@ class VerifiedBadge extends StatelessWidget {
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: Text(kVerifiedCopy),
+              content: const Text(kVerifiedCopy),
             ),
           );
       },

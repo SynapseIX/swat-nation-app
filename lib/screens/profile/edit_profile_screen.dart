@@ -182,14 +182,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                           const SizedBox(height: 8.0),
-                          Text(
+                          const Text(
                             'Change Picture',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               shadows: <Shadow>[
                                 Shadow(
-                                  offset: const Offset(1.0, 1.0),
+                                  offset: Offset(1.0, 1.0),
                                 ),
                               ],
                             ),
@@ -382,7 +382,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: <Widget>[
               Text(
                 title ?? 'Select a Source',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),

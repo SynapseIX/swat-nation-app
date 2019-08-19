@@ -6,37 +6,36 @@ import 'package:swat_nation/base/base_model.dart';
 class ClipModel extends BaseModel {
   ClipModel({
     @required this.author,
-    @required this.videoUrl,
+    @required this.link,
     @required this.random,
     @required this.createdAt,
-    this.thumbnailUrl,
+    this.title,
   });
 
   ClipModel.fromSnapshot(DocumentSnapshot document) {
     author = document.data['author'];
-    videoUrl = document.data['videoUrl'];
-    videoUrl = document.data['videoUrl'];
+    link = document.data['link'];
     random = document.data['random'];
     createdAt = document.data['createdAt'];
-    thumbnailUrl = document.data['thumbnailUrl'];
+    title = document.data['title'];
   }
 
   ClipModel.blank();
   
   String author;
-  String videoUrl;
+  String link;
   int random;
   Timestamp createdAt;
-  String thumbnailUrl;
+  String title;
 
   @override
   String toString() {
     return '''
     author: $author
-    videoUrl: $videoUrl
+    link: $link
     random: $random
     createdAt: $createdAt
-    thumbnail: $thumbnailUrl
+    title: $title
     ''';
   }
   
@@ -44,10 +43,10 @@ class ClipModel extends BaseModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'author': author,
-      'videoUrl': videoUrl,
+      'link': link,
       'random': random,
       'createdAt': createdAt,
-      'thumbnailUrl': thumbnailUrl,
+      'title': title,
     };
   }
 }
