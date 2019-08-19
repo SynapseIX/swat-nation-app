@@ -12,12 +12,6 @@ const int kMaxBioLength = 140;
 // SWAT Nation logo
 const String kLogo = 'https://static1.squarespace.com/static/5bfb2111372b964077959077/t/5bfcbd661ae6cf259c75a2ad/1563085290045/?format=500w';
 
-// Default profile picture
-const String kDefaultAvi = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/avatars%2Fmaster_chief_avi.jpg?alt=media&token=3a797114-7405-4115-b979-c9d29bfa8e82';
-
-// Default profile header
-const String kDefaultProfileHeader = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/profile%2Fprofile_header_background.jpg?alt=media&token=901e4f5e-fa6e-4320-8e94-3f3b129c0c17';
-
 // SWAT Nation social accounts
 const String kWebsite = 'https://swatnation.net';
 const String kFacebookGroup = 'https://facebook.com/groups/swat-nation';
@@ -26,6 +20,8 @@ const String kInstagram = 'https://instagram.com/haloswatnation';
 const String kXboxClub = 'https://account.xbox.com/en-us/clubs/profile?clubid=3379832045537319';
 
 // Profile
+const String kDefaultAvi = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fprofile.jpg?alt=media&token=da6246b4-cf90-484e-b923-4af3c630722b';
+const String kDefaultProfileHeader = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fprofile_header_background.jpg?alt=media&token=29608a22-932f-444d-843a-c2fa58b4701d';
 const String kGamertag = 'https://account.xbox.com/en-us/profile?gamertag=';
 const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people know that an account of public interest is authentic.';
 
