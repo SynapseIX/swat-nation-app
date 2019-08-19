@@ -46,100 +46,106 @@ class ClipCard extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             color: Colors.lightBlue,
-            child: Stack(
-              children: <Widget>[
-                FutureBuilder<ClipInfoModel>(
-                  future: extractClipInfo(model.link),
-                  builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
-                    if (snapshot.hasData) {
-                      return CachedNetworkImage(
-                        imageUrl: snapshot.data.thumbnail,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fadeInDuration: const Duration(milliseconds: 300),
-                        fit: BoxFit.cover,
-                        placeholder: (BuildContext context, String url) {
-                          return Center(child: const CircularProgressIndicator());
-                        },
-                      );
-                    }
+            child: GestureDetector(
+              // TODO(itsprof): play insterstitial if not premium
+              onTap: () {
+                print('Navigate to player...');
+              },
+              child: Stack(
+                children: <Widget>[
+                  FutureBuilder<ClipInfoModel>(
+                    future: extractClipInfo(model.link),
+                    builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
+                      if (snapshot.hasData) {
+                        return CachedNetworkImage(
+                          imageUrl: snapshot.data.thumbnail,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fadeInDuration: const Duration(milliseconds: 300),
+                          fit: BoxFit.cover,
+                          placeholder: (BuildContext context, String url) {
+                            return Center(child: const CircularProgressIndicator());
+                          },
+                        );
+                      }
 
-                    return const SizedBox();
-                  },
-                ),
-                Container(
-                  color: Colors.black54,
-                ),
-                Center(
-                  child: const Icon(
-                    MdiIcons.play,
-                    color: Colors.white,
-                    size: 50.0,
+                      return const SizedBox();
+                    },
                   ),
-                ),
-                Positioned(
-                  left: 8.0,
-                  bottom: 8.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        model.title ?? '',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0
+                  Container(
+                    color: Colors.black54,
+                  ),
+                  Center(
+                    child: const Icon(
+                      MdiIcons.play,
+                      color: Colors.white,
+                      size: 50.0,
+                    ),
+                  ),
+                  Positioned(
+                    left: 8.0,
+                    bottom: 8.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          model.title ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0
+                          ),
                         ),
-                      ),
-                      FutureBuilder<DocumentSnapshot>(
-                        future: userBloc.userByUid(model.author),
-                        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            final UserModel user = UserModel.fromSnapshot(snapshot.data);
-                            
-                            return Text(
-                              'Gameplay by ${user.displayName}',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                              ),
-                            );
-                          }
+                        FutureBuilder<DocumentSnapshot>(
+                          future: userBloc.userByUid(model.author),
+                          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (snapshot.hasData) {
+                              final UserModel user = UserModel.fromSnapshot(snapshot.data);
+                              
+                              return Text(
+                                'Gameplay by ${user.displayName}',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                ),
+                              );
+                            }
 
-                          return const SizedBox();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 8.0,
-                  right: 8.0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Icon(
-                        MdiIcons.calendar,
-                        color: Colors.white,
-                        size: 17.0,
-                      ),
-                      const SizedBox(width: 4.0),
-                      Text(
-                        humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy'),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic
+                            return const SizedBox();
+                          },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    top: 8.0,
+                    right: 8.0,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const Icon(
+                          MdiIcons.calendar,
+                          color: Colors.white,
+                          size: 17.0,
+                        ),
+                        const SizedBox(width: 4.0),
+                        Text(
+                          humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy'),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
