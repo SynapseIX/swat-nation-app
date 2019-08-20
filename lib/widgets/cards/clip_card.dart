@@ -6,8 +6,10 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/screens/clips/clip_screen.dart';
 import 'package:swat_nation/utils/clip_helper.dart';
 import 'package:swat_nation/utils/date_helper.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Creates a card that represents a clip.
 class ClipCard extends StatelessWidget {
@@ -48,8 +50,23 @@ class ClipCard extends StatelessWidget {
             color: Colors.lightBlue,
             child: GestureDetector(
               // TODO(itsprof): play insterstitial if not premium
-              onTap: () {
-                print('Navigate to player...');
+              onTap: () async {
+                DialogHelper.instance().showWaitingDialog(
+                  context: context,
+                  title: 'Loading clip...',
+                );
+
+                final ClipInfoModel clip = await extractClipInfo(model.link);
+                Navigator.of(context)
+                  ..pop()
+                  ..push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) {
+                        return ClipScreen(model: clip);
+                      },
+                      fullscreenDialog: true,
+                    ),
+                  );
               },
               child: Stack(
                 children: <Widget>[
@@ -135,7 +152,7 @@ class ClipCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4.0),
                         Text(
-                          humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy'),
+                          'Created ${humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy')}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontStyle: FontStyle.italic
