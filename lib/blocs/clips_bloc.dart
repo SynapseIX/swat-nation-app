@@ -76,7 +76,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
   }
 
   Future<void> reseed(ClipModel model) async {
-    if (Random().nextInt(kReseedValue) == 0) {
+    if (Random().nextInt(kMaxRandomValue) == 0) {
       final DocumentSnapshot doc = await clipByUid(model.uid);
       final DocumentReference ref = doc.reference;
       
