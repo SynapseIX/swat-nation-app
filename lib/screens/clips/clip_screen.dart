@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
@@ -28,6 +27,8 @@ class _ClipScreenState extends State<ClipScreen>
 
   @override
   void initState() {
+    super.initState();
+
     controller = VideoPlayerController.network(widget.model.videoUrl);
     controller.addListener(_listener);
     initialized = controller.initialize();
@@ -44,7 +45,6 @@ class _ClipScreenState extends State<ClipScreen>
     );
 
     Wakelock.enable();
-    super.initState();
   }
 
   @override
@@ -142,33 +142,22 @@ class _ClipScreenState extends State<ClipScreen>
                                   overlayOpacity = 0.0;
                                 });
                               } else {
+                                controller.value.isPlaying
+                                    ? await controller.pause()
+                                    : await controller.play();
+                                
                                 setState(() {
-                                  controller.value.isPlaying
-                                    ? controller.pause()
-                                    : controller.play();
                                   overlayOpacity = controller.value.isPlaying ? 0.0 : 1.0;
                                 });
                               }
                             },
                             onTapOverlay: () {
                               setState(() {
-                                if (controller.value.isPlaying) {
-                                  overlayOpacity = overlayOpacity == 1.0 ? 0.0 : 1.0;
-                                }
+                                overlayOpacity = controller.value.isPlaying 
+                                  && overlayOpacity == 1.0 
+                                    ? 0.0 
+                                    : 1.0;
                               });
-
-                              if (overlayOpacity == 1 && !stopped) {
-                                Future<void>.delayed(
-                                  kPlayerOverlayFadeAfterDuration,
-                                  () {
-                                    if (mounted) {
-                                      setState(() {
-                                        overlayOpacity = 0.0;
-                                      });
-                                    }
-                                  },
-                                );
-                              }
                             },
                           ),
                         ],
