@@ -99,7 +99,8 @@ class _ClipScreenState extends State<ClipScreen> {
                         setState(() {
                           overlayOpacity = 0.0;
                         });
-                      });
+                      },
+                    );
                   }
                 },
                 child: Scaffold(
