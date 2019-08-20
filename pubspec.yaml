@@ -46,6 +46,7 @@ dependencies:
   flutter_facebook_login: ^2.0.1
   material_design_icons_flutter: ^3.2.3895
   cached_network_image: ^1.1.1
+  wakelock: ^0.1.2+8
 
 dev_dependencies:
   flutter_test:

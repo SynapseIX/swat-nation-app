@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wakelock/wakelock.dart';
 
 /// Represents the screen that constains the video player for clips.
 class ClipScreen extends StatefulWidget {
@@ -41,6 +42,7 @@ class _ClipScreenState extends State<ClipScreen> {
       ],
     );
 
+    Wakelock.enable();
     super.initState();
   }
 
@@ -56,6 +58,7 @@ class _ClipScreenState extends State<ClipScreen> {
       ],
     );
 
+    Wakelock.disable();
     super.dispose();
   }
 
