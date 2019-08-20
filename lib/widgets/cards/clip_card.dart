@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
@@ -33,6 +34,7 @@ class ClipCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserBloc userBloc = UserBloc();
+    final ClipsBloc clipsBloc = ClipsBloc();
 
     final Widget card = AspectRatio(
       aspectRatio: 16.0 / 9.0,
@@ -55,6 +57,8 @@ class ClipCard extends StatelessWidget {
                   context: context,
                   title: 'Loading clip...',
                 );
+
+                await clipsBloc.reseed(model);
 
                 final ClipInfoModel clip = await extractClipInfo(model.link);
                 Navigator.of(context)
