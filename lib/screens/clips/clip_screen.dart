@@ -176,17 +176,7 @@ class _ClipScreenState extends State<ClipScreen> {
                           child: SafeArea(
                             child: IconButton(
                               icon: const Icon(MdiIcons.close, color: Colors.white,),
-                              onPressed: () {
-                                setState(() {
-                                  SystemChrome.setPreferredOrientations(
-                                    <DeviceOrientation>[
-                                      DeviceOrientation.portraitUp,
-                                    ],
-                                  ).then((void value) {
-                                    Navigator.of(context).pop();
-                                  });
-                                });
-                              },
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
                           ),
                         ),
