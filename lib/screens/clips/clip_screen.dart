@@ -83,82 +83,78 @@ class _ClipScreenState extends State<ClipScreen> {
         future: initialized,
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Center(
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (controller.value.isPlaying) {
-                      overlayOpacity = overlayOpacity == 1.0 ? 0.0 : 1.0;
-                    }
-                  });
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Stack(
+                children: <Widget>[
+                  Center(
+                    child: AspectRatio(
+                      aspectRatio: 16.0 / 9.0,
+                      child: Stack(
+                        children: <Widget>[
+                          VideoPlayer(controller),
+                          _ControlsOverlay(
+                            controller: controller,
+                            opacity: overlayOpacity,
+                            stopped: stopped,
+                            onTapPlayback: () async {
+                              if (stopped) {
+                                await controller.initialize();
+                                await controller.play();
 
-                  if (overlayOpacity == 1 && !stopped) {
-                    Future<void>.delayed(
-                      kPlayerOverlayFadeAfterDuration,
-                      () {
-                        setState(() {
-                          overlayOpacity = 0.0;
-                        });
-                      },
-                    );
-                  }
-                },
-                child: Scaffold(
-                  backgroundColor: Colors.black,
-                  body: Stack(
-                    children: <Widget>[
-                      Center(
-                        child: AspectRatio(
-                          aspectRatio: 16.0 / 9.0,
-                          child: Stack(
-                            children: <Widget>[
-                              VideoPlayer(controller),
-                              _ControlsOverlay(
-                                controller: controller,
-                                opacity: overlayOpacity,
-                                stopped: stopped,
-                                onTapPlayback: () async {
-                                  if (stopped) {
-                                    await controller.initialize();
-                                    await controller.play();
+                                setState(() {
+                                  stopped = false;
+                                  overlayOpacity = 0.0;
+                                });
+                              } else {
+                                setState(() {
+                                  controller.value.isPlaying
+                                    ? controller.pause()
+                                    : controller.play();
+                                  overlayOpacity = controller.value.isPlaying ? 0.0 : 1.0;
+                                });
+                              }
+                            },
+                            onTapOverlay: () {
+                              setState(() {
+                                if (controller.value.isPlaying) {
+                                  overlayOpacity = overlayOpacity == 1.0 ? 0.0 : 1.0;
+                                }
+                              });
 
+                              if (overlayOpacity == 1 && !stopped) {
+                                Future<void>.delayed(
+                                  kPlayerOverlayFadeAfterDuration,
+                                  () {
                                     setState(() {
-                                      stopped = false;
                                       overlayOpacity = 0.0;
                                     });
-                                  } else {
-                                    setState(() {
-                                      controller.value.isPlaying
-                                        ? controller.pause()
-                                        : controller.play();
-                                      overlayOpacity = controller.value.isPlaying ? 0.0 : 1.0;
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
+                                  },
+                                );
+                              }
+                            },
                           ),
-                        ),
+                        ],
                       ),
-                      Positioned(
-                        top: 0.0,
-                        left: 0.0,
-                        child: Opacity(
-                          opacity: overlayOpacity,
-                          child: SafeArea(
-                            child: IconButton(
-                              icon: const Icon(
-                                MdiIcons.close,
-                                color: Colors.white,
-                              ),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Positioned(
+                    top: 0.0,
+                    left: 0.0,
+                    child: Opacity(
+                      opacity: overlayOpacity,
+                      child: SafeArea(
+                        child: IconButton(
+                          icon: const Icon(
+                            MdiIcons.close,
+                            color: Colors.white,
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           }
@@ -176,12 +172,14 @@ class _ControlsOverlay extends StatelessWidget {
     @required this.opacity,
     @required this.stopped,
     this.onTapPlayback,
+    this.onTapOverlay,
   });
   
   final VideoPlayerController controller;
   final double opacity;
   final bool stopped;
   final VoidCallback onTapPlayback;
+  final VoidCallback onTapOverlay;
 
   @override
   Widget build(BuildContext context) {
@@ -209,35 +207,38 @@ class _ControlsOverlay extends StatelessWidget {
       ),
     );
 
-    return AnimatedOpacity(
-      opacity: opacity,
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        color: Colors.black54,
-        child: Stack(
-          children: <Widget>[
-            Center(
-              child: FlatButton(
-                child: playbackStateIcon,
-                onPressed: onTapPlayback,
+    return GestureDetector(
+      onTap: onTapOverlay,
+      child: AnimatedOpacity(
+        opacity: opacity,
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          color: Colors.black54,
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: FlatButton(
+                  child: playbackStateIcon,
+                  onPressed: onTapPlayback,
+                ),
               ),
-            ),
-            if (!stopped)
-            Positioned(
-              left: 0.0,
-              right: 0.0,
-              bottom: 0.0,
-              child: OrientationBuilder(
-                builder: (BuildContext context, Orientation orientation) {
-                  return orientation == Orientation.portrait
-                  ? progressIndicator
-                  : SafeArea(
-                    child: progressIndicator,
-                  );
-                },
+              if (!stopped)
+              Positioned(
+                left: 0.0,
+                right: 0.0,
+                bottom: 0.0,
+                child: OrientationBuilder(
+                  builder: (BuildContext context, Orientation orientation) {
+                    return orientation == Orientation.portrait
+                    ? progressIndicator
+                    : SafeArea(
+                      child: progressIndicator,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
