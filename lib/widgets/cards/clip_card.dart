@@ -61,6 +61,8 @@ class ClipCard extends StatelessWidget {
                 await clipsBloc.reseed(model);
 
                 final ClipInfoModel clip = await extractClipInfo(model.link);
+                clip.title = model.title ?? '';
+                
                 Navigator.of(context)
                   ..pop()
                   ..push(

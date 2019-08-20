@@ -88,6 +88,15 @@ class _ClipScreenState extends State<ClipScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             return Scaffold(
               backgroundColor: Colors.black,
+              appBar: overlayOpacity == 1.0
+                ? AppBar(
+                  backgroundColor: Colors.black,
+                  title: Text(
+                    widget.model.title ?? '',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+                : null,
               body: Stack(
                 children: <Widget>[
                   Center(
@@ -98,6 +107,7 @@ class _ClipScreenState extends State<ClipScreen> {
                           VideoPlayer(controller),
                           _ControlsOverlay(
                             controller: controller,
+                            model: widget.model,
                             opacity: overlayOpacity,
                             stopped: stopped,
                             onTapPlayback: () async {
@@ -141,22 +151,6 @@ class _ClipScreenState extends State<ClipScreen> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 0.0,
-                    left: 0.0,
-                    child: Opacity(
-                      opacity: overlayOpacity,
-                      child: SafeArea(
-                        child: IconButton(
-                          icon: const Icon(
-                            MdiIcons.close,
-                            color: Colors.white,
-                          ),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             );
@@ -172,6 +166,7 @@ class _ClipScreenState extends State<ClipScreen> {
 class _ControlsOverlay extends StatelessWidget {
   const _ControlsOverlay({
     @required this.controller,
+    @required this.model,
     @required this.opacity,
     @required this.stopped,
     this.onTapPlayback,
@@ -179,6 +174,7 @@ class _ControlsOverlay extends StatelessWidget {
   });
   
   final VideoPlayerController controller;
+  final ClipInfoModel model;
   final double opacity;
   final bool stopped;
   final VoidCallback onTapPlayback;
@@ -225,19 +221,26 @@ class _ControlsOverlay extends StatelessWidget {
                   onPressed: onTapPlayback,
                 ),
               ),
-              if (!stopped)
               Positioned(
                 left: 0.0,
                 right: 0.0,
                 bottom: 0.0,
-                child: OrientationBuilder(
-                  builder: (BuildContext context, Orientation orientation) {
-                    return orientation == Orientation.portrait
-                    ? progressIndicator
-                    : SafeArea(
-                      child: progressIndicator,
-                    );
-                  },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'Source: ${model.link}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      textScaleFactor: 0.5,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    if (!stopped)
+                    progressIndicator,
+                  ],
                 ),
               ),
             ],
