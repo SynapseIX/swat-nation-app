@@ -18,7 +18,8 @@ class ClipScreen extends StatefulWidget {
   State createState() => _ClipScreenState();
 }
 
-class _ClipScreenState extends State<ClipScreen> {
+class _ClipScreenState extends State<ClipScreen>
+  with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   VideoPlayerController controller;
   Future<void> initialized;
   
@@ -47,6 +48,25 @@ class _ClipScreenState extends State<ClipScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print('Readding listener');
+        controller.addListener(_listener);
+        break;
+      case AppLifecycleState.paused:
+        print('Removing listener');
+        controller.removeListener(_listener);
+        break;
+      default:
+        break;
+    }
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   void dispose() {
     controller.removeListener(_listener);
     controller.dispose();
@@ -68,7 +88,7 @@ class _ClipScreenState extends State<ClipScreen> {
     final bool isPlaying = controller.value.isPlaying;
     final bool playbackStopped = position == duration && !isPlaying;
     
-    if (playbackStopped) {
+    if (playbackStopped && mounted) {
       setState(() {
         stopped = true;
         overlayOpacity = 1.0;
@@ -78,6 +98,8 @@ class _ClipScreenState extends State<ClipScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -92,7 +114,7 @@ class _ClipScreenState extends State<ClipScreen> {
                 ? AppBar(
                   backgroundColor: Colors.black,
                   title: Text(
-                    widget.model.title ?? '',
+                    widget.model.title ?? 'Watching a Clip',
                     overflow: TextOverflow.ellipsis,
                   ),
                 )
@@ -139,9 +161,11 @@ class _ClipScreenState extends State<ClipScreen> {
                                 Future<void>.delayed(
                                   kPlayerOverlayFadeAfterDuration,
                                   () {
-                                    setState(() {
-                                      overlayOpacity = 0.0;
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        overlayOpacity = 0.0;
+                                      });
+                                    }
                                   },
                                 );
                               }
@@ -212,7 +236,7 @@ class _ControlsOverlay extends StatelessWidget {
         opacity: opacity,
         duration: const Duration(milliseconds: 300),
         child: Container(
-          color: Colors.black54,
+          color: Colors.black.withAlpha(192),
           child: Stack(
             children: <Widget>[
               Center(
