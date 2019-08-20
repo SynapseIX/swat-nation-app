@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:video_player/video_player.dart';
 
@@ -204,7 +203,6 @@ class _ControlsOverlay extends StatelessWidget {
               bottom: 0.0,
               child: OrientationBuilder(
                 builder: (BuildContext context, Orientation orientation) {
-                  print('Orientation: $orientation');
                   return orientation == Orientation.portrait
                   ? progressIndicator
                   : SafeArea(
