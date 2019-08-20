@@ -169,7 +169,23 @@ class _ClipScreenState extends State<ClipScreen>
             );
           }
 
-          return Center(child: const CircularProgressIndicator());
+          return Center(child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const CircularProgressIndicator(),
+              const SizedBox(height: 8.0),
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 18.0,
+                  ),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          ));
         },
       ),
     );

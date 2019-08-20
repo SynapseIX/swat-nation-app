@@ -62,7 +62,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
           _firestore
             .collection(clipsCollection)
             .where('random', isLessThanOrEqualTo: seed)
-            .orderBy('random')
+            .orderBy('random', descending: true)
             .limit(1)
             .snapshots()
             .transform(transformRandomClip)
@@ -76,13 +76,14 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
   }
 
   Future<void> reseed(ClipModel model) async {
-    if (Random().nextInt(kMaxRandomValue) == 0) {
+    if (Random().nextInt(kReseedValue) == 0) {
       final DocumentSnapshot doc = await clipByUid(model.uid);
       final DocumentReference ref = doc.reference;
+      final Random random = Random(DateTime.now().millisecondsSinceEpoch);
       
       return ref.setData(
         <String, dynamic>{
-          'random': Random().nextInt(kMaxRandomValue),
+          'random': random.nextInt(kMaxRandomValue),
         },
         merge: true,
       );
