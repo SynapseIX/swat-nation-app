@@ -83,20 +83,7 @@ class _ClipScreenState extends State<ClipScreen> {
         future: initialized,
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Widget playbackStateIcon;
-            if (stopped) {
-              playbackStateIcon = const Icon(
-                MdiIcons.replay,
-                color: Colors.white,
-                size: 80.0,
-              );
-            } else {
-              playbackStateIcon = Icon(
-                controller.value.isPlaying ? MdiIcons.pause : MdiIcons.play,
-                color: Colors.white,
-                size: 80.0,
-              );
-            }
+            
 
             return Center(
               child: GestureDetector(
@@ -117,69 +104,30 @@ class _ClipScreenState extends State<ClipScreen> {
                           child: Stack(
                             children: <Widget>[
                               VideoPlayer(controller),
-                              AnimatedOpacity(
+                              _ControlsOverlay(
+                                controller: controller,
                                 opacity: overlayOpacity,
-                                duration: const Duration(milliseconds: 300),
-                                child: Container(
-                                  color: Colors.black54,
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Center(
-                                        child: FlatButton(
-                                          child: playbackStateIcon,
-                                          onPressed: () async {
-                                            if (stopped) {
-                                              await controller.initialize();
-                                              await controller.play();
+                                stopped: stopped,
+                                onTapPlayback: () async {
+                                  if (stopped) {
+                                    await controller.initialize();
+                                    await controller.play();
 
-                                              setState(() {
-                                                stopped = false;
-                                                overlayOpacity = 0.0;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                controller.value.isPlaying
-                                                  ? controller.pause()
-                                                  : controller.play();
-                                                overlayOpacity = controller.value.isPlaying ? 0.0 : 1.0;
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      if (!stopped)
-                                      Positioned(
-                                        bottom: 0.0,
-                                        left: 0.0,
-                                        right: 0.0,
-                                        child: VideoProgressIndicator(
-                                          controller,
-                                          allowScrubbing: true,
-                                          colors: VideoProgressColors(
-                                            playedColor: Theme.of(context).primaryColor,
-                                            bufferedColor: Colors.lightBlue[50],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    setState(() {
+                                      stopped = false;
+                                      overlayOpacity = 0.0;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      controller.value.isPlaying
+                                        ? controller.pause()
+                                        : controller.play();
+                                      overlayOpacity = controller.value.isPlaying ? 0.0 : 1.0;
+                                    });
+                                  }
+                                },
                               ),
                             ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        left: 0.0,
-                        child: AnimatedOpacity(
-                          opacity: overlayOpacity,
-                          duration: const Duration(milliseconds: 300),
-                          child: SafeArea(
-                            child: IconButton(
-                              icon: const Icon(MdiIcons.close, color: Colors.white,),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
                           ),
                         ),
                       ),
@@ -192,6 +140,89 @@ class _ClipScreenState extends State<ClipScreen> {
 
           return Center(child: const CircularProgressIndicator());
         },
+      ),
+    );
+  }
+}
+
+class _ControlsOverlay extends StatelessWidget {
+  const _ControlsOverlay({
+    @required this.controller,
+    @required this.opacity,
+    @required this.stopped,
+    this.onTapPlayback,
+  });
+  
+  final VideoPlayerController controller;
+  final double opacity;
+  final bool stopped;
+  final VoidCallback onTapPlayback;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget playbackStateIcon;
+    if (stopped) {
+      playbackStateIcon = const Icon(
+        MdiIcons.replay,
+        color: Colors.white,
+        size: 80.0,
+      );
+    } else {
+      playbackStateIcon = Icon(
+        controller.value.isPlaying ? MdiIcons.pause : MdiIcons.play,
+        color: Colors.white,
+        size: 80.0,
+      );
+    }
+
+    final VideoProgressIndicator progressIndicator = VideoProgressIndicator(
+      controller,
+      allowScrubbing: true,
+      colors: VideoProgressColors(
+        playedColor: Theme.of(context).primaryColor,
+        bufferedColor: Colors.lightBlue[50],
+      ),
+    );
+
+    return AnimatedOpacity(
+      opacity: opacity,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        color: Colors.black54,
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: FlatButton(
+                child: playbackStateIcon,
+                onPressed: onTapPlayback,
+              ),
+            ),
+            if (!stopped)
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              bottom: 0.0,
+              child: OrientationBuilder(
+                builder: (BuildContext context, Orientation orientation) {
+                  print('Orientation: $orientation');
+                  return orientation == Orientation.portrait
+                  ? progressIndicator
+                  : SafeArea(
+                    child: progressIndicator,
+                  );
+                },
+              ),
+            ),
+            Positioned(
+              top: 0.0,
+              left: 0.0,
+              child: IconButton(
+                icon: const Icon(MdiIcons.close, color: Colors.white,),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
