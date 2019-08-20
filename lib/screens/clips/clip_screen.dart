@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:video_player/video_player.dart';
 
@@ -82,8 +83,6 @@ class _ClipScreenState extends State<ClipScreen> {
         future: initialized,
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            
-
             return Center(
               child: GestureDetector(
                 onTap: () {
@@ -92,6 +91,16 @@ class _ClipScreenState extends State<ClipScreen> {
                       overlayOpacity = overlayOpacity == 1.0 ? 0.0 : 1.0;
                     }
                   });
+
+                  if (overlayOpacity == 1 && !stopped) {
+                    Future<void>.delayed(
+                      kPlayerOverlayFadeAfterDuration,
+                      () {
+                        setState(() {
+                          overlayOpacity = 0.0;
+                        });
+                      });
+                  }
                 },
                 child: Scaffold(
                   backgroundColor: Colors.black,
@@ -127,6 +136,22 @@ class _ClipScreenState extends State<ClipScreen> {
                                 },
                               ),
                             ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 0.0,
+                        left: 0.0,
+                        child: Opacity(
+                          opacity: overlayOpacity,
+                          child: SafeArea(
+                            child: IconButton(
+                              icon: const Icon(
+                                MdiIcons.close,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
                           ),
                         ),
                       ),
@@ -209,14 +234,6 @@ class _ControlsOverlay extends StatelessWidget {
                     child: progressIndicator,
                   );
                 },
-              ),
-            ),
-            Positioned(
-              top: 0.0,
-              left: 0.0,
-              child: IconButton(
-                icon: const Icon(MdiIcons.close, color: Colors.white,),
-                onPressed: () => Navigator.of(context).pop(),
               ),
             ),
           ],
