@@ -11,7 +11,6 @@ import 'package:swat_nation/blocs/edit_profile_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the edit profile screen.
@@ -326,7 +325,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: bioController,
                 focusNode: bioNode,
                 maxLength: kMaxBioLength,
-                maxLines: iPhoneX(context) ? 3 : 4,
+                maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
