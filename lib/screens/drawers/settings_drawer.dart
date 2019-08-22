@@ -286,16 +286,7 @@ class _AuthHeader extends StatelessWidget {
               accountName: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
-                    user.displayName,
-                    style: const TextStyle(
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(1.0, 1.0),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Text(user.displayName),
                   if (model.verified)
                   Container(
                     margin: const EdgeInsets.only(left: 4.0),
@@ -303,16 +294,7 @@ class _AuthHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              accountEmail: Text(
-                user.email,
-                style: const TextStyle(
-                  shadows: <Shadow>[
-                    Shadow(
-                      offset: Offset(1.0, 1.0),
-                    ),
-                  ],
-                ),
-              ),
+              accountEmail: Text(user.email),
               currentAccountPicture: Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF333333),

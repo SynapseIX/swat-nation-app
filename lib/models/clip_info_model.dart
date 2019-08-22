@@ -10,6 +10,8 @@ class ClipInfoModel extends BaseModel {
     this.title,
   });
 
+  ClipInfoModel.blank();
+
   String thumbnail;
   String videoUrl;
   String link;

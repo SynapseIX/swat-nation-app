@@ -161,11 +161,6 @@ class _PublicHeader extends StatelessWidget {
                             color: Colors.white,
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(1.0, 1.0),
-                              ),
-                            ],
                           ),
                         ),
                         if (user.verified)
@@ -181,11 +176,6 @@ class _PublicHeader extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.white,
                         fontStyle: FontStyle.italic,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
                       ),
                     ),
                   ],
@@ -202,11 +192,6 @@ class _PublicHeader extends StatelessWidget {
                 textAlign: TextAlign.start,
                 style: const TextStyle(
                   color: Colors.white,
-                  shadows: <Shadow>[
-                    Shadow(
-                      offset: Offset(1.0, 1.0),
-                    ),
-                  ],
                 ),
               ),
             ),
@@ -271,11 +256,6 @@ class _PrivateHeader extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  shadows: <Shadow>[
-                    Shadow(
-                      offset: Offset(1.0, 1.0),
-                    ),
-                  ],
                 ),
               ),
               if (user.verified)
