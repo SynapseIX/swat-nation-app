@@ -270,78 +270,81 @@ class _AuthHeader extends StatelessWidget {
         if (snapshot.hasData) {
           final UserModel model = UserModel.fromSnapshot(snapshot.data);
 
-          return UserAccountsDrawerHeader(
-            accountName: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  user.displayName,
-                  style: const TextStyle(
-                    shadows: <Shadow>[
-                      Shadow(
-                        offset: Offset(1.0, 1.0),
-                      ),
-                    ],
-                  ),
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(
+                  model.headerUrl ?? kDefaultProfileHeader,
                 ),
-                if (model.verified)
-                Container(
-                  margin: const EdgeInsets.only(left: 4.0),
-                  child: const VerifiedBadge(),
-                ),
-              ],
+                fit: BoxFit.cover,
+              ),
             ),
-            accountEmail: Text(
-              user.email,
-              style: const TextStyle(
-                shadows: <Shadow>[
-                  Shadow(
-                    offset: Offset(1.0, 1.0),
+            child: UserAccountsDrawerHeader(
+              margin: EdgeInsets.zero,
+              accountName: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    user.displayName,
+                    style: const TextStyle(
+                      shadows: <Shadow>[
+                        Shadow(
+                          offset: Offset(1.0, 1.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (model.verified)
+                  Container(
+                    margin: const EdgeInsets.only(left: 4.0),
+                    child: const VerifiedBadge(),
                   ),
                 ],
               ),
-            ),
-            currentAccountPicture: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF333333),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  width: 3.0,
-                  color: Colors.white,
+              accountEmail: Text(
+                user.email,
+                style: const TextStyle(
+                  shadows: <Shadow>[
+                    Shadow(
+                      offset: Offset(1.0, 1.0),
+                    ),
+                  ],
                 ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(40.0),
-                child: CachedNetworkImage(
-                  imageUrl: user.photoUrl,
-                  width: 40.0,
-                  height: 40.0,
-                  fit: BoxFit.cover,
-                  fadeInDuration: const Duration(milliseconds: 300),
-                ),
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  const Color(0x88000000),
-                  BlendMode.overlay,
-                ),
-              ),
-            ),
-            onDetailsPressed: () {
-              Navigator.of(context)
-                ..pop()
-                ..push(
-                  MaterialPageRoute<ProfileScreen>(
-                    builder: (BuildContext context) => ProfileScreen(model: model),
-                    fullscreenDialog: true,
+              currentAccountPicture: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF333333),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 3.0,
+                    color: Colors.white,
                   ),
-                );
-            },
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: CachedNetworkImage(
+                    imageUrl: user.photoUrl,
+                    width: 40.0,
+                    height: 40.0,
+                    fit: BoxFit.cover,
+                    fadeInDuration: const Duration(milliseconds: 300),
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+              ),
+              onDetailsPressed: () {
+                Navigator.of(context)
+                  ..pop()
+                  ..push(
+                    MaterialPageRoute<ProfileScreen>(
+                      builder: (BuildContext context) => ProfileScreen(model: model),
+                      fullscreenDialog: true,
+                    ),
+                  );
+              },
+            ),
           );
         }
         
