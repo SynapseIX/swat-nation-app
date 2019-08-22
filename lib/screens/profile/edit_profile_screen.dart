@@ -126,7 +126,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     right: MediaQuery.of(context).size.width / 2.0 - 32.0,
                     child: IconButton(
                       icon: const Icon(
-                        MdiIcons.camera,
+                        MdiIcons.cameraPlus,
                         color: Colors.white,
                         size: 32.0,
                       ),
@@ -624,7 +624,7 @@ class _ProfilePicture extends StatelessWidget {
               color: Colors.black54,
             ),
             const Icon(
-              MdiIcons.camera,
+              MdiIcons.cameraPlus,
               color: Colors.white,
               size: 32.0,
             ),

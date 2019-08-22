@@ -39,6 +39,8 @@ class SettingsDrawer extends StatelessWidget {
               },
             ),
 
+            const SizedBox(height: 8.0),
+
             // About Us
             ListTile(
               leading: const Icon(MdiIcons.information),
@@ -349,6 +351,7 @@ class _AuthHeader extends StatelessWidget {
         }
         
         return DrawerHeader(
+          margin: EdgeInsets.zero,
           child: Center(
             child: const CircularProgressIndicator(),
           ),
