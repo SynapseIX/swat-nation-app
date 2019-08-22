@@ -8,12 +8,14 @@ import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
+import 'package:swat_nation/screens/clips/create_clip_scren.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
@@ -383,6 +385,8 @@ class _PublicBody extends StatelessWidget {
               );
             };
 
+            // TODO(itsprof): validate if subscriber
+            const bool subscriber = false;
             final bool showViewAll = snapshot.data.length > 3;
             final List<Widget> cards = showViewAll
               ? snapshot.data
@@ -420,8 +424,38 @@ class _PublicBody extends StatelessWidget {
                       ? <Widget>[
                         IconButton(
                           icon: Icon(MdiIcons.plusCircleOutline),
-                          // TODO(itsprof): implement
-                          onPressed: () {},
+                          onPressed: () {
+                            final DialogHelper helper = DialogHelper.instance();
+
+                            if (subscriber) {
+                              if (snapshot.data.length < 4) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) => CreateClipScreen(),
+                                  ),
+                                );
+                              } else {
+                                helper.showErrorDialog(
+                                  context: context,
+                                  title: 'Can\'t Add More Clips',
+                                  message: kSubClipLimitMessage,
+                                );
+                              }
+                            } else {
+                              if (snapshot.data.length < 4) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) => CreateClipScreen(),
+                                  ),
+                                );
+                              } else {
+                                helper.showSubscribeDialog(
+                                  context: context,
+                                  message: kNoSubClipLimitMessage,
+                                );
+                              }
+                            }
+                          },
                         )
                       ]
                       : <Widget>[],
