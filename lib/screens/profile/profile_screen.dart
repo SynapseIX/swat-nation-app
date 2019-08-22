@@ -110,106 +110,106 @@ class _PublicHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: Colors.black,
         image: DecorationImage(
-          image: CachedNetworkImageProvider(user.headerUrl ?? kDefaultProfileHeader),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            const Color(0x88000000),
-            BlendMode.overlay,
+          image: CachedNetworkImageProvider(
+            user.headerUrl ?? kDefaultProfileHeader,
           ),
+          fit: BoxFit.cover,
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF333333),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 3.0,
-                    color: Colors.white,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(80.0),
-                  child: CachedNetworkImage(
-                    imageUrl: user.photoUrl,
-                    width: 80.0,
-                    height: 80.0,
-                    fit: BoxFit.cover,
-                    fadeInDuration: const Duration(milliseconds: 300),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        user.displayName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (user.verified)
-                      Container(
-                        margin: const EdgeInsets.only(left: 4.0),
-                        child: const VerifiedBadge(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    'Joined ${humanizeTimestamp(user.createdAt, 'MMMM yyyy')}',
-                    style: const TextStyle(
+      child: Container(
+        padding: const EdgeInsets.all(24.0),
+        color: Colors.black54,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF333333),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 3.0,
                       color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(1.0, 1.0),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(80.0),
+                    child: CachedNetworkImage(
+                      imageUrl: user.photoUrl,
+                      width: 80.0,
+                      height: 80.0,
+                      fit: BoxFit.cover,
+                      fadeInDuration: const Duration(milliseconds: 300),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          user.displayName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (user.verified)
+                        Container(
+                          margin: const EdgeInsets.only(left: 4.0),
+                          child: const VerifiedBadge(),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      'Joined ${humanizeTimestamp(user.createdAt, 'MMMM yyyy')}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                        shadows: <Shadow>[
+                          Shadow(
+                            offset: Offset(1.0, 1.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
 
-          if (user.bio != null)
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(top: 16.0),
-            child: Text(
-              user.bio,
-              textAlign: TextAlign.start,
-              style: const TextStyle(
-                color: Colors.white,
-                shadows: <Shadow>[
-                  Shadow(
-                    offset: Offset(1.0, 1.0),
-                  ),
-                ],
+            if (user.bio != null)
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 16.0),
+              child: Text(
+                user.bio,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  color: Colors.white,
+                  shadows: <Shadow>[
+                    Shadow(
+                      offset: Offset(1.0, 1.0),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
