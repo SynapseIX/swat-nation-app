@@ -387,10 +387,10 @@ class _PublicBody extends StatelessWidget {
 
             // TODO(itsprof): validate if subscriber
             const bool subscriber = false;
-            final bool showViewAll = snapshot.data.length > 3;
+            final bool showViewAll = snapshot.data.length > kNoSubClipLimit;
             final List<Widget> cards = showViewAll
               ? snapshot.data
-                .sublist(0, 3)
+                .sublist(0, kNoSubClipLimit)
                 .map(cardMapper).toList()
               : snapshot.data
                 .map(cardMapper).toList();
@@ -428,7 +428,7 @@ class _PublicBody extends StatelessWidget {
                             final DialogHelper helper = DialogHelper.instance();
 
                             if (subscriber) {
-                              if (snapshot.data.length < 4) {
+                              if (snapshot.data.length < kSubClipLimit) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute<void>(
                                     builder: (BuildContext context) => CreateClipScreen(),
@@ -442,7 +442,7 @@ class _PublicBody extends StatelessWidget {
                                 );
                               }
                             } else {
-                              if (snapshot.data.length < 4) {
+                              if (snapshot.data.length < kNoSubClipLimit) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute<void>(
                                     builder: (BuildContext context) => CreateClipScreen(),
