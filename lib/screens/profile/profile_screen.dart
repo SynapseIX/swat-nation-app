@@ -336,7 +336,47 @@ class _PublicBody extends StatelessWidget {
           ),
         ),
 
-        // Requests
+        if (me && user.provider == UserProvider.email)
+        Container(
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Expanded(
+                child: RaisedButton(
+                  child: const Text(
+                    'Change Email',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.red,
+                  // TODO(itsprof): implement
+                  onPressed: () {},
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: RaisedButton(
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.red,
+                  // TODO(itsprof): implement
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Custom logo request
         if (me)
         Container(
           padding: const EdgeInsets.only(
@@ -349,29 +389,6 @@ class _PublicBody extends StatelessWidget {
             child: const Text('Request Custom Logo'),
           ),
         ),
-        // TODO(itsprof): validate if user provider is email and password
-        // if (me)
-        // Container(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //     children: <Widget>[
-        //       Expanded(
-        //         child: RaisedButton(
-        //           child: const Text('Change Email'),
-        //           onPressed: () {},
-        //         ),
-        //       ),
-        //       const SizedBox(width: 8.0),
-        //       Expanded(
-        //         child: RaisedButton(
-        //           child: const Text('Reset Password'),
-        //           onPressed: () {},
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
 
         // Clips
         StreamBuilder<List<ClipModel>>(
@@ -389,7 +406,7 @@ class _PublicBody extends StatelessWidget {
             };
 
             // TODO(itsprof): validate if subscriber
-            const bool subscriber = false;
+            const bool subscriber = true;
             final bool showViewAll = snapshot.data.length > kNoSubClipLimit;
             final List<Widget> cards = showViewAll
               ? snapshot.data

@@ -123,7 +123,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30.0),
                           child: CachedNetworkImage(
-                            imageUrl: snapshot.data.photoUrl ?? kLogo,
+                            imageUrl: snapshot.data.photoUrl ?? kDefaultAvi,
                             width: 30.0,
                             height: 30.0,
                             fit: BoxFit.cover,
