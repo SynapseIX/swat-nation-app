@@ -49,41 +49,44 @@ class _AllClipsScreenState extends State<AllClipsScreen> {
         itemCount: data.length,
         itemBuilder: (BuildContext context, int index) {
           final ClipModel model = data[index];
+          final ClipCard card = ClipCard(model: model);
 
-          return Dismissible(
-            key: ValueKey<String>(model.uid),
-            direction: DismissDirection.endToStart,
-            child: ClipCard(model: model),
-            background: Container(
-              alignment: Alignment.centerRight,
-              color: Colors.redAccent,
-              child: const Padding(
-                padding: EdgeInsets.all(48.0),
-                child: Icon(
-                  MdiIcons.delete,
-                  color: Colors.white,
+          return widget.me
+            ? Dismissible(
+                key: ValueKey<String>(model.uid),
+                direction: DismissDirection.endToStart,
+                child: card,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  color: Colors.redAccent,
+                  child: const Padding(
+                    padding: EdgeInsets.all(48.0),
+                    child: Icon(
+                      MdiIcons.delete,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            onDismissed: (DismissDirection direction) async {
-              Scaffold.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(
-                  content: model.title != null
-                    ? Text('Removed clip \'${model.title}\'')
-                    : const Text('Clip was removed'),
-                ));
+                onDismissed: (DismissDirection direction) async {
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: model.title != null
+                        ? Text('Removed clip \'${model.title}\'')
+                        : const Text('Clip was removed'),
+                    ));
 
-              setState(() {
-                data.removeAt(index);
-              });
-              
-              await bloc.remove(model);
-              if (data.isEmpty) {
-                Navigator.of(context).pop();
-              }
-            },
-          );
+                  setState(() {
+                    data.removeAt(index);
+                  });
+                  
+                  await bloc.remove(model);
+                  if (data.isEmpty) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            : card;
         },
       ),
     );
