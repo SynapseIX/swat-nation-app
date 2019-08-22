@@ -14,6 +14,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
   final String clipsCollection = 'clips';
 
   Stream<ClipModel> get randomClipStream => _randomClipSubject.stream;
+  ClipModel get randomClip => _randomClipSubject.value;
 
   Stream<List<ClipModel>> get allClips => _firestore
     .collection(clipsCollection)

@@ -50,9 +50,11 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     authBloc = AuthBloc.instance();
     userBloc = UserBloc();
     
-    final Random random = Random(DateTime.now().millisecondsSinceEpoch);
     clipsBloc = ClipsBloc();
-    clipsBloc.fetchRandomClip(random.nextInt(kMaxRandomValue));
+    if (clipsBloc.randomClip == null) {
+      final Random random = Random(DateTime.now().millisecondsSinceEpoch);
+      clipsBloc.fetchRandomClip(random.nextInt(kMaxRandomValue));
+    }
   }
 
   @override
