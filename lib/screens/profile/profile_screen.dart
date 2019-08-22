@@ -352,28 +352,39 @@ class _PublicBody extends StatelessWidget {
         // Requests
         if (me)
         Container(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Expanded(
-                child: RaisedButton(
-                  child: const Text('Change Email'),
-                  // TODO(itsprof): implement
-                  onPressed: () {},
-                ),
-              ),
-              const SizedBox(width: 8.0),
-              Expanded(
-                child: RaisedButton(
-                  child: const Text('Reset Password'),
-                  // TODO(itsprof): implement
-                  onPressed: () {},
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
+          child: RaisedButton(
+            // TODO(itsprof): implement
+            onPressed: () {},
+            child: const Text('Request Custom Logo'),
           ),
         ),
+        // TODO(itsprof): validate if user provider is email and password
+        // if (me)
+        // Container(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     children: <Widget>[
+        //       Expanded(
+        //         child: RaisedButton(
+        //           child: const Text('Change Email'),
+        //           onPressed: () {},
+        //         ),
+        //       ),
+        //       const SizedBox(width: 8.0),
+        //       Expanded(
+        //         child: RaisedButton(
+        //           child: const Text('Reset Password'),
+        //           onPressed: () {},
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
 
         // Clips
         StreamBuilder<List<ClipModel>>(
