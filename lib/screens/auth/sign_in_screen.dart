@@ -266,8 +266,9 @@ class _SignInScreenState extends State<SignInScreen> {
         : UserModel(
           uid: user.uid,
           displayName: user.displayName,
-          photoUrl: kDefaultAvi,
+          photoUrl: user.photoUrl,
           createdAt: Timestamp.now(),
+          provider: UserProvider.facebook,
         );
       model.platform = platform;
 

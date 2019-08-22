@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_model.dart';
 
+enum UserProvider { email, facebook }
+
 /// Represents a user instance.
 class UserModel extends BaseModel {
   UserModel({
     @required this.uid,
     @required this.displayName,
-    @required this.photoUrl,
     @required this.createdAt,
+    @required this.provider,
+    this.photoUrl,
     this.headerUrl,
     this.verified = false,
     this.platform,
@@ -25,6 +28,9 @@ class UserModel extends BaseModel {
     displayName = document.data['displayName'];
     photoUrl = document.data['photoUrl'];
     createdAt = document.data['createdAt'];
+    provider = document.data['provider'] == facebookProvider
+      ? UserProvider.facebook
+      : UserProvider.email;
     headerUrl = document.data['headerUrl'];
     verified = document.data['verified'];
     platform = document.data['platform'];
@@ -37,12 +43,16 @@ class UserModel extends BaseModel {
   }
 
   UserModel.blank();
+
+  static const String emailProvider = 'email';
+  static const String facebookProvider = 'facebook';
   
   String uid;
   String displayName;
   String photoUrl;
   String platform;
   Timestamp createdAt;
+  UserProvider provider;
   String headerUrl;
   bool verified;
   String gamertag;
@@ -59,6 +69,7 @@ class UserModel extends BaseModel {
     displayName: $displayName
     photoUrl: $photoUrl
     createdAt: $createdAt
+    provider: ${provider == UserProvider.facebook ? facebookProvider : emailProvider}
     headerUrl: $headerUrl
     verified: $verified
     platform: $platform
@@ -78,6 +89,7 @@ class UserModel extends BaseModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'createdAt': createdAt,
+      'provider': provider == UserProvider.facebook ? facebookProvider : emailProvider,
       'headerUrl': headerUrl,
       'verified': verified,
       'platform': platform,

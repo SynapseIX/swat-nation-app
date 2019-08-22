@@ -22,7 +22,7 @@ class UserBloc extends BaseBloc {
       : null;
   }
 
-  Future<DocumentReference> create(UserModel model) async {
+  Future<DocumentReference> create(UserModel model) {
     return _firestore
       .collection(userCollection)
       .add(model.toMap());

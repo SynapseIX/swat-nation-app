@@ -3,11 +3,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/screens/clips/all_clips_screen.dart';
+import 'package:swat_nation/screens/clips/create_clip_scren.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/cards/clip_card.dart';
+import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
+import 'package:swat_nation/widgets/common/view_all_card.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
+import 'package:swat_nation/widgets/headers/text_header.dart';
+import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
 import 'edit_profile_screen.dart';
 
@@ -25,18 +35,21 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   AuthBloc authBloc;
+  ClipsBloc clipsBloc;
   UserModel user;
 
   @override
   void initState() {
     super.initState();
     authBloc = AuthBloc.instance();
+    clipsBloc = ClipsBloc();
     user = widget.model;
   }
 
   @override
   void dispose() {
     authBloc.dispose();
+    clipsBloc.dispose();
     super.dispose();
   }
 
@@ -56,13 +69,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (me)
               IconButton(
                 icon: const Icon(MdiIcons.accountEdit),
+                tooltip: 'Edit Profile',
                 onPressed: () => _navigateToEdit(),
+              ),
+              if (!me)
+              IconButton(
+                icon: const Icon(MdiIcons.alert),
+                tooltip: 'Report User',
+                // TODO(itsprof): implement report user
+                onPressed: () {},
               ),
             ]
           ),
           body: me || !user.private
-            ? _PublicBody(user)
-            : _PrivateBody(user),
+            ? _PublicBody(bloc: clipsBloc, user: user, me: me)
+            : _PrivateBody(user: user),
         );
       },
     );
@@ -86,283 +107,114 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class _PublicHeader extends StatelessWidget {
-  const _PublicHeader(this.model);
+  const _PublicHeader({
+    @required this.user,
+  });
 
-  final UserModel model;
+  final UserModel user;
   
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(32.0),
       decoration: BoxDecoration(
-        color: Colors.black,
         image: DecorationImage(
-          image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            const Color(0x88000000),
-            BlendMode.overlay,
+          image: CachedNetworkImageProvider(
+            user.headerUrl ?? kDefaultProfileHeader,
           ),
+          fit: BoxFit.cover,
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF333333),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 3.0,
-                    color: Colors.white,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40.0),
-                  child: CachedNetworkImage(
-                    imageUrl: model.photoUrl,
-                    width: 40.0,
-                    height: 40.0,
-                    fit: BoxFit.cover,
-                    fadeInDuration: const Duration(milliseconds: 300),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        model.displayName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (model.verified)
-                      Container(
-                        margin: const EdgeInsets.only(left: 4.0),
-                        child: const VerifiedBadge(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    'Joined ${humanizeTimestamp(model.createdAt, 'MMMM yyyy')}',
-                    style: const TextStyle(
+      child: Container(
+        padding: const EdgeInsets.all(24.0),
+        color: Colors.black54,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF333333),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 3.0,
                       color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(1.0, 1.0),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(80.0),
+                    child: CachedNetworkImage(
+                      imageUrl: user.photoUrl ?? kDefaultAvi,
+                      width: 80.0,
+                      height: 80.0,
+                      fit: BoxFit.cover,
+                      fadeInDuration: const Duration(milliseconds: 300),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          user.displayName.length > 15
+                            ? '${user.displayName.substring(0, 10)}...'
+                            : user.displayName,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (user.verified)
+                        Container(
+                          margin: const EdgeInsets.only(left: 4.0),
+                          child: const VerifiedBadge(),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4.0),
+                    Text(
+                      'Joined ${humanizeTimestamp(user.createdAt, 'MMMM yyyy')}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            if (user.bio != null)
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 16.0),
+              child: Text(
+                user.bio,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
               ),
-            ],
-          ),
-
-          if (model.bio != null)
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(top: 16.0),
-            child: Text(
-              model.bio,
-              textAlign: TextAlign.start,
-              style: const TextStyle(
-                color: Colors.white,
-                shadows: <Shadow>[
-                  Shadow(
-                    offset: Offset(1.0, 1.0),
-                  ),
-                ],
-              ),
             ),
-          ),
-
-          if (model.gamertag != null)
-          GestureDetector(
-            onTap: () => openUrl('$kGamertag${model.twitter}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 16.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.xbox,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      model.gamertag,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (model.twitter != null)
-          GestureDetector(
-            onTap: () => openUrl('https://twitter.com/${model.twitter}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.twitter,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      model.twitter,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (model.mixer != null)
-          GestureDetector(
-            onTap: () => openUrl('https://mixer.com/${model.mixer}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.mixer,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      model.mixer,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          if (model.twitch != null)
-          GestureDetector(
-            onTap: () => openUrl('https://twitch.tv/${model.twitch}'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 8.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(
-                      MdiIcons.twitch,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      model.twitch,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // TODO(itsprof): uncomment when functionality done
-          // if (model.gamertag != null)
-          // GestureDetector(
-          //   onTap: () => print('TODO: implement'),
-          //   child: Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: <Widget>[
-          //       const SizedBox(height: 8.0),
-          //       Row(
-          //         children: const <Widget>[
-          //           Icon(
-          //             MdiIcons.chartLine,
-          //             color: Colors.white,
-          //             size: 20.0,
-          //           ),
-          //           SizedBox(width: 8.0),
-          //           Text(
-          //             'SWAT Stats',
-          //             style: TextStyle(
-          //               color: Colors.white,
-          //               shadows: <Shadow>[
-          //                 Shadow(
-          //                   offset: Offset(1.0, 1.0),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class _PrivateHeader extends StatelessWidget {
-  const _PrivateHeader(this.model);
+  const _PrivateHeader({
+    @required this.user,
+  });
 
-  final UserModel model;
+  final UserModel user;
   
   @override
   Widget build(BuildContext context) {
@@ -371,7 +223,7 @@ class _PrivateHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black,
         image: DecorationImage(
-          image: CachedNetworkImageProvider(model.headerUrl ?? kDefaultProfileHeader),
+          image: CachedNetworkImageProvider(user.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             const Color(0x88000000),
@@ -393,7 +245,7 @@ class _PrivateHeader extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(40.0),
               child: CachedNetworkImage(
-                imageUrl: model.photoUrl,
+                imageUrl: user.photoUrl ?? kDefaultAvi,
                 width: 40.0,
                 height: 40.0,
                 fit: BoxFit.cover,
@@ -406,19 +258,14 @@ class _PrivateHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                model.displayName,
+                user.displayName,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  shadows: <Shadow>[
-                    Shadow(
-                      offset: Offset(1.0, 1.0),
-                    ),
-                  ],
                 ),
               ),
-              if (model.verified)
+              if (user.verified)
               Container(
                 margin: const EdgeInsets.only(left: 4.0),
                 child: const VerifiedBadge(),
@@ -432,9 +279,15 @@ class _PrivateHeader extends StatelessWidget {
 }
 
 class _PublicBody extends StatelessWidget {
-  const _PublicBody(this.model);
+  const _PublicBody({
+    @required this.bloc,
+    @required this.user,
+    this.me = false,
+  });
 
-  final UserModel model;
+  final ClipsBloc bloc;
+  final UserModel user;
+  final bool me;
 
   @override
   Widget build(BuildContext context) {
@@ -442,23 +295,224 @@ class _PublicBody extends StatelessWidget {
       key: const PageStorageKey<String>('profile_list_view'),
       children: <Widget>[
         // Profile header
-        _PublicHeader(model),
+        _PublicHeader(user: user),
+
+        // Socials
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 16.0,
+            runSpacing: 4.0,
+            children: <Widget>[
+              if (user.gamertag != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.xbox),
+                label: Text(user.gamertag),
+                onPressed: () => openUrl('$kGamertag${user.gamertag}'),
+              ),
+
+              if (user.twitter != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.twitter),
+                label: Text(user.twitter),
+                onPressed: () => openUrl('https://twitter.com/${user.twitter}'),
+              ),
+
+              if (user.mixer != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.mixer),
+                label: Text(user.mixer),
+                onPressed: () => openUrl('https://mixer.com/${user.mixer}'),
+              ),
+
+              if (user.twitch != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.twitch),
+                label: Text(user.twitch),
+                onPressed: () => openUrl('https://twitch.tv/${user.twitch}'),
+              ),
+            ],
+          ),
+        ),
+
+        if (me && user.provider == UserProvider.email)
+        Container(
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Expanded(
+                child: RaisedButton(
+                  child: const Text(
+                    'Change Email',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.red,
+                  // TODO(itsprof): implement
+                  onPressed: () {},
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: RaisedButton(
+                  child: const Text(
+                    'Reset Password',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.red,
+                  // TODO(itsprof): implement
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Custom logo request
+        if (me)
+        Container(
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+          ),
+          child: RaisedButton(
+            // TODO(itsprof): implement
+            onPressed: () {},
+            child: const Text('Request Custom Logo'),
+          ),
+        ),
+
+        // Clips
+        StreamBuilder<List<ClipModel>>(
+          stream: bloc.allClipsForUser(user.uid),
+          builder: (BuildContext context, AsyncSnapshot<List<ClipModel>> snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox();
+            }
+
+            final Widget Function(ClipModel) cardMapper = (ClipModel model) {
+              return ClipCard(
+                key: ValueKey<String>(model.uid),
+                model: model,
+              );
+            };
+
+            // TODO(itsprof): validate if subscriber
+            const bool subscriber = true;
+            final bool showViewAll = snapshot.data.length > kNoSubClipLimit;
+            final List<Widget> cards = showViewAll
+              ? snapshot.data
+                .sublist(0, kNoSubClipLimit)
+                .map(cardMapper).toList()
+              : snapshot.data
+                .map(cardMapper).toList();
+            
+            if (showViewAll) {
+              cards.add(ViewAllCard(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) {
+                        return AllClipsScreen(
+                          data: snapshot.data,
+                          displayName: user.displayName,
+                          me: me,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ));
+            }
+            
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CardSection(
+                  header: TextHeader(
+                    'Clips',
+                    actions: me
+                      ? <Widget>[
+                        IconButton(
+                          icon: Icon(MdiIcons.plusCircleOutline),
+                          onPressed: () {
+                            final DialogHelper helper = DialogHelper.instance();
+
+                            if (subscriber) {
+                              if (snapshot.data.length < kSubClipLimit) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) => CreateClipScreen(
+                                      user: user,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                helper.showErrorDialog(
+                                  context: context,
+                                  title: 'Can\'t Add More Clips',
+                                  message: kSubClipLimitMessage,
+                                );
+                              }
+                            } else {
+                              if (snapshot.data.length < kNoSubClipLimit) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) => CreateClipScreen(
+                                      user: user,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                helper.showSubscribeDialog(
+                                  context: context,
+                                  message: kNoSubClipLimitMessage,
+                                );
+                              }
+                            }
+                          },
+                        )
+                      ]
+                      : <Widget>[],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28.0,
+                    ),
+                    margin: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
+                  ),
+                  cardList: HorizontalCardList(cards: cards),
+                ),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
 }
 
 class _PrivateBody extends StatelessWidget {
-  const _PrivateBody(this.model);
+  const _PrivateBody({
+    @required this.user,
+  });
 
-  final UserModel model;
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         // Profile header
-        _PrivateHeader(model),
+        _PrivateHeader(user: user),
 
         Expanded(
           child: Center(

@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-/// Creates a card for blog articles.
+/// Creates a card for announcements.
 class NewsCard extends StatelessWidget {
   const NewsCard({
-    @required this.title,
     Key key,
+    @required this.title,
     this.excerpt,
     this.thumbnailSrc,
     this.margin = EdgeInsets.zero,

@@ -17,21 +17,22 @@ class AuthScreensdValidator {
       },
     );
 
-  final StreamTransformer<String, String> validatePassword = StreamTransformer<String, String>.fromHandlers(
-    handleData: (String password, EventSink<String> sink) {
-      final RegExp digit = RegExp(r'.*[0-9].*');
+  final StreamTransformer<String, String> validatePassword = StreamTransformer<String, String>
+    .fromHandlers(
+      handleData: (String password, EventSink<String> sink) {
+        final RegExp digit = RegExp(r'.*[0-9].*');
 
-      if (password.length >= kPasswordMinLength) {
-        if (digit.hasMatch(password)) {
-          sink.add(password);
+        if (password.length >= kPasswordMinLength) {
+          if (digit.hasMatch(password)) {
+            sink.add(password);
+          } else {
+            sink.addError('Password must have at least one number');  
+          }
         } else {
-          sink.addError('Password must have at least one number');  
+          sink.addError('Password must be at least $kPasswordMinLength characters');
         }
-      } else {
-        sink.addError('Password must be at least $kPasswordMinLength characters');
       }
-    }
-  );
+    );
 
   final StreamTransformer<String, String> validateDisplayName = StreamTransformer<String, String>
     .fromHandlers(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/utils/device_model.dart';
@@ -38,18 +42,26 @@ class HomeTab extends StatefulWidget implements BaseTab {
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   AuthBloc authBloc;
   UserBloc userBloc;
+  ClipsBloc clipsBloc;
 
   @override
   void initState() {
     super.initState();
     authBloc = AuthBloc.instance();
     userBloc = UserBloc();
+    
+    clipsBloc = ClipsBloc();
+    if (clipsBloc.randomClip == null) {
+      final Random random = Random(DateTime.now().millisecondsSinceEpoch);
+      clipsBloc.fetchRandomClip(random.nextInt(kMaxRandomValue));
+    }
   }
 
   @override
   void dispose() {
     authBloc.dispose();
     userBloc.dispose();
+    clipsBloc.dispose();
     super.dispose();
   }
   
@@ -113,7 +125,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30.0),
                           child: CachedNetworkImage(
-                            imageUrl: snapshot.data.photoUrl ?? kLogo,
+                            imageUrl: snapshot.data.photoUrl ?? kDefaultAvi,
                             width: 30.0,
                             height: 30.0,
                             fit: BoxFit.cover,
@@ -140,6 +152,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Upcoming Tournaments
+        // TODO(itsprof): implement
         CardSection(
           header: const TextHeader(
             'Upcoming\nTournaments',
@@ -169,24 +182,38 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Community Highlight
-        const TextHeader(
-          'Community\nHighlight',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          sliver: true,
-        ),
-        const ClipCard(
-          src: 'https://picsum.photos/640/360?random=1',
-          duration: '28s',
-          author: 'Gameplay by\n@itsprof',
-          padding: EdgeInsets.all(8.0),
-          sliver: true,
+        StreamBuilder<ClipModel>(
+          stream: clipsBloc.randomClipStream,
+          builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
+            if (!snapshot.hasData) {
+              return const SliverToBoxAdapter(child: SizedBox());
+            }
+
+            return SliverToBoxAdapter(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const TextHeader(
+                    'Community\nHighlight',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28.0,
+                      ),
+                      margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
+                  ),
+                  ClipCard(
+                    key: UniqueKey(),
+                    model: snapshot.data,
+                    padding: const EdgeInsets.all(8.0),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
 
         // Announcements
+        // TODO(itsprof): implement
         CardSection(
           header: const TextHeader(
             'Announcements',
@@ -223,6 +250,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // #swatisart
+        // TODO(itsprof): implement
         CardSection(
           header: const TextHeader(
             '#swatisart',

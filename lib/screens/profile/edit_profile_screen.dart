@@ -11,7 +11,6 @@ import 'package:swat_nation/blocs/edit_profile_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the edit profile screen.
@@ -86,126 +85,125 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit My Profile'),
-      ),
-      body: GestureDetector(
-        onTap: _dismissKeyboard,
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: <Widget>[
-              // Profile picture and header
-              Container(
-                height: 200.0,
-                child: Stack(
-                  children: <Widget>[
-                    // Header background
-                    _HeaderBackground(
-                      headerFile: headerFile,
-                      headerUrl: widget.model.headerUrl,
-                    ),
+    return GestureDetector(
+      onTap: _dismissKeyboard,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit Profile'),
+          actions: <Widget>[
+            StreamBuilder<String>(
+              stream: bloc.displayNameStream,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                return IconButton(
+                  icon: Icon(MdiIcons.cloudUpload),
+                  tooltip: 'Save',
+                  onPressed: snapshot.hasData 
+                    ? () => _saveChanges(context)
+                    : null,
+                );
+              },
+            ),
+          ],
+        ),
+        body: ListView(
+          children: <Widget>[
+            Container(
+              height: 200.0,
+              margin: const EdgeInsets.only(bottom: 8.0),
+              child: Stack(
+                children: <Widget>[
+                  // Header background
+                  _HeaderBackground(
+                    headerFile: headerFile,
+                    headerUrl: widget.model.headerUrl,
+                  ),
 
-                    // Overlay
-                    Container(color: Colors.black45),
+                  // Edit header icon
+                  Positioned(
+                    top: 75.0 - 32.0,
+                    right: MediaQuery.of(context).size.width / 2.0 - 32.0,
+                    child: IconButton(
+                      icon: const Icon(
+                        MdiIcons.cameraPlus,
+                        color: Colors.white,
+                        size: 32.0,
+                      ),
+                      onPressed: () => _showImagePicker(
+                        context: context,
+                        title: 'Change Background',
+                        cameraCallBack: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.camera,
+                            imageQuality: 70,
+                          );
 
-                    // Edit header icon
-                    Positioned(
-                      top: 0.0,
-                      right: 0.0,
-                      child: IconButton(
-                        icon: Icon(
-                          MdiIcons.image,
-                          color: Colors.white,
-                        ),
-                        onPressed: () => _showImagePicker(
-                          context: context,
-                          title: 'Update Background',
-                          cameraCallBack: () async {
-                            final File pickedImage = await ImagePicker.pickImage(
-                              source: ImageSource.camera,
-                              imageQuality: 70,
-                            );
+                          setState(() {
+                            headerFile = pickedImage;  
+                          });
+                        },
+                        galleryCallback: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.gallery,
+                            imageQuality: 70,
+                          );
 
-                            setState(() {
-                              headerFile = pickedImage;  
-                            });
-                          },
-                          galleryCallback: () async {
-                            final File pickedImage = await ImagePicker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 70,
-                            );
-
-                            setState(() {
-                              headerFile = pickedImage;  
-                            });
-                          },
-                        ),
+                          setState(() {
+                            headerFile = pickedImage;  
+                          });
+                        },
                       ),
                     ),
+                  ),
 
-                    // Profile picture
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () => _showImagePicker(
-                              context: context,
-                              title: 'Update Profile Picture',
-                              cameraCallBack: () async {
-                                final File pickedImage = await ImagePicker.pickImage(
-                                  source: ImageSource.camera,
-                                  imageQuality: 70,
-                                );
+                  // Profile picture
+                  Positioned(
+                    bottom: 0.0,
+                    left: 16.0,
+                    child: GestureDetector(
+                      onTap: () => _showImagePicker(
+                        context: context,
+                        title: 'Change Avatar',
+                        cameraCallBack: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.camera,
+                            imageQuality: 70,
+                          );
 
-                                setState(() {
-                                  photoFile = pickedImage;
-                                });
-                              },
-                              galleryCallback: () async {
-                                final File pickedImage = await ImagePicker.pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 70,
-                                );
-                                
-                                setState(() {
-                                  photoFile = pickedImage;
-                                });
-                              },
-                            ),
-                            child: _ProfilePicture(
-                              photoFile: photoFile,
-                              photoUrl: widget.model.photoUrl,
-                            ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          Text(
-                            'Change Picture',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: const Offset(1.0, 1.0),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
+                          setState(() {
+                            photoFile = pickedImage;
+                          });
+                        },
+                        galleryCallback: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.gallery,
+                            imageQuality: 70,
+                          );
+                          
+                          setState(() {
+                            photoFile = pickedImage;
+                          });
+                        },
+                      ),
+                      child: _ProfilePicture(
+                        photoFile: photoFile,
+                        photoUrl: widget.model.photoUrl,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              // Display name
-              StreamBuilder<String>(
-                stream: bloc.displayNameStream,
-                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  return TextField(
+            // Display name
+            StreamBuilder<String>(
+              stream: bloc.displayNameStream,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16.0,
+                    right: 16.0,
+                  ),
+                  child: TextField(
                     controller: displayNameController,
                     focusNode: displayNameNode,
                     maxLength: kDisplayNameMaxChararcters,
@@ -222,12 +220,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       displayNameNode.nextFocus();
                     },
 
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+            ),
 
-              // Gamertag
-              TextField(
+            // Gamertag
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
                 controller: gamertagController,
                 focusNode: gamertagNode,
                 autocorrect: false,
@@ -241,9 +245,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   gamertagNode.nextFocus();
                 },
               ),
+            ),
 
-              // Twitter
-              TextField(
+            // Twitter
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
                 controller: twitterController,
                 focusNode: twitterNode,
                 autocorrect: false,
@@ -257,9 +267,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   twitterNode.nextFocus();
                 },
               ),
+            ),
 
-              // Mixer
-              TextField(
+            // Mixer
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
                 controller: mixerController,
                 focusNode: mixerNode,
                 autocorrect: false,
@@ -273,9 +289,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   mixerNode.nextFocus();
                 },
               ),
+            ),
 
-              // Twitch
-              TextField(
+            // Twitch
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
                 controller: twitchController,
                 focusNode: twitchNode,
                 autocorrect: false,
@@ -289,13 +311,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   twitchNode.nextFocus();
                 },
               ),
+            ),
 
-              // Bio
-              TextField(
+            // Bio
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
                 controller: bioController,
                 focusNode: bioNode,
                 maxLength: kMaxBioLength,
-                maxLines: iPhoneX(context) ? 3 : 4,
+                maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
@@ -307,11 +335,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _dismissKeyboard();
                 },
               ),
+            ),
 
-              const SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
 
-              // Privacy
-              Row(
+            // Privacy
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Row(
                 children: <Widget>[
                   Icon(
                     MdiIcons.lock,
@@ -339,28 +373,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ],
               ),
-
-              // Save button
-              Container(
-                margin: const EdgeInsets.only(top: 16.0),
-                width: double.infinity,
-                height: 40.0,
-                child: StreamBuilder<String>(
-                  stream: bloc.displayNameStream,
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    return RaisedButton(
-                      color: Colors.green,
-                      textColor: Colors.white,
-                      onPressed: snapshot.hasData 
-                        ? () => _saveChanges(context)
-                        : null,
-                      child: const Text('Save Profile'),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -376,13 +390,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.only(
+            top: 32.0,
+            left: 16.0,
+            right: 16.0,
+            bottom: 32.0,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 title ?? 'Select a Source',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -578,7 +597,7 @@ class _ProfilePicture extends StatelessWidget {
       image = Container(
         width: 100.0,
         height: 100.0,
-        color: Colors.lightBlue,
+        color: Colors.cyanAccent,
       );
     }
 
@@ -588,12 +607,27 @@ class _ProfilePicture extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(
           width: 3.0,
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100.0),
-        child: image,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            image,
+            Container(
+              width: 100.0,
+              height: 100.0,
+              color: Colors.black54,
+            ),
+            const Icon(
+              MdiIcons.cameraPlus,
+              color: Colors.white,
+              size: 32.0,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -617,19 +651,27 @@ class _HeaderBackground extends StatelessWidget {
       image = Image.file(
         headerFile,
         width: double.infinity,
-        height: double.infinity,
+        height: 150.0,
         fit: BoxFit.fitWidth,
       );
     } else {
       image = CachedNetworkImage(
         imageUrl: headerUrl ?? kDefaultProfileHeader,
         width: double.infinity,
-        height: double.infinity,
+        height: 150.0,
         fit: BoxFit.cover,
         fadeInDuration: const Duration(milliseconds: 300),
       );
     }
 
-    return image;
+    return Stack(
+      children: <Widget>[
+        image,
+        Container(
+          height: 150.0,
+          color: Colors.black54,
+        ),
+      ],
+    );
   }
 }

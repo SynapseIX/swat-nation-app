@@ -47,6 +47,11 @@
 	<string>The app needs this if you want to take a picture to use as your profile picture.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The app needs this if you want to record a video for your profile.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

@@ -5,6 +5,7 @@ class TextHeader extends StatelessWidget {
   const TextHeader(
     this.text, {
     Key key,
+    this.actions = const <Widget>[],
     this.style,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
@@ -14,6 +15,7 @@ class TextHeader extends StatelessWidget {
   }) : super(key: key);
 
   final String text;
+  final List<Widget> actions;
   final TextStyle style;
   final TextAlign textAlign;
   final TextOverflow overflow;
@@ -26,11 +28,21 @@ class TextHeader extends StatelessWidget {
     final Widget header = Container(
       margin: margin,
       padding: padding,
-      child: Text(
-        text,
-        style: style,
-        textAlign: textAlign,
-        overflow: overflow,
+      child: Row(
+        children: <Widget>[
+          Text(
+            text,
+            style: style,
+            textAlign: textAlign,
+            overflow: overflow,
+          ),
+          Spacer(),
+          if (actions.isNotEmpty)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: actions,
+          ),
+        ],
       ),
     );
 
