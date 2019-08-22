@@ -88,304 +88,291 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _dismissKeyboard,
-      child: Material(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            // App bar
-            SliverAppBar(
-              pinned: true,
-              title: const Text('Edit Profile'),
-              actions: <Widget>[
-                StreamBuilder<String>(
-                  stream: bloc.displayNameStream,
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    return IconButton(
-                      icon: Icon(
-                        MdiIcons.contentSave,
-                      ),
-                      tooltip: 'Save',
-                      onPressed: snapshot.hasData 
-                        ? () => _saveChanges(context)
-                        : null,
-                    );
-                  },
-                ),
-              ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit Profile'),
+          actions: <Widget>[
+            StreamBuilder<String>(
+              stream: bloc.displayNameStream,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                return IconButton(
+                  icon: Icon(
+                    MdiIcons.contentSave,
+                  ),
+                  tooltip: 'Save',
+                  onPressed: snapshot.hasData 
+                    ? () => _saveChanges(context)
+                    : null,
+                );
+              },
             ),
+          ],
+        ),
+        body: ListView(
+          children: <Widget>[
+            Container(
+              height: 200.0,
+              margin: const EdgeInsets.only(bottom: 8.0),
+              child: Stack(
+                children: <Widget>[
+                  // Header background
+                  _HeaderBackground(
+                    headerFile: headerFile,
+                    headerUrl: widget.model.headerUrl,
+                  ),
 
-            SliverToBoxAdapter(
-              child: Container(
-                height: 200.0,
-                margin: const EdgeInsets.only(bottom: 8.0),
-                child: Stack(
-                  children: <Widget>[
-                    // Header background
-                    _HeaderBackground(
-                      headerFile: headerFile,
-                      headerUrl: widget.model.headerUrl,
-                    ),
+                  // Edit header icon
+                  Positioned(
+                    top: 75.0 - 32.0,
+                    right: MediaQuery.of(context).size.width / 2.0 - 32.0,
+                    child: IconButton(
+                      icon: const Icon(
+                        MdiIcons.camera,
+                        color: Colors.white,
+                        size: 32.0,
+                      ),
+                      onPressed: () => _showImagePicker(
+                        context: context,
+                        title: 'Change Background',
+                        cameraCallBack: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.camera,
+                            imageQuality: 70,
+                          );
 
-                    // Edit header icon
-                    Positioned(
-                      top: 75.0 - 32.0,
-                      right: MediaQuery.of(context).size.width / 2.0 - 32.0,
-                      child: IconButton(
-                        icon: const Icon(
-                          MdiIcons.camera,
-                          color: Colors.white,
-                          size: 32.0,
-                        ),
-                        onPressed: () => _showImagePicker(
-                          context: context,
-                          title: 'Change Background',
-                          cameraCallBack: () async {
-                            final File pickedImage = await ImagePicker.pickImage(
-                              source: ImageSource.camera,
-                              imageQuality: 70,
-                            );
+                          setState(() {
+                            headerFile = pickedImage;  
+                          });
+                        },
+                        galleryCallback: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.gallery,
+                            imageQuality: 70,
+                          );
 
-                            setState(() {
-                              headerFile = pickedImage;  
-                            });
-                          },
-                          galleryCallback: () async {
-                            final File pickedImage = await ImagePicker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 70,
-                            );
-
-                            setState(() {
-                              headerFile = pickedImage;  
-                            });
-                          },
-                        ),
+                          setState(() {
+                            headerFile = pickedImage;  
+                          });
+                        },
                       ),
                     ),
+                  ),
 
-                    // Profile picture
-                    Positioned(
-                      bottom: 0.0,
-                      left: 16.0,
-                      child: GestureDetector(
-                        onTap: () => _showImagePicker(
-                          context: context,
-                          title: 'Change Avatar',
-                          cameraCallBack: () async {
-                            final File pickedImage = await ImagePicker.pickImage(
-                              source: ImageSource.camera,
-                              imageQuality: 70,
-                            );
+                  // Profile picture
+                  Positioned(
+                    bottom: 0.0,
+                    left: 16.0,
+                    child: GestureDetector(
+                      onTap: () => _showImagePicker(
+                        context: context,
+                        title: 'Change Avatar',
+                        cameraCallBack: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.camera,
+                            imageQuality: 70,
+                          );
 
-                            setState(() {
-                              photoFile = pickedImage;
-                            });
-                          },
-                          galleryCallback: () async {
-                            final File pickedImage = await ImagePicker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 70,
-                            );
-                            
-                            setState(() {
-                              photoFile = pickedImage;
-                            });
-                          },
-                        ),
-                        child: _ProfilePicture(
-                          photoFile: photoFile,
-                          photoUrl: widget.model.photoUrl,
-                        ),
+                          setState(() {
+                            photoFile = pickedImage;
+                          });
+                        },
+                        galleryCallback: () async {
+                          final File pickedImage = await ImagePicker.pickImage(
+                            source: ImageSource.gallery,
+                            imageQuality: 70,
+                          );
+                          
+                          setState(() {
+                            photoFile = pickedImage;
+                          });
+                        },
+                      ),
+                      child: _ProfilePicture(
+                        photoFile: photoFile,
+                        photoUrl: widget.model.photoUrl,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
 
-            // Fields
-            SliverList(
-              delegate: SliverChildListDelegate(
-                <Widget>[
-                  // Display name
-                  StreamBuilder<String>(
-                    stream: bloc.displayNameStream,
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          left: 16.0,
-                          right: 16.0,
-                        ),
-                        child: TextField(
-                          controller: displayNameController,
-                          focusNode: displayNameNode,
-                          maxLength: kDisplayNameMaxChararcters,
-                          autocorrect: false,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            icon: const Icon(MdiIcons.account),
-                            labelText: 'Username',
-                            hintText: 'Username',
-                            errorText: snapshot.error,
-                          ),
-                          onChanged: bloc.onChangeDisplayName,
-                          onSubmitted: (String text) {
-                            displayNameNode.nextFocus();
-                          },
+            // Display name
+            StreamBuilder<String>(
+              stream: bloc.displayNameStream,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16.0,
+                    right: 16.0,
+                  ),
+                  child: TextField(
+                    controller: displayNameController,
+                    focusNode: displayNameNode,
+                    maxLength: kDisplayNameMaxChararcters,
+                    autocorrect: false,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      icon: const Icon(MdiIcons.account),
+                      labelText: 'Username',
+                      hintText: 'Username',
+                      errorText: snapshot.error,
+                    ),
+                    onChanged: bloc.onChangeDisplayName,
+                    onSubmitted: (String text) {
+                      displayNameNode.nextFocus();
+                    },
 
-                        ),
+                  ),
+                );
+              },
+            ),
+
+            // Gamertag
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
+                controller: gamertagController,
+                focusNode: gamertagNode,
+                autocorrect: false,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(
+                  icon: Icon(MdiIcons.xbox),
+                  labelText: 'Gamertag',
+                  hintText: 'Gamertag',
+                ),
+                onSubmitted: (String text) {
+                  gamertagNode.nextFocus();
+                },
+              ),
+            ),
+
+            // Twitter
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
+                controller: twitterController,
+                focusNode: twitterNode,
+                autocorrect: false,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(
+                  icon: Icon(MdiIcons.twitter),
+                  labelText: 'Twitter',
+                  hintText: 'Twitter',
+                ),
+                onSubmitted: (String text) {
+                  twitterNode.nextFocus();
+                },
+              ),
+            ),
+
+            // Mixer
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
+                controller: mixerController,
+                focusNode: mixerNode,
+                autocorrect: false,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(
+                  icon: Icon(MdiIcons.mixer),
+                  labelText: 'Mixer',
+                  hintText: 'Mixer',
+                ),
+                onSubmitted: (String text) {
+                  mixerNode.nextFocus();
+                },
+              ),
+            ),
+
+            // Twitch
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
+                controller: twitchController,
+                focusNode: twitchNode,
+                autocorrect: false,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(
+                  icon: Icon(MdiIcons.twitch),
+                  labelText: 'Twitch',
+                  hintText: 'Twitch',
+                ),
+                onSubmitted: (String text) {
+                  twitchNode.nextFocus();
+                },
+              ),
+            ),
+
+            // Bio
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: TextField(
+                controller: bioController,
+                focusNode: bioNode,
+                maxLength: kMaxBioLength,
+                maxLines: iPhoneX(context) ? 3 : 4,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.done,
+                decoration: const InputDecoration(
+                  icon: Icon(MdiIcons.bio),
+                  labelText: 'Biography',
+                  hintText: 'Biography',
+                ),
+                onSubmitted: (String text) {
+                  _dismissKeyboard();
+                },
+              ),
+            ),
+
+            const SizedBox(height: 16.0),
+
+            // Privacy
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    MdiIcons.lock,
+                    color: Theme.of(context).hintColor,
+                  ),
+                  const SizedBox(width: 16.0),
+                  Text(
+                    'Private',
+                    style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                  Spacer(),
+                  StreamBuilder<bool>(
+                    stream: bloc.privacyStream,
+                    initialData: false,
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      return Switch(
+                        value: snapshot.data,
+                        onChanged: bloc.onChangePrivacy,
+                        activeColor: Theme.of(context).primaryColor,
                       );
                     },
-                  ),
-
-                  // Gamertag
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: TextField(
-                      controller: gamertagController,
-                      focusNode: gamertagNode,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        icon: Icon(MdiIcons.xbox),
-                        labelText: 'Gamertag',
-                        hintText: 'Gamertag',
-                      ),
-                      onSubmitted: (String text) {
-                        gamertagNode.nextFocus();
-                      },
-                    ),
-                  ),
-
-                  // Twitter
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: TextField(
-                      controller: twitterController,
-                      focusNode: twitterNode,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        icon: Icon(MdiIcons.twitter),
-                        labelText: 'Twitter',
-                        hintText: 'Twitter',
-                      ),
-                      onSubmitted: (String text) {
-                        twitterNode.nextFocus();
-                      },
-                    ),
-                  ),
-
-                  // Mixer
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: TextField(
-                      controller: mixerController,
-                      focusNode: mixerNode,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        icon: Icon(MdiIcons.mixer),
-                        labelText: 'Mixer',
-                        hintText: 'Mixer',
-                      ),
-                      onSubmitted: (String text) {
-                        mixerNode.nextFocus();
-                      },
-                    ),
-                  ),
-
-                  // Twitch
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: TextField(
-                      controller: twitchController,
-                      focusNode: twitchNode,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        icon: Icon(MdiIcons.twitch),
-                        labelText: 'Twitch',
-                        hintText: 'Twitch',
-                      ),
-                      onSubmitted: (String text) {
-                        twitchNode.nextFocus();
-                      },
-                    ),
-                  ),
-
-                  // Bio
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: TextField(
-                      controller: bioController,
-                      focusNode: bioNode,
-                      maxLength: kMaxBioLength,
-                      maxLines: iPhoneX(context) ? 3 : 4,
-                      textCapitalization: TextCapitalization.sentences,
-                      textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
-                        icon: Icon(MdiIcons.bio),
-                        labelText: 'Biography',
-                        hintText: 'Biography',
-                      ),
-                      onSubmitted: (String text) {
-                        _dismissKeyboard();
-                      },
-                    ),
-                  ),
-
-                  const SizedBox(height: 16.0),
-
-                  // Privacy
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          MdiIcons.lock,
-                          color: Theme.of(context).hintColor,
-                        ),
-                        const SizedBox(width: 16.0),
-                        Text(
-                          'Private',
-                          style: TextStyle(
-                            color: Theme.of(context).hintColor,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                        Spacer(),
-                        StreamBuilder<bool>(
-                          stream: bloc.privacyStream,
-                          initialData: false,
-                          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                            return Switch(
-                              value: snapshot.data,
-                              onChanged: bloc.onChangePrivacy,
-                              activeColor: Theme.of(context).primaryColor,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),
