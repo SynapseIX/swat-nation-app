@@ -27,6 +27,7 @@ const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people
 const String kDefaultSubscribeMessage = 'Subscribe to SWAT Nation Pro to access exclusive benefits:\n\n- Early tourney registration\n- Increase your clips from 3 to 20\n- Earn more ranking points\n- Exclusive profile badge\n- Access exclusive chat rooms\n- No ads\n- More to come 😃';
 
 // Clips
+const String kXboxClipsHost = 'https://xboxclips.com/';
 const String kDefaultClipThumbnail = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fthumbnail.webp?alt=media&token=d6a53308-b3f2-4146-a371-6b852da0232f';
 const int kReseedValue = 100;
 const int kMaxRandomValue = 10000;

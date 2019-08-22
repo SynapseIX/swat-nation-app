@@ -15,7 +15,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
 
   Stream<ClipModel> get randomClipStream => _randomClipSubject.stream;
   ClipModel get randomClip => _randomClipSubject.value;
-
+  
   Stream<List<ClipModel>> get allClips => _firestore
     .collection(clipsCollection)
     .snapshots()
@@ -46,6 +46,11 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
     return _firestore
       .collection(clipsCollection)
       .add(model.toMap());
+  }
+
+  Future<void> remove(ClipModel model) async {
+    final DocumentSnapshot document = await clipByUid(model.uid);
+    return document.reference.delete();
   }
 
   void fetchRandomClip(int seed) {

@@ -400,7 +400,7 @@ class _PublicBody extends StatelessWidget {
 
             final Widget Function(ClipModel) cardMapper = (ClipModel model) {
               return ClipCard(
-                key: UniqueKey(),
+                key: ValueKey<String>(model.uid),
                 model: model,
               );
             };
@@ -451,7 +451,9 @@ class _PublicBody extends StatelessWidget {
                               if (snapshot.data.length < kSubClipLimit) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => CreateClipScreen(),
+                                    builder: (BuildContext context) => CreateClipScreen(
+                                      user: user,
+                                    ),
                                   ),
                                 );
                               } else {
@@ -465,7 +467,9 @@ class _PublicBody extends StatelessWidget {
                               if (snapshot.data.length < kNoSubClipLimit) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => CreateClipScreen(),
+                                    builder: (BuildContext context) => CreateClipScreen(
+                                      user: user,
+                                    ),
                                   ),
                                 );
                               } else {

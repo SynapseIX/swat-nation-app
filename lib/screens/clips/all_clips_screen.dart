@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 
 /// Screen that lists all clips from a user.
-class AllClipsScreen extends StatelessWidget {
+class AllClipsScreen extends StatefulWidget {
   const AllClipsScreen({
     @required this.data,
     @required this.displayName,
@@ -15,18 +17,73 @@ class AllClipsScreen extends StatelessWidget {
   final bool me;
 
   @override
+  State createState() => _AllClipsScreenState();
+}
+
+class _AllClipsScreenState extends State<AllClipsScreen> {
+  ClipsBloc bloc;
+  List<ClipModel> data;
+
+  @override
+  void initState() {
+    bloc = ClipsBloc();
+    data = widget.data;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: me
+        title: widget.me
           ? const Text('My Clips')
-          : Text('$displayName\'s Clips'),
+          : Text('${widget.displayName}\'s Clips'),
       ),
       body: ListView.builder(
         itemCount: data.length,
         itemBuilder: (BuildContext context, int index) {
           final ClipModel model = data[index];
-          return ClipCard(model: model);
+
+          return Dismissible(
+            key: ValueKey<String>(model.uid),
+            direction: DismissDirection.endToStart,
+            child: ClipCard(model: model),
+            background: Container(
+              alignment: Alignment.centerRight,
+              color: Colors.redAccent,
+              child: const Padding(
+                padding: EdgeInsets.all(48.0),
+                child: Icon(
+                  MdiIcons.delete,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            onDismissed: (DismissDirection direction) async {
+              Scaffold.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  content: model.title != null
+                    ? Text('Removed clip \'${model.title}\'')
+                    : const Text('Clip was removed'),
+                ));
+
+              setState(() {
+                data.removeAt(index);
+              });
+              
+              await bloc.remove(model);
+              if (data.isEmpty) {
+                Navigator.of(context).pop();
+              }
+            },
+          );
         },
       ),
     );

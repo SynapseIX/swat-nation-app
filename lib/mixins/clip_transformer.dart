@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
 
 /// Mixin for transforming clips to application model objects.
@@ -34,4 +35,12 @@ class ClipTransformer {
           }
         },
       );
+
+  bool validateLink(String link) {
+    if (link == null) {
+      return false;
+    }
+
+    return link.startsWith(kXboxClipsHost);
+  }
 }

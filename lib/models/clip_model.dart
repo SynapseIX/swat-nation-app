@@ -5,11 +5,11 @@ import 'package:swat_nation/base/base_model.dart';
 /// Represents a video clip.
 class ClipModel extends BaseModel {
   ClipModel({
-    @required this.uid,
     @required this.author,
     @required this.link,
     @required this.random,
     @required this.createdAt,
+    this.uid,
     this.title,
   });
 

@@ -1,6 +1,7 @@
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 
 /// Extract information from an XboxClips.com link.
@@ -11,7 +12,7 @@ Future<ClipInfoModel> extractClipInfo(String link) async {
     return null;
   }
 
-  if (link.startsWith('https://xboxclips.com/')) {
+  if (link.startsWith(kXboxClipsHost)) {
     final http.Response response = await http.get(link);
     final dom.Document document = parser.parse(response.body);
 
