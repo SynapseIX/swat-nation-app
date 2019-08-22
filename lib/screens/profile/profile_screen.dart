@@ -7,6 +7,7 @@ import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/screens/clips/all_clips_screen.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -392,8 +393,19 @@ class _PublicBody extends StatelessWidget {
             
             if (showViewAll) {
               cards.add(ViewAllCard(
-                // TODO(itsprof): navigate to all clips screen
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) {
+                        return AllClipsScreen(
+                          data: snapshot.data,
+                          displayName: user.displayName,
+                          me: me,
+                        );
+                      },
+                    ),
+                  );
+                },
               ));
             }
             
