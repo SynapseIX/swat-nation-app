@@ -26,19 +26,11 @@ class ViewAllCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
-              width: 60.0,
-              height: 60.0,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: Icon(
-                Icons.arrow_forward,
-                color: Theme.of(context).primaryColor,
-              ),
+            Icon(
+              Icons.arrow_forward,
+              color: Theme.of(context).primaryColor,
+              size: 60.0,
             ),
-            const SizedBox(height: 12.0),
             const Text(
               'view all',
               style: TextStyle(

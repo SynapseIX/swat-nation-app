@@ -12,6 +12,7 @@ import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
+import 'package:swat_nation/widgets/common/view_all_card.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
@@ -374,7 +375,28 @@ class _PublicBody extends StatelessWidget {
               return const SizedBox();
             }
 
-            final List<ClipModel> data = snapshot.data;
+            final Widget Function(ClipModel) cardMapper = (ClipModel model) {
+              return ClipCard(
+                key: UniqueKey(),
+                model: model,
+              );
+            };
+
+            final bool showViewAll = snapshot.data.length > 3;
+            final List<Widget> cards = showViewAll
+              ? snapshot.data
+                .sublist(0, 3)
+                .map(cardMapper).toList()
+              : snapshot.data
+                .map(cardMapper).toList();
+            
+            if (showViewAll) {
+              cards.add(ViewAllCard(
+                // TODO(itsprof): navigate to all clips screen
+                onTap: () {},
+              ));
+            }
+            
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,15 +419,7 @@ class _PublicBody extends StatelessWidget {
                     ),
                     margin: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
                   ),
-                  cardList: HorizontalCardList(
-                    cards: data
-                      .map((ClipModel model) {
-                        return ClipCard(
-                          key: UniqueKey(),
-                          model: model,
-                        );
-                      }).toList(),
-                  ),
+                  cardList: HorizontalCardList(cards: cards),
                 ),
               ],
             );
