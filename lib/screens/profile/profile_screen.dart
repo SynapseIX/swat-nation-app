@@ -65,11 +65,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (me)
               IconButton(
                 icon: const Icon(MdiIcons.accountEdit),
+                tooltip: 'Edit Profile',
                 onPressed: () => _navigateToEdit(),
               ),
               if (!me)
               IconButton(
                 icon: const Icon(MdiIcons.alert),
+                tooltip: 'Report User',
                 // TODO(itsprof): implement report user
                 onPressed: () {},
               ),
