@@ -49,7 +49,7 @@ class ClipCard extends StatelessWidget {
           child: Container(
             width: double.infinity,
             height: double.infinity,
-            color: Colors.lightBlue,
+            color: Colors.cyanAccent,
             child: GestureDetector(
               // TODO(itsprof): play insterstitial if not premium
               onTap: () async {
@@ -62,7 +62,7 @@ class ClipCard extends StatelessWidget {
 
                 final ClipInfoModel clip = await extractClipInfo(model.link);
                 clip.title = model.title ?? '';
-                
+
                 Navigator.of(context)
                   ..pop()
                   ..push(
