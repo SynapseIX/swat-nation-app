@@ -68,19 +68,11 @@ class _AllClipsScreenState extends State<AllClipsScreen> {
                   ),
                 ),
                 onDismissed: (DismissDirection direction) async {
-                  Scaffold.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
-                      content: model.title != null
-                        ? Text('Removed clip \'${model.title}\'')
-                        : const Text('Clip was removed'),
-                    ));
-
                   setState(() {
                     data.removeAt(index);
                   });
-                  
                   await bloc.remove(model);
+
                   if (data.isEmpty) {
                     Navigator.of(context).pop();
                   }
