@@ -144,7 +144,7 @@ class _PublicHeader extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(80.0),
                     child: CachedNetworkImage(
-                      imageUrl: user.photoUrl,
+                      imageUrl: user.photoUrl ?? kDefaultAvi,
                       width: 80.0,
                       height: 80.0,
                       fit: BoxFit.cover,
@@ -160,7 +160,10 @@ class _PublicHeader extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          user.displayName,
+                          user.displayName.length > 15
+                            ? '${user.displayName.substring(0, 10)}...'
+                            : user.displayName,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -242,7 +245,7 @@ class _PrivateHeader extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(40.0),
               child: CachedNetworkImage(
-                imageUrl: user.photoUrl,
+                imageUrl: user.photoUrl ?? kDefaultAvi,
                 width: 40.0,
                 height: 40.0,
                 fit: BoxFit.cover,

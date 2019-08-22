@@ -244,7 +244,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       final UserUpdateInfo info = UserUpdateInfo();
       info.displayName = uiBloc.displayNameValue;
-      info.photoUrl = kDefaultAvi;
 
       await user.updateProfile(info);
       await user.reload();
@@ -252,8 +251,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       final UserModel model = UserModel(
         uid: user.uid,
         displayName: uiBloc.displayNameValue,
-        photoUrl: kDefaultAvi,
-        createdAt: Timestamp.now(), 
+        createdAt: Timestamp.now(),
+        provider: UserProvider.email,
         platform: Platform.isIOS ? 'iOS' : 'Android',
       );
       await userBloc.create(model);

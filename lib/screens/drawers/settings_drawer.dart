@@ -307,7 +307,7 @@ class _AuthHeader extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40.0),
                   child: CachedNetworkImage(
-                    imageUrl: user.photoUrl,
+                    imageUrl: user.photoUrl ?? kDefaultAvi,
                     width: 40.0,
                     height: 40.0,
                     fit: BoxFit.cover,

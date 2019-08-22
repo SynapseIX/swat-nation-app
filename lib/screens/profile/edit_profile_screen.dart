@@ -597,7 +597,7 @@ class _ProfilePicture extends StatelessWidget {
       image = Container(
         width: 100.0,
         height: 100.0,
-        color: Colors.lightBlue,
+        color: Colors.cyanAccent,
       );
     }
 

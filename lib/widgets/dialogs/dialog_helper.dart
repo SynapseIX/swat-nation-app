@@ -13,7 +13,7 @@ class DialogHelper {
 
   Future<Dialog> showWaitingDialog({
     @required BuildContext context,
-    String title = 'Waiting...',
+    String title = 'Working...',
   }) {
     return showDialog<Dialog>(
       context: context,
