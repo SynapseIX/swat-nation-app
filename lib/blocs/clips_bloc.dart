@@ -24,7 +24,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
     return _firestore
       .collection(clipsCollection)
       .where('author', isEqualTo: uid)
-      .orderBy('createdAt', descending: false)
+      .orderBy('createdAt', descending: true)
       .snapshots()
       .transform(transformClips);
   }
