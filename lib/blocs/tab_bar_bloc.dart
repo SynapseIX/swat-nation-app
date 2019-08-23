@@ -10,12 +10,13 @@ class TabBarBloc extends BaseBloc {
   static final TabBarBloc _bloc = TabBarBloc._internal();
 
   final PageController _controller = PageController();
+  PageController get controller => _controller;
+  
   final BehaviorSubject<int> _tabBarSubject = BehaviorSubject<int>.seeded(0);
 
   Stream<int> get indexStream => _tabBarSubject.stream;
   int get currentIndex => _tabBarSubject.value;
 
-  PageController get controller => _controller;
   void Function(int) get setCurrentIndex => _tabBarSubject.sink.add;
 
   @override
