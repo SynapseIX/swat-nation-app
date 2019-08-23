@@ -16,9 +16,13 @@ class FinderTab extends StatefulWidget implements BaseTab {
   String get title => 'Finder';
 }
 
-class _FinderTabState extends State<FinderTab> {
+class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(color: Colors.lightGreen);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

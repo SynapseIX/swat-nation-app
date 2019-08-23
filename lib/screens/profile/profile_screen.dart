@@ -40,10 +40,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    super.initState();
     authBloc = AuthBloc.instance();
     clipsBloc = ClipsBloc();
     user = widget.model;
+    super.initState();
   }
 
   @override
@@ -292,7 +292,6 @@ class _PublicBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      key: const PageStorageKey<String>('profile_list_view'),
       children: <Widget>[
         // Profile header
         _PublicHeader(user: user),
@@ -483,11 +482,6 @@ class _PublicBody extends StatelessWidget {
                         )
                       ]
                       : <Widget>[],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28.0,
-                    ),
-                    margin: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
                   ),
                   cardList: HorizontalCardList(cards: cards),
                 ),

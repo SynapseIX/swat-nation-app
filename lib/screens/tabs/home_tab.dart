@@ -46,15 +46,16 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
-    super.initState();
+    final int seed = Random(DateTime.now().millisecondsSinceEpoch)
+      .nextInt(kMaxRandomValue);
+
     authBloc = AuthBloc.instance();
     userBloc = UserBloc();
     
     clipsBloc = ClipsBloc();
-    if (clipsBloc.randomClip == null) {
-      final Random random = Random(DateTime.now().millisecondsSinceEpoch);
-      clipsBloc.fetchRandomClip(random.nextInt(kMaxRandomValue));
-    }
+    clipsBloc.fetchRandomClip(seed);
+
+    super.initState();
   }
 
   @override
@@ -73,97 +74,14 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     final double cardWidth = MediaQuery.of(context).size.width * widthMultiplier;
 
     return CustomScrollView(
-      key: const PageStorageKey<String>('home_tab_scroll_view'),
       slivers: <Widget>[
-        StreamBuilder<FirebaseUser>(
-          stream: authBloc.onAuthStateChanged,
-          builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-            if (snapshot.hasData) {
-              final String loadingDisplayName = snapshot.data.displayName ?? '...';
-              final String displayName =
-                loadingDisplayName.length > kDisplayNameMaxChararcters
-                ? '${loadingDisplayName.substring(0, kDisplayNameMaxChararcters - 5)}...'
-                : loadingDisplayName;
-
-              return SliverAppBar(
-                pinned: true,
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-                title: GestureDetector(
-                  onTap: () async {
-                    DialogHelper.instance().showWaitingDialog(
-                      context: context,
-                      title: 'Fetching profile...',
-                    );
-                    
-                    final FirebaseUser user = await authBloc.currentUser;
-                    final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
-                    final UserModel model = UserModel.fromSnapshot(doc);
-
-                    Navigator.of(context)
-                      ..pop()
-                      ..push(
-                        MaterialPageRoute<ProfileScreen>(
-                          builder: (BuildContext context) => ProfileScreen(model: model),
-                          fullscreenDialog: true,
-                        ),
-                      );
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(right: 8.0),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF333333),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 2.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30.0),
-                          child: CachedNetworkImage(
-                            imageUrl: snapshot.data.photoUrl ?? kDefaultAvi,
-                            width: 30.0,
-                            height: 30.0,
-                            fit: BoxFit.cover,
-                            fadeInDuration: const Duration(milliseconds: 300),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        'Hi, $displayName!',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            return SliverAppBar(
-              pinned: true,
-              automaticallyImplyLeading: false,
-              title: const Text('What\'s New?'),
-            );
-          },
-        ),
+        _AppBar(userBloc: userBloc),
 
         // Upcoming Tournaments
         // TODO(itsprof): implement
         CardSection(
-          header: const TextHeader(
-            'Upcoming\nTournaments',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          ),
+          header: const TextHeader('Upcoming\nTournaments'),
           cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('upcoming_tourneys_list'),
             cards: <Widget>[
               TourneyCard(
                 src: 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.jpg?alt=media&token=58f286a3-fd53-48fc-92c4-b53b4a37df56',
@@ -189,22 +107,13 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               return const SliverToBoxAdapter(child: SizedBox());
             }
 
-            return SliverToBoxAdapter(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const TextHeader(
-                    'Community\nHighlight',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28.0,
-                      ),
-                      margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-                  ),
+            return SliverList(
+              delegate: SliverChildListDelegate(
+                <Widget>[
+                  const TextHeader('Community\nHighlight'),
                   ClipCard(
-                    key: UniqueKey(),
                     model: snapshot.data,
-                    padding: const EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.all(8.0),
                   ),
                 ],
               ),
@@ -215,16 +124,8 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         // Announcements
         // TODO(itsprof): implement
         CardSection(
-          header: const TextHeader(
-            'Announcements',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          ),
+          header: const TextHeader('Announcements'),
           cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('latest_news_list'),
             cards: <Widget>[
               NewsCard(
                 title: 'New App Launched',
@@ -252,16 +153,8 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         // #swatisart
         // TODO(itsprof): implement
         CardSection(
-          header: const TextHeader(
-            '#swatisart',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-            margin: EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
-          ),
+          header: const TextHeader('#swatisart',),
           cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('swat_is_art_list'),
             cards: const <Widget>[
               ArtCard(
                 src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/ff67587a4391b3631be38a6451efb3a5/5DCE9C0C/t51.2885-15/e35/66643368_348677349143588_4294471077142937309_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
@@ -290,4 +183,94 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class _AppBar extends StatelessWidget {
+  const _AppBar({
+    Key key,
+    @required this.userBloc
+  }) : super(key: key);
+  
+  final UserBloc userBloc;
+  
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<FirebaseUser>(
+      stream: AuthBloc.instance().onAuthStateChanged,
+      builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+        if (snapshot.hasData) {
+          final String loadingDisplayName = snapshot.data.displayName ?? '...';
+          final String displayName =
+            loadingDisplayName.length > kDisplayNameMaxChararcters
+            ? '${loadingDisplayName.substring(0, kDisplayNameMaxChararcters - 5)}...'
+            : loadingDisplayName;
+
+          return SliverAppBar(
+            pinned: true,
+            floating: true,
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            title: GestureDetector(
+              onTap: () async {
+                DialogHelper.instance().showWaitingDialog(
+                  context: context,
+                  title: 'Fetching profile...',
+                );
+                
+                final FirebaseUser user = await AuthBloc.instance().currentUser;
+                final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
+                final UserModel model = UserModel.fromSnapshot(doc);
+
+                Navigator.of(context)
+                  ..pop()
+                  ..push(
+                    MaterialPageRoute<ProfileScreen>(
+                      builder: (BuildContext context) => ProfileScreen(model: model),
+                      fullscreenDialog: true,
+                    ),
+                  );
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(right: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF333333),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 2.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: CachedNetworkImage(
+                        imageUrl: snapshot.data.photoUrl ?? kDefaultAvi,
+                        width: 30.0,
+                        height: 30.0,
+                        fit: BoxFit.cover,
+                        fadeInDuration: const Duration(milliseconds: 300),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Hi, $displayName!',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return SliverAppBar(
+          pinned: true,
+          floating: true,
+          automaticallyImplyLeading: false,
+          title: const Text('What\'s New?'),
+        );
+      },
+    );
+  }
 }

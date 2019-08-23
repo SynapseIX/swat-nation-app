@@ -27,8 +27,6 @@ class _ClipScreenState extends State<ClipScreen>
 
   @override
   void initState() {
-    super.initState();
-
     controller = VideoPlayerController.network(widget.model.videoUrl);
     controller.addListener(_listener);
     initialized = controller.initialize();
@@ -45,6 +43,7 @@ class _ClipScreenState extends State<ClipScreen>
     );
 
     Wakelock.enable();
+    super.initState();
   }
 
   @override

@@ -16,9 +16,13 @@ class ChatTab extends StatefulWidget implements BaseTab {
   String get title => 'Chat';
 }
 
-class _ChatTabState extends State<ChatTab> {
+class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(color: Colors.orange);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -6,10 +6,13 @@ class TextHeader extends StatelessWidget {
     this.text, {
     Key key,
     this.actions = const <Widget>[],
-    this.style,
+    this.style = const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 28.0,
+    ),
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-    this.margin = EdgeInsets.zero,
+    this.margin = const EdgeInsets.only(top: 24.0, left: 8.0, right: 8.0),
     this.padding = EdgeInsets.zero,
     this.sliver = false,
   }) : super(key: key);
