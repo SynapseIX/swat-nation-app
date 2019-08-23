@@ -91,18 +91,18 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                         },
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        MdiIcons.closeCircle,
-                        color: Theme.of(context).hintColor,
-                        size: 17.0,
-                      ),
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         searchController.clear();
                         setState(() {
                           query = '';
                         });
                       },
+                      child: Icon(
+                        MdiIcons.closeCircle,
+                        color: Theme.of(context).hintColor,
+                        size: 17.0,
+                      ),
                     ),
                   ],
                 ),
