@@ -99,10 +99,14 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                           query = '';
                         });
                       },
-                      child: Icon(
-                        MdiIcons.closeCircle,
-                        color: Theme.of(context).hintColor,
-                        size: 17.0,
+                      child: Container(
+                        height: 40.0,
+                        width: 40.0,
+                        child: Icon(
+                          MdiIcons.closeCircle,
+                          color: Theme.of(context).hintColor,
+                          size: 20.0,
+                        ),
                       ),
                     ),
                   ],
