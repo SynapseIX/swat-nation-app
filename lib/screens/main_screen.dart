@@ -67,6 +67,7 @@ class _MainScreenState extends State<MainScreen> {
             controller: bloc.controller,
             children: tabs,
             onPageChanged: (int page) => bloc.setCurrentIndex(page),
+            physics: const NeverScrollableScrollPhysics(),
           );
         }
       ),
