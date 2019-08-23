@@ -23,5 +23,6 @@ class TabBarBloc extends BaseBloc {
   void dispose() {
     print('TabBarBloc disposed');
     _tabBarSubject.close();
+    _controller.dispose();
   }
 }
