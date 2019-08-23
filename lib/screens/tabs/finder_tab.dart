@@ -192,6 +192,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                           Navigator.of(context).push(
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) => ProfileScreen(model: model),
+                              fullscreenDialog: true,
                             ),
                           );
                         },
