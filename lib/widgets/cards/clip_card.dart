@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
@@ -122,14 +121,12 @@ class ClipCard extends StatelessWidget {
                             fontSize: 20.0
                           ),
                         ),
-                        FutureBuilder<DocumentSnapshot>(
+                        FutureBuilder<UserModel>(
                           future: userBloc.userByUid(model.author),
-                          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
                             if (snapshot.hasData) {
-                              final UserModel user = UserModel.fromSnapshot(snapshot.data);
-                              
                               return Text(
-                                'Gameplay by ${user.displayName}',
+                                'Gameplay by ${snapshot.data.displayName}',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: const TextStyle(

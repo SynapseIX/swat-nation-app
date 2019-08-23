@@ -95,7 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               stream: bloc.displayNameStream,
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 return IconButton(
-                  icon: Icon(MdiIcons.cloudUpload),
+                  icon: const Icon(MdiIcons.cloudUpload),
                   tooltip: 'Save',
                   onPressed: snapshot.hasData 
                     ? () => _saveChanges(context)

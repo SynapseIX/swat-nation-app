@@ -67,6 +67,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
           actions: <Widget>[
             IconButton(
               icon: Icon(MdiIcons.cloudUpload),
+              tooltip: 'Upload Clip',
               onPressed: validateLink(model.link)
                 ? () async {
                   DialogHelper.instance().showWaitingDialog(
@@ -151,7 +152,6 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 focusNode: titleNode,
                 autocorrect: true,
                 maxLength: 30,
-                maxLines: 2,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(

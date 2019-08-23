@@ -17,13 +17,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  TabBarBloc bloc;
+  final PageController controller = PageController();
+
   List<BaseTab> tabs;
 
   @override
   void initState() {
-    bloc = TabBarBloc.instance();
-
     tabs = <BaseTab>[
       const HomeTab(),
       const TourneysTab(),
@@ -34,25 +33,19 @@ class _MainScreenState extends State<MainScreen> {
 
     super.initState();
   }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: SettingsDrawer(),
       body: PageView(
-        controller: bloc.controller,
+        controller: TabBarBloc.instance().controller,
         children: tabs,
-        onPageChanged: (int page) => bloc.setCurrentIndex(page),
+        onPageChanged: (int page) => TabBarBloc.instance().setCurrentIndex(page),
         physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: StreamBuilder<int>(
-        stream: bloc.indexStream,
+        stream: TabBarBloc.instance().indexStream,
         initialData: 0,
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           return BottomNavigationBar(
@@ -68,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
                 title: Text(tab.title),
               );
             }).toList(),
-            onTap: (int index) => bloc.controller.jumpToPage(index),
+            onTap: (int index) => TabBarBloc.instance().controller.jumpToPage(index),
           );
         }
       ),

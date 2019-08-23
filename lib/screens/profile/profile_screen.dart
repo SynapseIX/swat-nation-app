@@ -8,7 +8,7 @@ import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
-import 'package:swat_nation/screens/clips/create_clip_scren.dart';
+import 'package:swat_nation/screens/clips/create_clip_screen.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
