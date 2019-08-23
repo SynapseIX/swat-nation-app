@@ -5,7 +5,7 @@ import 'package:swat_nation/models/chat_model.dart';
 
 /// Mixin that contains tranformers used in chat screens.
 class ChatTransformer {
-  final StreamTransformer<QuerySnapshot, List<ChatModel>> transformRoom
+  final StreamTransformer<QuerySnapshot, List<ChatModel>> roomTransformer
     = StreamTransformer<QuerySnapshot, List<ChatModel>>.fromHandlers(
       handleData: (QuerySnapshot snapshot, EventSink<List<ChatModel>> sink) {
         if (snapshot.documents.isEmpty) {
