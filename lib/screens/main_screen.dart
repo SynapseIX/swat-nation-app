@@ -60,31 +60,31 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: SettingsDrawer(),
-      body: StreamBuilder<int>(
+      body: PageView(
+        controller: bloc.controller,
+        children: tabs,
+        onPageChanged: (int page) => bloc.setCurrentIndex(page),
+        physics: const NeverScrollableScrollPhysics(),
+      ),
+      bottomNavigationBar: StreamBuilder<int>(
         stream: bloc.indexStream,
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-          return PageView(
-            controller: bloc.controller,
-            children: tabs,
-            onPageChanged: (int page) => bloc.setCurrentIndex(page),
-            physics: const NeverScrollableScrollPhysics(),
+          return BottomNavigationBar(
+            backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
+              ? const Color(0xFF111111)
+              : Colors.white,
+            currentIndex: snapshot.data,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Theme.of(context).primaryColor,
+            items: tabs.map((BaseTab tab) {
+              return BottomNavigationBarItem(
+                icon: Icon(tab.icon),
+                title: Text(tab.title),
+              );
+            }).toList(),
+            onTap: (int index) => bloc.controller.jumpToPage(index),
           );
         }
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
-          ? const Color(0xFF111111)
-          : Colors.white,
-        currentIndex: bloc.currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).primaryColor,
-        items: tabs.map((BaseTab tab) {
-          return BottomNavigationBarItem(
-            icon: Icon(tab.icon),
-            title: Text(tab.title),
-          );
-        }).toList(),
-        onTap: (int index) => bloc.controller.jumpToPage(index),
       ),
     );
   }
