@@ -16,9 +16,13 @@ class TourneysTab extends StatefulWidget implements BaseTab {
   String get title => 'Tourneys';
 }
 
-class _TourneysTabState extends State<TourneysTab> {
+class _TourneysTabState extends State<TourneysTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(color: Colors.lightBlue);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

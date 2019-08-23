@@ -16,9 +16,13 @@ class RankingTab extends StatefulWidget implements BaseTab {
   String get title => 'Ranking';
 }
 
-class _RankingTabState extends State<RankingTab> {
+class _RankingTabState extends State<RankingTab> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(color: Colors.purple);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -17,7 +17,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final PageStorageBucket bucket = PageStorageBucket();
+  final PageController controller = PageController();
 
   TabBarBloc bloc;
 
@@ -33,11 +33,11 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     bloc = TabBarBloc.instance();
 
-    homeTab = const HomeTab(key: PageStorageKey<String>('home'));
-    tourneysTab = const TourneysTab(key: PageStorageKey<String>('tourneys'));
-    finderTab = const FinderTab(key: PageStorageKey<String>('finder'));
-    chatTab = const ChatTab(key: PageStorageKey<String>('chat'));
-    rankingTab = const RankingTab(key: PageStorageKey<String>('ranking'));
+    homeTab = const HomeTab();
+    tourneysTab = const TourneysTab();
+    finderTab = const FinderTab();
+    chatTab = const ChatTab();
+    rankingTab = const RankingTab();
 
     tabs = <BaseTab>[
       homeTab,
@@ -52,33 +52,33 @@ class _MainScreenState extends State<MainScreen> {
   
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int>(
-      stream: bloc.stream,
-      initialData: 0,
-      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-        return Scaffold(
-          endDrawer: SettingsDrawer(),
-          body: PageStorage(
-            bucket: bucket,
-            child: tabs[snapshot.data],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
-              ? const Color(0xFF111111)
-              : Colors.white,
-            currentIndex: snapshot.data,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Theme.of(context).primaryColor,
-            items: tabs.map((BaseTab tab) {
-              return BottomNavigationBarItem(
-                icon: Icon(tab.icon),
-                title: Text(tab.title),
-              );
-            }).toList(),
-            onTap: (int index) => bloc.setCurrentIndex(index),
-          ),
-        );
-      },
+    return Scaffold(
+      endDrawer: SettingsDrawer(),
+      body: StreamBuilder<int>(
+        stream: bloc.indexStream,
+        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+          return PageView(
+            controller: bloc.controller,
+            children: tabs,
+            onPageChanged: (int page) => bloc.setCurrentIndex(page),
+          );
+        }
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
+          ? const Color(0xFF111111)
+          : Colors.white,
+        currentIndex: bloc.currentIndex,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Theme.of(context).primaryColor,
+        items: tabs.map((BaseTab tab) {
+          return BottomNavigationBarItem(
+            icon: Icon(tab.icon),
+            title: Text(tab.title),
+          );
+        }).toList(),
+        onTap: (int index) => bloc.controller.jumpToPage(index),
+      ),
     );
   }
 }
