@@ -35,6 +35,8 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
   ClipsBloc bloc;
   ClipModel model;
 
+  int stackIndex;
+
   @override
   void initState() {
     bloc = ClipsBloc();
@@ -42,6 +44,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
     model = ClipModel.blank();
     model.createdAt = Timestamp.now();
 
+    stackIndex = 0;
     super.initState();
   }
 
@@ -103,11 +106,17 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
         body: ListView(
           children: <Widget>[
             // Preview
-            IgnorePointer(
-              child: ClipCard(
-                model: model,
-                padding: const EdgeInsets.all(8.0),
-              ),
+            IndexedStack(
+              index: stackIndex,
+              children: <Widget>[
+                _PreviewCard(),
+                IgnorePointer(
+                  child: ClipCard(
+                    model: model,
+                    padding: const EdgeInsets.all(8.0),
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 16.0),
@@ -125,15 +134,17 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   icon: Icon(MdiIcons.web),
-                  labelText: 'XboxClips.com Link',
+                  labelText: 'Link To Clip',
                   hintText: '$kXboxClipsHost...',
                   errorText: !validateLink(model.link)
                     ? 'Enter a valid XboxClips.com link for your clip'
                     : null,
                 ),
                 onChanged: (String value) {
+                  final bool validLink = validateLink(value);
                   setState(() {
                     model.link = value;
+                    stackIndex = validLink ? 1 : 0;
                   });
                 },
                 onSubmitted: (String value) {
@@ -181,5 +192,41 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
     if (titleNode.hasFocus) {
       titleNode.unfocus();
     }
+  }
+}
+
+class _PreviewCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 16.0 / 9.0,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          color: const Color(0xFF333333),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const <Widget>[
+                Icon(
+                  MdiIcons.video,
+                  size: 60.0,
+                  color: Colors.white,
+                ),
+                Text(
+                  'PREVIEW',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

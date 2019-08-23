@@ -32,7 +32,7 @@ class ViewAllCard extends StatelessWidget {
               size: 60.0,
             ),
             const Text(
-              'view all',
+              'View All',
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 14.0,

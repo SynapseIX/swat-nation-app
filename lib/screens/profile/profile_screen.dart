@@ -406,31 +406,30 @@ class _PublicBody extends StatelessWidget {
 
             // TODO(itsprof): validate if subscriber
             const bool subscriber = true;
-            final bool showViewAll = snapshot.data.length > kNoSubClipLimit;
-            final List<Widget> cards = showViewAll
+            final bool largeList = snapshot.data.length > kNoSubClipLimit;
+            final List<Widget> cards = largeList
               ? snapshot.data
                 .sublist(0, kNoSubClipLimit)
                 .map(cardMapper).toList()
               : snapshot.data
                 .map(cardMapper).toList();
             
-            if (showViewAll) {
-              cards.add(ViewAllCard(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) {
-                        return AllClipsScreen(
-                          data: snapshot.data,
-                          displayName: user.displayName,
-                          me: me,
-                        );
-                      },
-                    ),
-                  );
-                },
-              ));
-            }
+            // View All
+            cards.add(ViewAllCard(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) {
+                      return AllClipsScreen(
+                        data: snapshot.data,
+                        displayName: user.displayName,
+                        me: me,
+                      );
+                    },
+                  ),
+                );
+              },
+            ));
             
             return Column(
               mainAxisSize: MainAxisSize.min,
