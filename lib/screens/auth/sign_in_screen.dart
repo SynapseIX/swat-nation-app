@@ -260,16 +260,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
       final String platform = Platform.isIOS ? 'iOS' : 'Android';
       
-      final DocumentSnapshot doc = await userBloc.userByUid(user.uid);
-      final UserModel model = doc != null
-        ? UserModel.fromSnapshot(doc)
-        : UserModel(
-          uid: user.uid,
-          displayName: user.displayName,
-          photoUrl: user.photoUrl,
-          createdAt: Timestamp.now(),
-          provider: UserProvider.facebook,
-        );
+      final UserModel model = await userBloc.userByUid(user.uid) ?? UserModel(
+        uid: user.uid,
+        displayName: user.displayName,
+        photoUrl: user.photoUrl,
+        createdAt: Timestamp.now(),
+        provider: UserProvider.facebook,
+      );
       model.platform = platform;
 
       if (displayNameExists) {

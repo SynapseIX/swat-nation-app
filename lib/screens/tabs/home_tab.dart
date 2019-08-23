@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -218,8 +217,7 @@ class _AppBar extends StatelessWidget {
                 );
                 
                 final FirebaseUser user = await AuthBloc.instance().currentUser;
-                final DocumentSnapshot doc =  await userBloc.userByUid(user.uid);
-                final UserModel model = UserModel.fromSnapshot(doc);
+                final UserModel model = await userBloc.userByUid(user.uid);
 
                 Navigator.of(context)
                   ..pop()
