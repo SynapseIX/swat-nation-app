@@ -13,15 +13,29 @@ class ChatBloc extends BaseBloc with ChatTransformer {
 
   Stream<List<ChatModel>> get generalRoomStream => _firestore
     .collection(generalRoomCollection)
+    .orderBy('createdAt', descending: true)
     .limit(kMaxChatMessages)
     .snapshots()
     .transform(roomTransformer);
 
   Stream<List<ChatModel>> get proRoomStream => _firestore
     .collection(proRoomCollection)
+    .orderBy('createdAt', descending: true)
     .limit(kMaxChatMessages)
     .snapshots()
     .transform(roomTransformer);
+  
+  Future<DocumentReference> sendMessageToGeneral(ChatModel message) {
+    return _firestore
+      .collection(generalRoomCollection)
+      .add(message.toMap());
+  }
+
+  Future<DocumentReference> sendMessageToPro(ChatModel message) {
+    return _firestore
+      .collection(proRoomCollection)
+      .add(message.toMap());
+  }
   
   @override
   void dispose() {
