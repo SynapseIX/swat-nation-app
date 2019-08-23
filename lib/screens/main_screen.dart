@@ -66,6 +66,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: StreamBuilder<int>(
         stream: bloc.indexStream,
+        initialData: 0,
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           return BottomNavigationBar(
             backgroundColor: ThemeBloc.instance().currentTheme is DarkTheme
