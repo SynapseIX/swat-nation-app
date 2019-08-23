@@ -20,7 +20,6 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    super.initState();
     themeBloc = ThemeBloc.instance();
     themeBloc.retrieveSavedTheme();
 
@@ -29,6 +28,8 @@ class _AppState extends State<App> {
         DeviceOrientation.portraitUp,
       ],
     );
+
+    super.initState();
   }
 
   @override

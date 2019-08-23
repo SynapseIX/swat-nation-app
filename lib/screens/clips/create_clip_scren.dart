@@ -37,11 +37,12 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
 
   @override
   void initState() {
-    super.initState();
     bloc = ClipsBloc();
 
     model = ClipModel.blank();
     model.createdAt = Timestamp.now();
+
+    super.initState();
   }
 
   @override

@@ -49,8 +49,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void initState() {
-    super.initState();
-    
     bloc = EditProfileBloc();
     bloc.onChangeDisplayName(widget.model.displayName);
     bloc.onChangePrivacy(widget.model.private);
@@ -61,6 +59,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     mixerController.text = widget.model.mixer;
     twitchController.text = widget.model.twitch;
     bioController.text = widget.model.bio;
+
+    super.initState();
   }
 
   @override
