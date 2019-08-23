@@ -71,21 +71,40 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                 color: ThemeBloc.instance().currentTheme is LightTheme
                   ? Colors.white
                   : Theme.of(context).appBarTheme.color,
-                child: TextField(
-                  controller: searchController,
-                  focusNode: searchNode,
-                  autocorrect: false,
-                  textInputAction: TextInputAction.search,
-                  decoration: const InputDecoration(
-                    icon: Icon(MdiIcons.magnify),
-                    border: InputBorder.none,
-                    hintText: 'Search members...',
-                  ),
-                  onChanged: (String value) {
-                    setState(() {
-                      query = value;
-                    });
-                  },
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        focusNode: searchNode,
+                        autocorrect: false,
+                        textInputAction: TextInputAction.search,
+                        decoration: const InputDecoration(
+                          icon: Icon(MdiIcons.magnify),
+                          border: InputBorder.none,
+                          hintText: 'Search members...',
+                        ),
+                        onChanged: (String value) {
+                          setState(() {
+                            query = value;
+                          });
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        MdiIcons.closeCircle,
+                        color: Theme.of(context).hintColor,
+                        size: 17.0,
+                      ),
+                      onPressed: () {
+                        searchController.clear();
+                        setState(() {
+                          query = '';
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
