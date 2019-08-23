@@ -106,7 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             hintText: 'user@example.com',
                             errorText: snapshot.error,
                           ),
-                          onSubmitted: (String text) {
+                          onSubmitted: (String value) {
                             emailNode.nextFocus();
                           },
                           onChanged: uiBloc.onChangeEmail,
@@ -129,7 +129,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             hintText: 'password',
                             errorText: snapshot.error,
                           ),
-                          onSubmitted: (String text) => _submitSignIn(context),
+                          onSubmitted: (String value) => _submitSignIn(context),
                           onChanged: uiBloc.onChangePassword,
                         );
                       },

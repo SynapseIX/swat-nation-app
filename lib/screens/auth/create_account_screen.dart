@@ -114,7 +114,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'user@example.com',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
+                              onSubmitted: (String value) {
                                 emailNode.nextFocus();
                               },
                               onChanged: uiBloc.onChangeEmail,
@@ -137,7 +137,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'password',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
+                              onSubmitted: (String value) {
                                 passwordNode.nextFocus();
                               },
                               onChanged: uiBloc.onChangePassword,
@@ -160,7 +160,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'confirm password',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
+                              onSubmitted: (String value) {
                                 confirmPasswordNode.nextFocus();
                               },
                               onChanged: uiBloc.onChangeConfirmPassword,
@@ -183,7 +183,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'Username',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) => _submitCreateAccount(context),
+                              onSubmitted: (String value) => _submitCreateAccount(context),
                               onChanged: uiBloc.onChangeDisplayName,
                             );
                           },
