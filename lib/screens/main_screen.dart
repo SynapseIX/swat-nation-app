@@ -18,31 +18,18 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   TabBarBloc bloc;
-
-  HomeTab homeTab;
-  TourneysTab tourneysTab;
-  FinderTab finderTab;
-  ChatTab chatTab;
-  RankingTab rankingTab;
-
   List<BaseTab> tabs;
 
   @override
   void initState() {
     bloc = TabBarBloc.instance();
 
-    homeTab = const HomeTab();
-    tourneysTab = const TourneysTab();
-    finderTab = const FinderTab();
-    chatTab = const ChatTab();
-    rankingTab = const RankingTab();
-
     tabs = <BaseTab>[
-      homeTab,
-      tourneysTab,
-      finderTab,
-      chatTab,
-      rankingTab,
+      const HomeTab(),
+      const TourneysTab(),
+      const FinderTab(),
+      const ChatTab(),
+      const RankingTab(),
     ];
 
     super.initState();
