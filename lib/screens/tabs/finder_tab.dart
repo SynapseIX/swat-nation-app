@@ -57,33 +57,36 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
           SliverAppBar(
             pinned: true,
             floating: true,
-            snap: true,
             backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
               ? Colors.lightGreen
               : Theme.of(context).appBarTheme.color,
             title: const Text('Member Finder'),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
+            bottom: PreferredSize(
+              preferredSize: const Size(
+                double.infinity,
+                60.0,
               ),
-              child: TextField(
-                controller: searchController,
-                focusNode: searchNode,
-                autocorrect: false,
-                textInputAction: TextInputAction.search,
-                decoration: const InputDecoration(
-                  icon: Icon(MdiIcons.magnify),
-                  hintText: 'Search members...',
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                color: ThemeBloc.instance().currentTheme is LightTheme
+                  ? Colors.white
+                  : Theme.of(context).appBarTheme.color,
+                child: TextField(
+                  controller: searchController,
+                  focusNode: searchNode,
+                  autocorrect: false,
+                  textInputAction: TextInputAction.search,
+                  decoration: const InputDecoration(
+                    icon: Icon(MdiIcons.magnify),
+                    border: InputBorder.none,
+                    hintText: 'Search members...',
+                  ),
+                  onChanged: (String value) {
+                    setState(() {
+                      query = value;
+                    });
+                  },
                 ),
-                onChanged: (String value) {
-                  setState(() {
-                    query = value;
-                  });
-                },
               ),
             ),
           ),
