@@ -91,6 +91,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                         },
                       ),
                     ),
+                    if (query.isNotEmpty)
                     GestureDetector(
                       onTap: () {
                         searchController.clear();
