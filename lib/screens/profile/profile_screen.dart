@@ -292,7 +292,6 @@ class _PublicBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      key: const PageStorageKey<String>('profile_list_view'),
       children: <Widget>[
         // Profile header
         _PublicHeader(user: user),

@@ -82,7 +82,6 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         CardSection(
           header: const TextHeader('Upcoming\nTournaments'),
           cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('upcoming_tourneys_list'),
             cards: <Widget>[
               TourneyCard(
                 src: 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/tourney-posters%2F%2317%20Once%20upon%20a%20SWAT.jpg?alt=media&token=58f286a3-fd53-48fc-92c4-b53b4a37df56',
@@ -127,7 +126,6 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         CardSection(
           header: const TextHeader('Announcements'),
           cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('latest_news_list'),
             cards: <Widget>[
               NewsCard(
                 title: 'New App Launched',
@@ -157,7 +155,6 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         CardSection(
           header: const TextHeader('#swatisart',),
           cardList: HorizontalCardList(
-            key: const PageStorageKey<String>('swat_is_art_list'),
             cards: const <Widget>[
               ArtCard(
                 src: 'https://instagram.fuio1-1.fna.fbcdn.net/vp/ff67587a4391b3631be38a6451efb3a5/5DCE9C0C/t51.2885-15/e35/66643368_348677349143588_4294471077142937309_n.jpg?_nc_ht=instagram.fuio1-1.fna.fbcdn.net',
