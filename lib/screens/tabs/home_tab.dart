@@ -92,7 +92,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
                 width: cardWidth,
               ),
               ViewAllCard(
-                onTap: () => TabBarBloc.instance().setCurrentIndex(1),
+                onTap: () => TabBarBloc.instance().controller.jumpToPage(1),
               ),
             ],
           ),
