@@ -92,6 +92,7 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       final ChatModel model = snapshot.data[index];
+                      
                       return ChatListTile(
                         key: UniqueKey(),
                         model: model,
