@@ -33,11 +33,14 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
 
   ChatBloc bloc;
   UserBloc userBloc;
+  bool proRoom;
 
   @override
   void initState() {
     bloc = ChatBloc();
     userBloc = UserBloc();
+
+    proRoom = false;
     super.initState();
   }
 
@@ -62,7 +65,18 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
         backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
           ? Colors.orange
           : Theme.of(context).appBarTheme.color,
-        title: const Text('Chat'),
+        // TODO(itsprof): make popup menu button
+        title: GestureDetector(
+          onTap: () {},
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(proRoom ? 'PRO Chat' : 'General Chat'),
+              const SizedBox(width: 4.0),
+              const Icon(MdiIcons.menuDown),
+            ],
+          ),
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -92,7 +106,7 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       final ChatModel model = snapshot.data[index];
-                      
+
                       return ChatListTile(
                         key: UniqueKey(),
                         model: model,
