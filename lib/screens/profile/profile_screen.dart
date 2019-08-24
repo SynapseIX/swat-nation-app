@@ -171,9 +171,8 @@ class _PublicHeader extends StatelessWidget {
                           ),
                         ),
                         if (user.verified)
-                        Container(
-                          margin: const EdgeInsets.only(left: 4.0),
-                          child: const VerifiedBadge(),
+                        const VerifiedBadge(
+                          margin: EdgeInsets.only(left: 4.0),
                         ),
                       ],
                     ),
@@ -266,9 +265,8 @@ class _PrivateHeader extends StatelessWidget {
                 ),
               ),
               if (user.verified)
-              Container(
-                margin: const EdgeInsets.only(left: 4.0),
-                child: const VerifiedBadge(),
+              const VerifiedBadge(
+                margin: EdgeInsets.only(left: 4.0),
               ),
             ],
           ),

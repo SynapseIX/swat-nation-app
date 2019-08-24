@@ -287,9 +287,8 @@ class _AuthHeader extends StatelessWidget {
                 children: <Widget>[
                   Text(user.displayName),
                   if (model.verified)
-                  Container(
-                    margin: const EdgeInsets.only(left: 4.0),
-                    child: const VerifiedBadge(),
+                  const VerifiedBadge(
+                    margin: EdgeInsets.only(left: 4.0),
                   ),
                 ],
               ),

@@ -6,9 +6,11 @@ import 'package:swat_nation/constants.dart';
 class VerifiedBadge extends StatelessWidget {
   const VerifiedBadge({
     this.size = 20.0,
+    this.margin = EdgeInsets.zero,
   });
 
   final double size;
+  final EdgeInsets margin;
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +24,23 @@ class VerifiedBadge extends StatelessWidget {
             ),
           );
       },
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            width: size / 2.0,
-            height: size / 2.0,
-            color: Colors.white,
-          ),
-          Icon(
-            MdiIcons.checkDecagram,
-            color: Colors.lightBlue,
-            size: size,
-          ),
-        ],
+      child: Container(
+        margin: margin,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Container(
+              width: size / 2.0,
+              height: size / 2.0,
+              color: Colors.white,
+            ),
+            Icon(
+              MdiIcons.checkDecagram,
+              color: Colors.lightBlue,
+              size: size,
+            ),
+          ],
+        ),
       ),
     );
   }

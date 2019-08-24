@@ -185,9 +185,8 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                             ),
                           ),
                           if (model.verified)
-                          Container(
-                            margin: const EdgeInsets.only(left: 4.0),
-                            child: const VerifiedBadge(),
+                          const VerifiedBadge(
+                            margin: EdgeInsets.only(left: 4.0),
                           ),
                         ],
                       ),

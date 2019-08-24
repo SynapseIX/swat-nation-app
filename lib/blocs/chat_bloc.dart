@@ -6,8 +6,8 @@ import 'package:swat_nation/models/chat_model.dart';
 
 /// BLoC to manage chat and chat rooms
 class ChatBloc extends BaseBloc with ChatTransformer {
-  static const String generalRoomCollection = 'chats/general';
-  static const String proRoomCollection = 'chats/pro';
+  static const String generalRoomCollection = 'chats-general';
+  static const String proRoomCollection = 'chats-pro';
 
   final Firestore _firestore = Firestore.instance;
 

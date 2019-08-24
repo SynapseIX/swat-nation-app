@@ -10,6 +10,7 @@ class ChatModel extends BaseModel {
     @required this.author,
     @required this.displayName,
     this.photoUrl,
+    this.verified = false,
   });
 
   ChatModel.fromSnapshot(DocumentSnapshot snapshot) {
@@ -18,6 +19,7 @@ class ChatModel extends BaseModel {
     author = snapshot.data['author'];
     displayName = snapshot.data['displayName'];
     photoUrl = snapshot.data['photoUrl'];
+    verified = snapshot.data['verified'];
   }
 
   ChatModel.blank();
@@ -27,6 +29,7 @@ class ChatModel extends BaseModel {
   String author;
   String displayName;
   String photoUrl;
+  bool verified;
 
   @override
   String toString() {
@@ -36,6 +39,7 @@ class ChatModel extends BaseModel {
     author: $author
     displayName: $displayName
     photoUrl: $photoUrl
+    verified: $verified
     ''';
   }
 
@@ -47,6 +51,7 @@ class ChatModel extends BaseModel {
       'author': author,
       'displayName': displayName,
       'photoUrl': photoUrl,
+      'verified': verified,
     };
   }
 }
