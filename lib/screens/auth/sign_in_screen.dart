@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
+import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
@@ -242,6 +243,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
       uiBloc.onChangeEmail('');
       uiBloc.onChangePassword('');
+
+      TabBarBloc.instance().setCurrentIndex(0);
     }
   }
 
@@ -290,6 +293,8 @@ class _SignInScreenState extends State<SignInScreen> {
         title: 'Can\'t Log In With Facebook',
         message: e.message,
       );
+    } finally {
+      TabBarBloc.instance().setCurrentIndex(0);
     }
   }
 

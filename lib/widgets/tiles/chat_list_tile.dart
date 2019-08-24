@@ -9,11 +9,7 @@ class ChatListTile extends StatelessWidget {
   const ChatListTile({
     Key key,
     @required this.model,
-    this.padding = const EdgeInsets.only(
-      left: 16.0,
-      right: 16.0,
-      bottom: 8.0,
-    ),
+    this.padding = const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
     this.onTap,
   }) : assert(model != null),
        super(key: key);

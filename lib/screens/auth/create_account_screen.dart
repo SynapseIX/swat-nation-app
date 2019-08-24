@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
+import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
@@ -280,6 +281,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       uiBloc.onChangePassword('');
       uiBloc.onChangeConfirmPassword('');
       uiBloc.onChangeDisplayName('');
+
+      TabBarBloc.instance().setCurrentIndex(0);
     }
   }
 

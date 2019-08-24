@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
+import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
@@ -171,6 +172,7 @@ class SettingsDrawer extends StatelessWidget {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         AuthBloc.instance().signOut();
+                                        TabBarBloc.instance().controller.jumpToPage(0);
                                       },
                                       child: const Text('Yes, sign me out'),
                                     ),
