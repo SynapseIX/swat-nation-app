@@ -50,7 +50,7 @@ class _AppState extends State<App> {
         return MaterialApp(
           title: 'SWAT Nation',
           theme: theme.themeData,
-          home: MainScreen(),
+          home: const MainScreen(),
         );
       },
     );
