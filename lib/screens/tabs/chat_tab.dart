@@ -70,7 +70,6 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
         backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
           ? Colors.orange
           : Theme.of(context).appBarTheme.color,
-        // TODO(itsprof): make popup menu button
         title: PopupMenuButton<ChatRooms>(
           itemBuilder: (BuildContext context) => <PopupMenuEntry<ChatRooms>>[
             const PopupMenuItem<ChatRooms>(
@@ -273,7 +272,12 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                   height: 40.0,
                   child: RaisedButton(
                     color: Colors.red,
-                    child: const Text('Report'),
+                    child: const Text(
+                      'Report',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     // TODO(itsprof): implement
                     onPressed: () {
                       Navigator.of(context).pop();                                      
