@@ -11,6 +11,7 @@ import 'package:swat_nation/models/chat_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/widgets/common/comment_input.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/tiles/chat_list_tile.dart';
 
 /// Represents the chat tab screen.
@@ -119,16 +120,13 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                 },
               ),
             ),
-            FutureBuilder<FirebaseUser>(
-              future: AuthBloc.instance().currentUser,
+            StreamBuilder<FirebaseUser>(
+              stream: AuthBloc.instance().onAuthStateChanged,
               builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: !snapshot.hasData
-                    ? () {
-                      // TODO(itsprof): implement
-                      print('Sign in...');
-                    }
+                    ? () => DialogHelper.instance().showSignInDIalog(context: context)
                     : null,
                   child: IgnorePointer(
                     ignoring: !snapshot.hasData,
