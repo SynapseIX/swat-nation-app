@@ -274,7 +274,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       Navigator.of(context)
         .pushAndRemoveUntil(
-          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => MainScreen()),
+          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => const MainScreen()),
           (Route<dynamic> r) => false,
         );
     } catch (e) {
