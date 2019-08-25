@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
+import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
@@ -114,7 +115,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'user@example.com',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
+                              onSubmitted: (String value) {
                                 emailNode.nextFocus();
                               },
                               onChanged: uiBloc.onChangeEmail,
@@ -137,7 +138,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'password',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
+                              onSubmitted: (String value) {
                                 passwordNode.nextFocus();
                               },
                               onChanged: uiBloc.onChangePassword,
@@ -160,7 +161,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'confirm password',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) {
+                              onSubmitted: (String value) {
                                 confirmPasswordNode.nextFocus();
                               },
                               onChanged: uiBloc.onChangeConfirmPassword,
@@ -183,7 +184,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'Username',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String text) => _submitCreateAccount(context),
+                              onSubmitted: (String value) => _submitCreateAccount(context),
                               onChanged: uiBloc.onChangeDisplayName,
                             );
                           },
@@ -280,6 +281,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       uiBloc.onChangePassword('');
       uiBloc.onChangeConfirmPassword('');
       uiBloc.onChangeDisplayName('');
+
+      TabBarBloc.instance().setCurrentIndex(0);
     }
   }
 

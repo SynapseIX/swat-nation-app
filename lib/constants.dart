@@ -26,6 +26,9 @@ const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people
 // Subscriptions
 const String kDefaultSubscribeMessage = 'Subscribe to SWAT Nation Pro to access exclusive benefits:\n\n- Early tourney registration\n- Increase your clips from 3 to 20\n- Earn more ranking points\n- Exclusive profile badge\n- Access exclusive chat rooms\n- No ads\n- More to come 😃';
 
+// Sign In
+const String kDefaultSignInMessage = 'SWAT Nation is better enjoyed if you Sign In. Please sign in to register for tourneys, chat, subscribe, and more.\n\nYou can also create an account if needed.';
+
 // Clips
 const String kXboxClipsHost = 'https://xboxclips.com/';
 const String kDefaultClipThumbnail = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fthumbnail.webp?alt=media&token=d6a53308-b3f2-4146-a371-6b852da0232f';
@@ -36,3 +39,6 @@ const int kSubClipLimit = 20;
 const int kNoSubClipLimit = 3;
 const String kSubClipLimitMessage = 'You have reached your clip limit! Please remove older clips to make space for more.';
 const String kNoSubClipLimitMessage = 'You have reached your clip limit! Subscribe to SWAT Nation PRO to add up to $kSubClipLimit clips + access to other exlusive benefits.';
+
+// Chat
+const int kMaxChatMessages = 200;

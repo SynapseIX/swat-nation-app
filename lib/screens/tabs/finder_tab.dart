@@ -50,6 +50,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return GestureDetector(
       onTap: _dismissKeyboard,
       child: CustomScrollView(
@@ -57,6 +58,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
           SliverAppBar(
             pinned: true,
             floating: true,
+            automaticallyImplyLeading: false,
             backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
               ? Colors.lightGreen
               : Theme.of(context).appBarTheme.color,
@@ -183,9 +185,8 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                             ),
                           ),
                           if (model.verified)
-                          Container(
-                            margin: const EdgeInsets.only(left: 4.0),
-                            child: const VerifiedBadge(),
+                          const VerifiedBadge(
+                            margin: EdgeInsets.only(left: 4.0),
                           ),
                         ],
                       ),

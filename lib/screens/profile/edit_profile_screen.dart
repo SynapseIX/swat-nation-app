@@ -216,7 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       errorText: snapshot.error,
                     ),
                     onChanged: bloc.onChangeDisplayName,
-                    onSubmitted: (String text) {
+                    onSubmitted: (String value) {
                       displayNameNode.nextFocus();
                     },
 
@@ -241,7 +241,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   labelText: 'Gamertag',
                   hintText: 'Gamertag',
                 ),
-                onSubmitted: (String text) {
+                onSubmitted: (String value) {
                   gamertagNode.nextFocus();
                 },
               ),
@@ -263,7 +263,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   labelText: 'Twitter',
                   hintText: 'Twitter',
                 ),
-                onSubmitted: (String text) {
+                onSubmitted: (String value) {
                   twitterNode.nextFocus();
                 },
               ),
@@ -285,7 +285,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   labelText: 'Mixer',
                   hintText: 'Mixer',
                 ),
-                onSubmitted: (String text) {
+                onSubmitted: (String value) {
                   mixerNode.nextFocus();
                 },
               ),
@@ -307,7 +307,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   labelText: 'Twitch',
                   hintText: 'Twitch',
                 ),
-                onSubmitted: (String text) {
+                onSubmitted: (String value) {
                   twitchNode.nextFocus();
                 },
               ),
@@ -331,7 +331,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   labelText: 'Biography',
                   hintText: 'Biography',
                 ),
-                onSubmitted: (String text) {
+                onSubmitted: (String value) {
                   _dismissKeyboard();
                 },
               ),
