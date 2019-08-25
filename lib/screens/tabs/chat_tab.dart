@@ -67,8 +67,23 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
           ? Colors.orange
           : Theme.of(context).appBarTheme.color,
         // TODO(itsprof): make popup menu button
-        title: GestureDetector(
-          onTap: () {},
+        title: PopupMenuButton<ChatRooms>(
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<ChatRooms>>[
+            const PopupMenuItem<ChatRooms>(
+              value: ChatRooms.general,
+              child: Text('General Chat'),
+            ),
+            const PopupMenuItem<ChatRooms>(
+              value: ChatRooms.pro,
+              child: Text('PRO Chat'),
+            ),
+          ],
+          onSelected: (ChatRooms room) {
+            // TODO(itsprof): validate if subscriber
+            setState(() {
+              proRoom = room == ChatRooms.pro;
+            });
+          },
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -96,7 +111,9 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
           children: <Widget>[
             Expanded(
               child: StreamBuilder<List<ChatModel>>(
-                stream: bloc.generalRoomStream,
+                stream: proRoom 
+                  ? bloc.proRoomStream
+                  : bloc.generalRoomStream,
                 builder: (BuildContext context, AsyncSnapshot<List<ChatModel>> snapshot) {
                   if (!snapshot.hasData || snapshot.hasError) {
                     return _EmptyState();

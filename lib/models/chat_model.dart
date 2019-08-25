@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_model.dart';
 
+enum ChatRooms { general, pro }
+
 /// Represents a chat message instance.
 class ChatModel extends BaseModel {
   ChatModel({

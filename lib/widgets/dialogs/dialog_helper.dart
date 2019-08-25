@@ -12,7 +12,7 @@ class DialogHelper {
 
   static final DialogHelper _instance = DialogHelper._internal();
 
-  Future<Dialog> showWaitingDialog({
+  Future<void> showWaitingDialog({
     @required BuildContext context,
     String title = 'Working...',
   }) {
@@ -40,7 +40,7 @@ class DialogHelper {
     );
   }
 
-  Future<Dialog> showErrorDialog({
+  Future<void> showErrorDialog({
       @required BuildContext context,
       String title = 'Error',
       String message = 'An unexpected error has ocurred.',
@@ -84,7 +84,7 @@ class DialogHelper {
   }
 
 
-  Future<Dialog> showSubscribeDialog({
+  Future<void> showSubscribeDialog({
       @required BuildContext context,
       String message,
     }) {
@@ -139,7 +139,7 @@ class DialogHelper {
     );
   }
 
-  Future<Dialog> showSignInDIalog({
+  Future<void> showSignInDIalog({
       @required BuildContext context,
     }) {
     return showDialog<Dialog>(
