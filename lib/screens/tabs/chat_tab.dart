@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,13 @@ import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/chat_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/chat_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/widgets/common/comment_input.dart';
+import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/tiles/chat_list_tile.dart';
 
@@ -128,8 +132,11 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                       return ChatListTile(
                         key: UniqueKey(),
                         model: model,
-                        onTap: (ChatModel model) {
-                          print('Tapped ${model.message}');
+                        onTap: (ChatModel model) async {
+                          final FirebaseUser currentUser = await AuthBloc.instance().currentUser;
+                          if (model.author != currentUser.uid) {
+                            _showMessageOptions(context, model);
+                          }
                         },
                       );
                     },
@@ -181,6 +188,96 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => true;
+
+  Future<void> _showMessageOptions(BuildContext context, ChatModel model) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF333333),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          width: 3.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: CachedNetworkImage(
+                          imageUrl: model.photoUrl ?? kDefaultAvi,
+                          width: 20.0,
+                          height: 20.0,
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 300),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Text(
+                      model.displayName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    if (model.verified)
+                    const VerifiedBadge(
+                      margin: EdgeInsets.only(left: 4.0),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                Container(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: RaisedButton(
+                    child: const Text('View Profile'),
+                    onPressed: () async {
+                      final UserModel user
+                        = await userBloc.userByUid(model.author);
+                      Navigator.of(context)
+                        ..pop()
+                        ..push(
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) {
+                              return ProfileScreen(model: user);
+                            },
+                            fullscreenDialog: true,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Container(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: RaisedButton(
+                    color: Colors.red,
+                    child: const Text('Report'),
+                    // TODO(itsprof): implement
+                    onPressed: () {
+                      Navigator.of(context).pop();                                      
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
 
   void _dismissKeyboard() {
     if (focusNode.hasFocus) {
