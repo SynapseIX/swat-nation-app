@@ -6,9 +6,11 @@ import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 
-void main() => runApp(App());
+void main() => runApp(const App());
 
 class App extends StatefulWidget {
+  const App({ Key key }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _AppState();
