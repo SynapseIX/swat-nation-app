@@ -9,7 +9,6 @@ import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
-import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
 /// Represents the team finder tab screen.
@@ -60,9 +59,6 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
             pinned: true,
             floating: true,
             automaticallyImplyLeading: false,
-            backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
-              ? Colors.lightGreen
-              : Theme.of(context).appBarTheme.color,
             title: const Text('Member Finder'),
             bottom: PreferredSize(
               preferredSize: const Size(
@@ -71,9 +67,9 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
               ),
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-                color: ThemeBloc.instance().currentTheme is LightTheme
-                  ? Colors.white
-                  : Theme.of(context).appBarTheme.color,
+                color: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Theme.of(context).appBarTheme.color
+                  : Colors.white,
                 child: Row(
                   children: <Widget>[
                     Expanded(
