@@ -17,8 +17,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final PageController controller = PageController();
-
   List<BaseTab> tabs;
 
   @override
