@@ -172,7 +172,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 autocorrect: true,
                 maxLength: 30,
                 textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
                   icon: Icon(MdiIcons.textShort),
                   labelText: 'Title',
