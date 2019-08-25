@@ -12,6 +12,8 @@ import 'package:swat_nation/themes/dark_theme.dart';
 
 /// Main screen that holds the bottom navigation bar.
 class MainScreen extends StatefulWidget {
+  const MainScreen({ Key key }) : super(key: key);
+  
   @override
   State<StatefulWidget> createState() => _MainScreenState();
 }
