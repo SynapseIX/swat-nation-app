@@ -175,7 +175,12 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                             verified: user.verified,
                           );
 
-                          bloc.sendMessageToGeneral(message);
+                          if (proRoom) {
+                            bloc.sendMessageToPro(message);
+                          } else {
+                            bloc.sendMessageToGeneral(message);
+                          }
+
                           controller.clear();
                         }
                       },
