@@ -8,10 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
+import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 import 'create_account_screen.dart';
@@ -97,6 +99,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       stream: uiBloc.emailStream,
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         return TextField(
+                          keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                                ? Brightness.dark
+                                : Brightness.light,
                           controller: emailController,
                           autocorrect: false,
                           keyboardType: TextInputType.emailAddress,
@@ -120,6 +125,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       stream: uiBloc.passwordStream,
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         return TextField(
+                          keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                                ? Brightness.dark
+                                : Brightness.light,
                           controller: passwordController,
                           autocorrect: false,
                           obscureText: true,

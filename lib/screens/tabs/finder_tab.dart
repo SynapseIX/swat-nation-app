@@ -8,6 +8,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
@@ -77,6 +78,9 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                   children: <Widget>[
                     Expanded(
                       child: TextField(
+                        keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                          ? Brightness.dark
+                          : Brightness.light,
                         controller: searchController,
                         focusNode: searchNode,
                         autocorrect: false,

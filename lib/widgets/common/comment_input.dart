@@ -26,6 +26,9 @@ class CommentInput extends StatelessWidget {
       alignment: Alignment.center,
       height: 40.0,
       child: TextField(
+        keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+          ? Brightness.dark
+          : Brightness.light,
         controller: controller,
         focusNode: focusNode,
         maxLength: 140,
