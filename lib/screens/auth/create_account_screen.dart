@@ -198,7 +198,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 hintText: 'Username',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String value) => _submitCreateAccount(context),
+                              onSubmitted: (String value) => _dismissKeyboard(),
                               onChanged: uiBloc.onChangeDisplayName,
                             );
                           },

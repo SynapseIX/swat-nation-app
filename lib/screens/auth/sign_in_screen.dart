@@ -138,7 +138,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             hintText: 'password',
                             errorText: snapshot.error,
                           ),
-                          onSubmitted: (String value) => _submitSignIn(context),
+                          onSubmitted: (String value) => _dismissKeyboard(),
                           onChanged: uiBloc.onChangePassword,
                         );
                       },
