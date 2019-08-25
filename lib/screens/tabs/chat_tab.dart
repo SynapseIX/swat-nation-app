@@ -251,9 +251,16 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                   child: RaisedButton(
                     child: const Text('View Profile'),
                     onPressed: () async {
+                      DialogHelper.instance().showWaitingDialog(
+                        context: context,
+                        title: 'Fetching profile...',
+                      );
+
                       final UserModel user
                         = await userBloc.userByUid(model.author);
+                      
                       Navigator.of(context)
+                        ..pop()
                         ..pop()
                         ..push(
                           MaterialPageRoute<void>(
