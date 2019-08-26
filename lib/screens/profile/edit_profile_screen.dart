@@ -19,8 +19,9 @@ import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 /// Represents the edit profile screen.
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({
+    Key key,
     @required this.model,
-  });
+  }) : super(key: key);
 
   final UserModel model;
 

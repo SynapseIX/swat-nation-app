@@ -2,6 +2,9 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
+import 'package:swat_nation/screens/clips/all_clips_screen.dart';
+import 'package:swat_nation/screens/clips/clip_screen.dart';
+import 'package:swat_nation/screens/clips/create_clip_screen.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/screens/profile/edit_profile_screen.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
@@ -20,9 +23,9 @@ class Routes {
   static String profile = '/profile/:uid';
   static String editProfile = '/profile/edit/:uid';
   
-  static String clip = '/clips/:uid';
-  static String clipAll = '/clips/all/:uid';
-  static String clipCreate = '/clips/create';
+  static String clip = '/clip/:uid';
+  static String clipAll = '/clip/all/:uid/:displayName/:me';
+  static String clipCreate = '/clip/create/:uid';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
@@ -56,6 +59,23 @@ class Routes {
     router.define(
       editProfile,
       handler: EditProfileScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Clips
+    router.define(
+      clip,
+      handler: ClipScreen.routeHandler(),
+      transitionType: TransitionType.inFromBottom,
+    );
+    router.define(
+      clipAll,
+      handler: AllClipsScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+    router.define(
+      clipCreate,
+      handler: CreateClipScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
   }

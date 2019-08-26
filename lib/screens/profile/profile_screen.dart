@@ -10,8 +10,6 @@ import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
-import 'package:swat_nation/screens/clips/all_clips_screen.dart';
-import 'package:swat_nation/screens/clips/create_clip_screen.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -439,16 +437,9 @@ class _PublicBody extends StatelessWidget {
             // View All
             cards.add(ViewAllCard(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) {
-                      return AllClipsScreen(
-                        data: snapshot.data,
-                        displayName: user.displayName,
-                        me: me,
-                      );
-                    },
-                  ),
+                Routes.router.navigateTo(
+                  context,
+                  'clip/all/${user.uid}/${user.displayName}/$me',
                 );
               },
             ));
@@ -469,13 +460,7 @@ class _PublicBody extends StatelessWidget {
 
                             if (subscriber) {
                               if (snapshot.data.length < kSubClipLimit) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => CreateClipScreen(
-                                      user: user,
-                                    ),
-                                  ),
-                                );
+                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
                               } else {
                                 helper.showErrorDialog(
                                   context: context,
@@ -485,13 +470,7 @@ class _PublicBody extends StatelessWidget {
                               }
                             } else {
                               if (snapshot.data.length < kNoSubClipLimit) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => CreateClipScreen(
-                                      user: user,
-                                    ),
-                                  ),
-                                );
+                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
                               } else {
                                 helper.showSubscribeDialog(
                                   context: context,

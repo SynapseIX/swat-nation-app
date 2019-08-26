@@ -1,17 +1,59 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
+import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/utils/clip_helper.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
 
 /// Represents the screen that constains the video player for clips.
 class ClipScreen extends StatefulWidget {
   const ClipScreen({
+    Key key,
     @required this.model,
-  });
+  }) : super(key: key);
   
   final ClipInfoModel model;
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        final ClipsBloc bloc = ClipsBloc();
+        final String uid = parameters['uid'].first;
+
+        final Widget emptyState = Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Center(
+            child: const CircularProgressIndicator(),
+          ),
+        );
+
+        return FutureBuilder<ClipModel>(
+          future: bloc.clipByUid(uid),
+          builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
+            if (!snapshot.hasData) {
+              return emptyState;
+            }
+
+            final ClipModel clip = snapshot.data;
+            return FutureBuilder<ClipInfoModel>(
+              future: extractClipInfo(clip.link),
+              builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
+                if (!snapshot.hasData) {
+                  return emptyState;
+                }
+                
+                return ClipScreen(model: snapshot.data);
+              },
+            );
+          },
+        );
+      }
+    );
+  }
 
   @override
   State createState() => _ClipScreenState();
