@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/screens/profile/edit_profile_screen.dart';
+import 'package:swat_nation/screens/profile/profile_screen.dart';
 
 /// Defines the navigation routes and application router.
 class Routes {
@@ -15,9 +17,10 @@ class Routes {
   static String signIn = '/sign-in';
   static String createAccount = '/create-account';
   
-  static String profile = '/profile/:id';
+  static String profile = '/profile/:uid';
+  static String editProfile = '/profile/edit/:uid';
   
-  static String clip = '/clips/:id';
+  static String clip = '/clips/:uid';
   static String clipAll = '/clips/all/:uid';
   static String clipCreate = '/clips/create';
 
@@ -41,6 +44,18 @@ class Routes {
     router.define(
       createAccount,
       handler: CreateAccountScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Profiles
+    router.define(
+      profile,
+      handler: ProfileScreen.routeHandler(),
+      transitionType: TransitionType.inFromBottom,
+    );
+    router.define(
+      editProfile,
+      handler: EditProfileScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
   }

@@ -8,7 +8,7 @@ import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/profile/profile_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
@@ -202,14 +202,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                       trailing: model.private
                         ? const Icon(MdiIcons.lock)
                         : null,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => ProfileScreen(model: model),
-                              fullscreenDialog: true,
-                            ),
-                          );
-                        },
+                        onTap: () => Routes.router.navigateTo(context, 'profile/${model.uid}'),
                     );
                   },
                   childCount: data.length,

@@ -9,7 +9,6 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
-import 'package:swat_nation/screens/profile/profile_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
@@ -307,14 +306,8 @@ class _AuthHeader extends StatelessWidget {
                 color: Colors.black54,
               ),
               onDetailsPressed: () {
-                Navigator.of(context)
-                  ..pop()
-                  ..push(
-                    MaterialPageRoute<ProfileScreen>(
-                      builder: (BuildContext context) => ProfileScreen(model: model),
-                      fullscreenDialog: true,
-                    ),
-                  );
+                Navigator.pop(context);
+                Routes.router.navigateTo(context, '/profile/${model.uid}');
               },
             ),
           );

@@ -12,7 +12,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/chat_model.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/profile/profile_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/comment_input.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
@@ -273,15 +273,8 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                       
                       Navigator.of(context)
                         ..pop()
-                        ..pop()
-                        ..push(
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) {
-                              return ProfileScreen(model: user);
-                            },
-                            fullscreenDialog: true,
-                        ),
-                      );
+                        ..pop();
+                      Routes.router.navigateTo(context, 'profile/${user.uid}');
                     },
                   ),
                 ),
