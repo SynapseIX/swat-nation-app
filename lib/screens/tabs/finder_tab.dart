@@ -75,7 +75,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                   return Container(
                     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
                     color: theme is DarkTheme
-                      ? Theme.of(context).appBarTheme.color
+                      ? const Color(0xFF111111)
                       : Colors.white,
                     child: Row(
                       children: <Widget>[
