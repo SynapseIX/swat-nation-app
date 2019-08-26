@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/routes.dart';
-import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 
@@ -52,7 +51,6 @@ class _AppState extends State<App> {
         return MaterialApp(
           title: 'SWAT Nation',
           theme: theme.themeData,
-          home: const MainScreen(),
           onGenerateRoute: Routes.router.generator,
         );
       },
