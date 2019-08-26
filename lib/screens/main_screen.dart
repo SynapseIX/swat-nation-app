@@ -40,12 +40,12 @@ class _MainScreenState extends State<MainScreen> {
       endDrawer: SettingsDrawer(),
       body: PageView(
         controller: TabBarBloc.instance().controller,
+        physics: const NeverScrollableScrollPhysics(),
         children: tabs,
         onPageChanged: (int page) => TabBarBloc.instance().setCurrentIndex(page),
-        physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: StreamBuilder<int>(
-        stream: TabBarBloc.instance().indexStream,
+        stream: TabBarBloc.instance().stream,
         initialData: 0,
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           return BottomNavigationBar(

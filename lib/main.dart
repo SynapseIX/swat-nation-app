@@ -44,6 +44,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return StreamBuilder<BaseTheme>(
       stream: themeBloc.stream,
+      initialData: LightTheme(),
       builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
         final BaseTheme theme = snapshot.data is LightTheme
           ? LightTheme()

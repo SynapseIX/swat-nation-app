@@ -14,7 +14,7 @@ class TabBarBloc extends BaseBloc {
   
   final BehaviorSubject<int> _tabBarSubject = BehaviorSubject<int>.seeded(0);
 
-  Stream<int> get indexStream => _tabBarSubject.stream;
+  Stream<int> get stream => _tabBarSubject.stream;
   int get currentIndex => _tabBarSubject.value;
 
   void Function(int) get setCurrentIndex => _tabBarSubject.sink.add;
