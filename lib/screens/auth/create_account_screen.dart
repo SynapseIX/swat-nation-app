@@ -89,14 +89,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             color: Color(0xFF333333),
                             shape: BoxShape.circle,
                           ),
-                          child: Hero(
-                            tag: 'swat_nation_logo',
-                            child: CachedNetworkImage(
-                              imageUrl: kLogo,
-                              fadeInDuration: const Duration(milliseconds: 300),
-                              width: 120.0,
-                              height: 120.0,
-                            ),
+                          child: CachedNetworkImage(
+                            imageUrl: kLogo,
+                            fadeInDuration: const Duration(milliseconds: 300),
+                            width: 120.0,
+                            height: 120.0,
                           ),
                         ),
 

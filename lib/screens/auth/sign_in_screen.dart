@@ -3,8 +3,10 @@ import 'dart:io' show Platform;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
@@ -20,6 +22,18 @@ import 'create_account_screen.dart';
 
 /// Represents the sign in screen.
 class SignInScreen extends StatefulWidget {
+  const SignInScreen({
+    Key key,
+  }) : super(key: key);
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        return const SignInScreen();
+      }
+    );
+  }
+  
   @override
   State<StatefulWidget> createState() => _SignInScreenState();
 }
@@ -64,6 +78,10 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign In'),
+        leading: IconButton(
+          icon: const Icon(MdiIcons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: GestureDetector(
         onTap: () => _dismissKeyboard(),
@@ -81,14 +99,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         color: Color(0xFF333333),
                         shape: BoxShape.circle,
                       ),
-                      child: Hero(
-                        tag: 'swat_nation_logo',
-                        child: CachedNetworkImage(
-                          imageUrl: kLogo,
-                          fadeInDuration: const Duration(milliseconds: 300),
-                          width: 120.0,
-                          height: 120.0,
-                        ),
+                      child: CachedNetworkImage(
+                        imageUrl: kLogo,
+                        fadeInDuration: const Duration(milliseconds: 300),
+                        width: 120.0,
+                        height: 120.0,
                       ),
                     ),
 

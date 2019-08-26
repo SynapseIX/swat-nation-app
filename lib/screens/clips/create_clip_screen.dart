@@ -71,7 +71,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
           title: const Text('Add Clip'),
           actions: <Widget>[
             IconButton(
-              icon: Icon(MdiIcons.cloudUpload),
+              icon: const Icon(MdiIcons.cloudUpload),
               tooltip: 'Upload Clip',
               onPressed: validateLink(model.link)
                 ? () async {

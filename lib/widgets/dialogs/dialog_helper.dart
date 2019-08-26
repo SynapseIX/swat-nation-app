@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/screens/auth/sign_in_screen.dart';
+import 'package:swat_nation/routes.dart';
 
 /// Creates dialogs needed for the application
 class DialogHelper {
@@ -111,15 +111,6 @@ class DialogHelper {
                 const SizedBox(height: 16.0),
                 Text(message ?? kDefaultSubscribeMessage),
                 const SizedBox(height: 24.0),
-                Container(
-                  width: double.infinity,
-                  height: 40.0,
-                  child: RaisedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Go Back'),
-                  ),
-                ),
-                const SizedBox(height: 8.0),
                 // TODO(itsprof): navigate to store screen
                 Container(
                   width: double.infinity,
@@ -133,6 +124,15 @@ class DialogHelper {
                         color: Colors.white,
                       ),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Container(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: RaisedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancel'),
                   ),
                 ),
               ],
@@ -173,25 +173,9 @@ class DialogHelper {
                   width: double.infinity,
                   height: 40.0,
                   child: RaisedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    color: Colors.grey,
-                    child: const Text('Go Back'),
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                Container(
-                  width: double.infinity,
-                  height: 40.0,
-                  child: RaisedButton(
                     onPressed: () {
-                      Navigator.of(context)
-                        ..pop()
-                        ..push(
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) => SignInScreen(),
-                            fullscreenDialog: true,
-                          ),
-                        );
+                      Navigator.pop(context);
+                      Routes.router.navigateTo(context, Routes.signIn);
                     },
                     color: Colors.green,
                     child: const Text(
@@ -200,6 +184,15 @@ class DialogHelper {
                         color: Colors.white,
                       ),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Container(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: RaisedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancel'),
                   ),
                 ),
               ],
