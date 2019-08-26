@@ -66,7 +66,7 @@ class AuthBloc extends BaseBloc {
     return result.user;
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut() {
     return _firebaseAuth.signOut();
   }
 

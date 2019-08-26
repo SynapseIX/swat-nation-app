@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
+import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/chat_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
@@ -12,7 +13,7 @@ import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/chat_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
-import 'package:swat_nation/themes/light_theme.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/comment_input.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
@@ -67,10 +68,6 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
-          ? Colors.orange
-          : Theme.of(context).appBarTheme.color,
-        // TODO(itsprof): make popup menu button
         title: PopupMenuButton<ChatRooms>(
           itemBuilder: (BuildContext context) => <PopupMenuEntry<ChatRooms>>[
             const PopupMenuItem<ChatRooms>(
@@ -84,6 +81,7 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
           ],
           onSelected: (ChatRooms room) {
             // TODO(itsprof): validate if subscriber
+            controller.clear();
             setState(() {
               proRoom = room == ChatRooms.pro;
             });
@@ -150,40 +148,53 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
             ),
             StreamBuilder<FirebaseUser>(
               stream: AuthBloc.instance().onAuthStateChanged,
-              builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<FirebaseUser> userSnapshot) {
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: !snapshot.hasData
+                  onTap: !userSnapshot.hasData
                     ? () => DialogHelper.instance().showSignInDIalog(context: context)
                     : null,
                   child: IgnorePointer(
-                    ignoring: !snapshot.hasData,
-                    child: CommentInput(
-                      controller: controller,
-                      focusNode: focusNode,
-                      onSubmitted: (String value) async {
-                        if (value.trim().isNotEmpty) {
-                          final UserModel user = await userBloc
-                            .userByUid(snapshot.data.uid);
+                    ignoring: !userSnapshot.hasData,
+                    child: StreamBuilder<BaseTheme>(
+                      stream: ThemeBloc.instance().stream,
+                      builder: (BuildContext context, AsyncSnapshot<BaseTheme> themeSnapshot) {
+                        final BaseTheme theme = themeSnapshot.data;
 
-                          final ChatModel message = ChatModel(
-                            message: value,
-                            createdAt: Timestamp.now(),
-                            author: user.uid,
-                            displayName: user.displayName,
-                            photoUrl: user.photoUrl,
-                            verified: user.verified,
-                          );
+                        return CommentInput(
+                          controller: controller,
+                          focusNode: focusNode,
+                          keyboardAppearance: theme is DarkTheme
+                            ? Brightness.dark
+                            : Brightness.light,
+                          fillColor: theme is DarkTheme
+                            ? const Color(0xFF111111)
+                            : Colors.white,
+                          onSubmitted: (String value) async {
+                            if (value.trim().isNotEmpty) {
+                              final UserModel user = await userBloc
+                                .userByUid(userSnapshot.data.uid);
 
-                          if (proRoom) {
-                            bloc.sendMessageToPro(message);
-                          } else {
-                            bloc.sendMessageToGeneral(message);
-                          }
+                              final ChatModel message = ChatModel(
+                                message: value,
+                                createdAt: Timestamp.now(),
+                                author: user.uid,
+                                displayName: user.displayName,
+                                photoUrl: user.photoUrl,
+                                verified: user.verified,
+                              );
 
-                          controller.clear();
-                        }
-                      },
+                              if (proRoom) {
+                                bloc.sendMessageToPro(message);
+                              } else {
+                                bloc.sendMessageToGeneral(message);
+                              }
+
+                              controller.clear();
+                            }
+                          },
+                        );
+                      }
                     ),
                   ),
                 );
@@ -252,9 +263,16 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                   child: RaisedButton(
                     child: const Text('View Profile'),
                     onPressed: () async {
+                      DialogHelper.instance().showWaitingDialog(
+                        context: context,
+                        title: 'Fetching profile...',
+                      );
+
                       final UserModel user
                         = await userBloc.userByUid(model.author);
+                      
                       Navigator.of(context)
+                        ..pop()
                         ..pop()
                         ..push(
                           MaterialPageRoute<void>(
@@ -273,7 +291,12 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                   height: 40.0,
                   child: RaisedButton(
                     color: Colors.red,
-                    child: const Text('Report'),
+                    child: const Text(
+                      'Report',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     // TODO(itsprof): implement
                     onPressed: () {
                       Navigator.of(context).pop();                                      

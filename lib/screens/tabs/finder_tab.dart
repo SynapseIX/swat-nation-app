@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
+import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
-import 'package:swat_nation/themes/light_theme.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
 /// Represents the team finder tab screen.
@@ -36,6 +37,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
   void initState() {
     bloc = UserBloc();
     query = '';
+
     super.initState();
   }
 
@@ -59,60 +61,67 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
             pinned: true,
             floating: true,
             automaticallyImplyLeading: false,
-            backgroundColor: ThemeBloc.instance().currentTheme is LightTheme
-              ? Colors.lightGreen
-              : Theme.of(context).appBarTheme.color,
             title: const Text('Member Finder'),
             bottom: PreferredSize(
               preferredSize: const Size(
                 double.infinity,
                 60.0,
               ),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-                color: ThemeBloc.instance().currentTheme is LightTheme
-                  ? Colors.white
-                  : Theme.of(context).appBarTheme.color,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TextField(
-                        controller: searchController,
-                        focusNode: searchNode,
-                        autocorrect: false,
-                        textInputAction: TextInputAction.search,
-                        decoration: const InputDecoration(
-                          icon: Icon(MdiIcons.magnify),
-                          border: InputBorder.none,
-                          hintText: 'Search members...',
+              child: StreamBuilder<BaseTheme>(
+                stream: ThemeBloc.instance().stream,
+                builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
+                  final BaseTheme theme = snapshot.data;
+
+                  return Container(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                    color: theme is DarkTheme
+                      ? const Color(0xFF111111)
+                      : Colors.white,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            keyboardAppearance: theme is DarkTheme
+                              ? Brightness.dark
+                              : Brightness.light,
+                            controller: searchController,
+                            focusNode: searchNode,
+                            autocorrect: false,
+                            textInputAction: TextInputAction.search,
+                            decoration: const InputDecoration(
+                              icon: Icon(MdiIcons.magnify),
+                              border: InputBorder.none,
+                              hintText: 'Search members...',
+                            ),
+                            onChanged: (String value) {
+                              setState(() {
+                                query = value;
+                              });
+                            },
+                          ),
                         ),
-                        onChanged: (String value) {
-                          setState(() {
-                            query = value;
-                          });
-                        },
-                      ),
-                    ),
-                    if (query.isNotEmpty)
-                    GestureDetector(
-                      onTap: () {
-                        searchController.clear();
-                        setState(() {
-                          query = '';
-                        });
-                      },
-                      child: Container(
-                        height: 40.0,
-                        width: 40.0,
-                        child: Icon(
-                          MdiIcons.closeCircle,
-                          color: Theme.of(context).hintColor,
-                          size: 20.0,
+                        if (query.isNotEmpty)
+                        GestureDetector(
+                          onTap: () {
+                            searchController.clear();
+                            setState(() {
+                              query = '';
+                            });
+                          },
+                          child: Container(
+                            height: 40.0,
+                            width: 40.0,
+                            child: Icon(
+                              MdiIcons.closeCircle,
+                              color: Theme.of(context).hintColor,
+                              size: 20.0,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                }
               ),
             ),
           ),

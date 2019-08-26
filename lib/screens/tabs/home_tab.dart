@@ -39,7 +39,6 @@ class HomeTab extends StatefulWidget implements BaseTab {
 }
 
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
-  AuthBloc authBloc;
   UserBloc userBloc;
   ClipsBloc clipsBloc;
 
@@ -48,7 +47,6 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     final int seed = Random(DateTime.now().millisecondsSinceEpoch)
       .nextInt(kMaxRandomValue);
 
-    authBloc = AuthBloc.instance();
     userBloc = UserBloc();
     
     clipsBloc = ClipsBloc();
@@ -59,7 +57,6 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
 
   @override
   void dispose() {
-    authBloc.dispose();
     userBloc.dispose();
     clipsBloc.dispose();
     super.dispose();

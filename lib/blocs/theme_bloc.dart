@@ -11,7 +11,7 @@ class ThemeBloc extends BaseBloc {
   ThemeBloc._internal();
   static final ThemeBloc _bloc = ThemeBloc._internal();
 
-  final BehaviorSubject<BaseTheme> _themeSubject = BehaviorSubject<BaseTheme>();
+  final BehaviorSubject<BaseTheme> _themeSubject = BehaviorSubject<BaseTheme>.seeded(LightTheme());
 
   Stream<BaseTheme> get stream => _themeSubject.stream;
   BaseTheme get currentTheme => _themeSubject.value;

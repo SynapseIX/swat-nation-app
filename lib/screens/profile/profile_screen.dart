@@ -34,13 +34,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  AuthBloc authBloc;
   ClipsBloc clipsBloc;
   UserModel user;
 
   @override
   void initState() {
-    authBloc = AuthBloc.instance();
     clipsBloc = ClipsBloc();
     user = widget.model;
     super.initState();
@@ -48,7 +46,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    authBloc.dispose();
     clipsBloc.dispose();
     super.dispose();
   }
@@ -56,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<FirebaseUser>(
-      future: authBloc.currentUser,
+      future: AuthBloc.instance().currentUser,
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
         final bool me = snapshot.hasData && user.uid == snapshot.data.uid;
 

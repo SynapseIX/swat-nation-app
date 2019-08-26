@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
+import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/mixins/clip_transformer.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
@@ -127,6 +129,9 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: linkController,
                 focusNode: linkNode,
                 autocorrect: false,
@@ -159,12 +164,15 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: titleController,
                 focusNode: titleNode,
                 autocorrect: true,
                 maxLength: 30,
                 textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
                   icon: Icon(MdiIcons.textShort),
                   labelText: 'Title',

@@ -8,9 +8,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/edit_profile_bloc.dart';
+import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the edit profile screen.
@@ -204,6 +206,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     right: 16.0,
                   ),
                   child: TextField(
+                    keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                      ? Brightness.dark
+                      : Brightness.light,
                     controller: displayNameController,
                     focusNode: displayNameNode,
                     maxLength: kDisplayNameMaxChararcters,
@@ -232,6 +237,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: gamertagController,
                 focusNode: gamertagNode,
                 autocorrect: false,
@@ -254,6 +262,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: twitterController,
                 focusNode: twitterNode,
                 autocorrect: false,
@@ -276,6 +287,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: mixerController,
                 focusNode: mixerNode,
                 autocorrect: false,
@@ -298,6 +312,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: twitchController,
                 focusNode: twitchNode,
                 autocorrect: false,
@@ -320,6 +337,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 right: 16.0,
               ),
               child: TextField(
+                keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                  ? Brightness.dark
+                  : Brightness.light,
                 controller: bioController,
                 focusNode: bioNode,
                 maxLength: kMaxBioLength,

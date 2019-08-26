@@ -116,7 +116,6 @@ class DialogHelper {
                   height: 40.0,
                   child: RaisedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    color: Colors.grey,
                     child: const Text('Go Back'),
                   ),
                 ),
@@ -128,7 +127,12 @@ class DialogHelper {
                   child: RaisedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     color: Colors.green,
-                    child: const Text('Learn More'),
+                    child: const Text(
+                      'Learn More',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -190,7 +194,12 @@ class DialogHelper {
                         );
                     },
                     color: Colors.green,
-                    child: const Text('Let\'s do this!'),
+                    child: const Text(
+                      'Let\'s do this!',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],

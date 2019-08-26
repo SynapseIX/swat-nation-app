@@ -12,13 +12,13 @@ import 'package:swat_nation/themes/dark_theme.dart';
 
 /// Main screen that holds the bottom navigation bar.
 class MainScreen extends StatefulWidget {
+  const MainScreen({ Key key }) : super(key: key);
+  
   @override
   State<StatefulWidget> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final PageController controller = PageController();
-
   List<BaseTab> tabs;
 
   @override
@@ -40,12 +40,12 @@ class _MainScreenState extends State<MainScreen> {
       endDrawer: SettingsDrawer(),
       body: PageView(
         controller: TabBarBloc.instance().controller,
+        physics: const NeverScrollableScrollPhysics(),
         children: tabs,
         onPageChanged: (int page) => TabBarBloc.instance().setCurrentIndex(page),
-        physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: StreamBuilder<int>(
-        stream: TabBarBloc.instance().indexStream,
+        stream: TabBarBloc.instance().stream,
         initialData: 0,
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           return BottomNavigationBar(

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:swat_nation/blocs/theme_bloc.dart';
-import 'package:swat_nation/themes/dark_theme.dart';
 
 /// Input text widget for chat and comments.
 class CommentInput extends StatelessWidget {
@@ -11,6 +9,8 @@ class CommentInput extends StatelessWidget {
     this.onSubmitted,
     this.onTap,
     this.hintText = 'Say something...',
+    this.keyboardAppearance = Brightness.light,
+    this.fillColor,
   }) : super(key: key);
   
   final TextEditingController controller;
@@ -18,6 +18,8 @@ class CommentInput extends StatelessWidget {
   final ValueChanged<String> onSubmitted;
   final VoidCallback onTap;
   final String hintText;
+  final Brightness keyboardAppearance;
+  final Color fillColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class CommentInput extends StatelessWidget {
       child: TextField(
         controller: controller,
         focusNode: focusNode,
+        keyboardAppearance: keyboardAppearance,
         maxLength: 140,
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.send,
@@ -39,9 +42,7 @@ class CommentInput extends StatelessWidget {
             ),
           ),
           filled: true,
-          fillColor: ThemeBloc.instance().currentTheme is DarkTheme
-            ? const Color(0xFF333333)
-            : Colors.white,
+          fillColor: fillColor,
           contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 15.0, 10.0),
           counterText: '',
         ),
