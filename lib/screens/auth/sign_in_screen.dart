@@ -14,11 +14,9 @@ import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
-
-import 'create_account_screen.dart';
 
 /// Represents the sign in screen.
 class SignInScreen extends StatefulWidget {
@@ -186,11 +184,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         GestureDetector(
                           onTap: () {
                             _dismissKeyboard();
-                            Navigator.of(context).push(
-                              MaterialPageRoute<CreateAccountScreen>(
-                                builder: (BuildContext context)=> CreateAccountScreen(),
-                              ),
-                            );
+                            Routes.router.navigateTo(context, Routes.createAccount);
                           },
                           child: const Text(
                             'Create Account',
@@ -247,11 +241,11 @@ class _SignInScreenState extends State<SignInScreen> {
         },
       );
 
-      Navigator.of(context)
-        .pushAndRemoveUntil(
-          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => const MainScreen()),
-          (Route<dynamic> r) => false,
-        );
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.root,
+        (Route<dynamic> route) => false,
+      );
     } catch (e) {
       Navigator.of(context).pop();
       helper.showErrorDialog(
@@ -304,11 +298,11 @@ class _SignInScreenState extends State<SignInScreen> {
         await userBloc.create(model);
       }
 
-      Navigator.of(context)
-        .pushAndRemoveUntil(
-          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => const MainScreen()),
-          (Route<dynamic> r) => false,
-        );
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.root,
+        (Route<dynamic> route) => false,
+      );
     } catch (e) {
       Navigator.of(context).pop();
       helper.showErrorDialog(
