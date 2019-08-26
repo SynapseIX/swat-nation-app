@@ -138,7 +138,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 textCapitalization: TextCapitalization.none,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  icon: Icon(MdiIcons.web),
+                  icon: const Icon(MdiIcons.web),
                   labelText: 'Link To Clip',
                   hintText: '$kXboxClipsHost...',
                   errorText: !validateLink(model.link)
