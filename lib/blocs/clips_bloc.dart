@@ -30,7 +30,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
       .transform(transformClips);
   }
 
-  Future<DocumentSnapshot> clipByUid(String uid) async {
+  Future<ClipModel> clipByUid(String uid) async {
     final QuerySnapshot snapshot = await _firestore
       .collection(clipsCollection)
       .where('uid', isEqualTo: uid)
@@ -38,7 +38,7 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
 
     final List<DocumentSnapshot> docs = snapshot.documents;
     return docs.isNotEmpty
-      ? docs.first
+      ? ClipModel.fromSnapshot(docs.first)
       : null;
   }
 
@@ -49,8 +49,10 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
   }
 
   Future<void> remove(ClipModel model) async {
-    final DocumentSnapshot document = await clipByUid(model.uid);
-    return document.reference.delete();
+    return _firestore
+      .collection(clipsCollection)
+      .document(model.uid)
+      .delete();
   }
 
   void fetchRandomClip(int seed) {
@@ -82,11 +84,13 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
       );
   }
 
-  Future<void> reseed(ClipModel model) async {
+  Future<void> reseed(ClipModel model) {
     if (Random().nextInt(kReseedValue) == 0) {
-      final DocumentSnapshot doc = await clipByUid(model.uid);
-      final DocumentReference ref = doc.reference;
       final Random random = Random(DateTime.now().millisecondsSinceEpoch);
+      
+      final DocumentReference ref = _firestore
+        .collection(clipsCollection)
+        .document(model.uid);
       
       return ref.setData(
         <String, dynamic>{
@@ -95,6 +99,8 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
         merge: true,
       );
     }
+
+    return null;
   }
 
   @override

@@ -8,8 +8,7 @@ import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/auth/sign_in_screen.dart';
-import 'package:swat_nation/screens/profile/profile_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
@@ -142,14 +141,11 @@ class SettingsDrawer extends StatelessWidget {
                                       color: Color(0xFF333333),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Hero(
-                                      tag: 'swat_nation_logo',
-                                      child: CachedNetworkImage(
-                                        imageUrl: kLogo,
-                                        fadeInDuration: const Duration(milliseconds: 300),
-                                        width: 100.0,
-                                        height: 100.0,
-                                      ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: kLogo,
+                                      fadeInDuration: const Duration(milliseconds: 300),
+                                      width: 100.0,
+                                      height: 100.0,
                                     ),
                                   ),
                                   const SizedBox(height: 16.0),
@@ -217,14 +213,11 @@ class _NoAuthHeader extends StatelessWidget {
               color: Color(0xFF333333),
               shape: BoxShape.circle,
             ),
-            child: Hero(
-              tag: 'swat_nation_logo',
-              child: CachedNetworkImage(
-                imageUrl: kLogo,
-                fadeInDuration: const Duration(milliseconds: 300),
-                width: 60.0,
-                height: 60.0,
-              ),
+            child: CachedNetworkImage(
+              imageUrl: kLogo,
+              fadeInDuration: const Duration(milliseconds: 300),
+              width: 60.0,
+              height: 60.0,
             ),
           ),
           title: const Text(
@@ -243,14 +236,8 @@ class _NoAuthHeader extends StatelessWidget {
             ),
           ),
           onTap: () {
-            Navigator.of(context)
-              ..pop()
-              ..push(
-                MaterialPageRoute<SignInScreen>(
-                  fullscreenDialog: true,
-                  builder: (BuildContext context) => SignInScreen(),
-                ),
-              );
+            Navigator.pop(context);
+            Routes.router.navigateTo(context, Routes.signIn);
           },
         ),
       ),
@@ -319,14 +306,8 @@ class _AuthHeader extends StatelessWidget {
                 color: Colors.black54,
               ),
               onDetailsPressed: () {
-                Navigator.of(context)
-                  ..pop()
-                  ..push(
-                    MaterialPageRoute<ProfileScreen>(
-                      builder: (BuildContext context) => ProfileScreen(model: model),
-                      fullscreenDialog: true,
-                    ),
-                  );
+                Navigator.pop(context);
+                Routes.router.navigateTo(context, '/profile/${model.uid}');
               },
             ),
           );

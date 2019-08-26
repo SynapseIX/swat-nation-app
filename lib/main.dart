@@ -1,7 +1,9 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swat_nation/base/base_theme.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/themes/light_theme.dart';
@@ -18,12 +20,15 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  ThemeBloc themeBloc;
+  _AppState() {
+    final Router router = Router();
+    Routes.configureRoutes(router);
+    Routes.router = router;
+  }
 
   @override
   void initState() {
-    themeBloc = ThemeBloc.instance();
-    themeBloc.retrieveSavedTheme();
+    ThemeBloc.instance().retrieveSavedTheme();
 
     SystemChrome.setPreferredOrientations(
       <DeviceOrientation>[
@@ -35,15 +40,9 @@ class _AppState extends State<App> {
   }
 
   @override
-  void dispose() {
-    themeBloc.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<BaseTheme>(
-      stream: themeBloc.stream,
+      stream: ThemeBloc.instance().stream,
       initialData: LightTheme(),
       builder: (BuildContext context, AsyncSnapshot<BaseTheme> snapshot) {
         final BaseTheme theme = snapshot.data is LightTheme
@@ -54,6 +53,7 @@ class _AppState extends State<App> {
           title: 'SWAT Nation',
           theme: theme.themeData,
           home: const MainScreen(),
+          onGenerateRoute: Routes.router.generator,
         );
       },
     );

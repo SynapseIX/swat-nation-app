@@ -3,6 +3,7 @@ import 'dart:io'show Platform;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
@@ -11,12 +12,24 @@ import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the create account screen.
 class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({
+    Key key
+  }) : super(key: key);
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        return const CreateAccountScreen();
+      }
+    );
+  }
+
   @override
   State createState() => _CreateAccountScreenState();
 }
@@ -89,14 +102,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             color: Color(0xFF333333),
                             shape: BoxShape.circle,
                           ),
-                          child: Hero(
-                            tag: 'swat_nation_logo',
-                            child: CachedNetworkImage(
-                              imageUrl: kLogo,
-                              fadeInDuration: const Duration(milliseconds: 300),
-                              width: 120.0,
-                              height: 120.0,
-                            ),
+                          child: CachedNetworkImage(
+                            imageUrl: kLogo,
+                            fadeInDuration: const Duration(milliseconds: 300),
+                            width: 120.0,
+                            height: 120.0,
                           ),
                         ),
 
@@ -272,11 +282,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       );
       await userBloc.create(model);
 
-      Navigator.of(context)
-        .pushAndRemoveUntil(
-          MaterialPageRoute<MainScreen>(builder: (BuildContext context) => const MainScreen()),
-          (Route<dynamic> r) => false,
-        );
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.root,
+        (Route<dynamic> route) => false,
+      );
     } catch (e) {
       Navigator.of(context).pop();
       helper.showErrorDialog(

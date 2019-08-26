@@ -6,7 +6,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/clips/clip_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/clip_helper.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
@@ -59,19 +59,8 @@ class ClipCard extends StatelessWidget {
 
                 await clipsBloc.reseed(model);
 
-                final ClipInfoModel clip = await extractClipInfo(model.link);
-                clip.title = model.title ?? '';
-
-                Navigator.of(context)
-                  ..pop()
-                  ..push(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) {
-                        return ClipScreen(model: clip);
-                      },
-                      fullscreenDialog: true,
-                    ),
-                  );
+                Navigator.pop(context);
+                Routes.router.navigateTo(context, 'clip/${model.uid}');
               },
               child: Stack(
                 children: <Widget>[

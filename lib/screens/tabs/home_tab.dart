@@ -11,8 +11,7 @@ import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
-import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/profile/profile_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/device_model.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -214,16 +213,9 @@ class _AppBar extends StatelessWidget {
                 );
                 
                 final FirebaseUser user = await AuthBloc.instance().currentUser;
-                final UserModel model = await userBloc.userByUid(user.uid);
 
-                Navigator.of(context)
-                  ..pop()
-                  ..push(
-                    MaterialPageRoute<ProfileScreen>(
-                      builder: (BuildContext context) => ProfileScreen(model: model),
-                      fullscreenDialog: true,
-                    ),
-                  );
+                Navigator.pop(context);
+                Routes.router.navigateTo(context, 'profile/${user.uid}');
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

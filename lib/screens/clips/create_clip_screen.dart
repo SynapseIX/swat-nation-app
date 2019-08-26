@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/mixins/clip_transformer.dart';
 import 'package:swat_nation/models/clip_model.dart';
@@ -16,10 +18,36 @@ import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 /// Represent the creat clip screen.
 class CreateClipScreen extends StatefulWidget {
   const CreateClipScreen({
+    Key key,
     @required this.user,
-  });
+  }) : super(key: key);
 
   final UserModel user;
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        final String uid = parameters['uid'].first;
+        final UserBloc bloc = UserBloc();
+
+        return FutureBuilder<UserModel>(
+          future: bloc.userByUid(uid),
+          builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            return CreateClipScreen(user: snapshot.data);
+          },
+        );
+      }
+    );
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -71,7 +99,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
           title: const Text('Add Clip'),
           actions: <Widget>[
             IconButton(
-              icon: Icon(MdiIcons.cloudUpload),
+              icon: const Icon(MdiIcons.cloudUpload),
               tooltip: 'Upload Clip',
               onPressed: validateLink(model.link)
                 ? () async {
@@ -138,7 +166,7 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                 textCapitalization: TextCapitalization.none,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  icon: Icon(MdiIcons.web),
+                  icon: const Icon(MdiIcons.web),
                   labelText: 'Link To Clip',
                   hintText: '$kXboxClipsHost...',
                   errorText: !validateLink(model.link)

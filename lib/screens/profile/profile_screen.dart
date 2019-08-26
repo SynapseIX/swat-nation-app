@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
-import 'package:swat_nation/screens/clips/all_clips_screen.dart';
-import 'package:swat_nation/screens/clips/create_clip_screen.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
@@ -19,13 +20,37 @@ import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
-import 'edit_profile_screen.dart';
-
 /// Represents the user profile screen.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
+    Key key,
     @required this.model,
-  });
+  }) : super(key: key);
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        final UserBloc bloc = UserBloc();
+        final String uid = parameters['uid'].first;
+
+        return FutureBuilder<UserModel>(
+          future: bloc.userByUid(uid),
+          builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            return ProfileScreen(model: snapshot.data);
+          },
+        );
+      }
+    );
+  }
   
   final UserModel model;
 
@@ -62,6 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: me
               ? const Text('My Profile')
               : const Text('Member Profile'),
+            leading: IconButton(
+              icon: const Icon(MdiIcons.close),
+              onPressed: () => Navigator.pop(context),
+            ),
             actions: <Widget>[
               if (me)
               IconButton(
@@ -87,13 +116,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _navigateToEdit() async {
-    final UserModel updatedUser = await Navigator.of(context).push(
-      MaterialPageRoute<UserModel>(
-        builder: (BuildContext context) {
-          return EditProfileScreen(model: user);
-        },
-      ),
-    );
+    final UserModel updatedUser = await Routes
+      .router
+      .navigateTo(context, 'profile/edit/${user.uid}');
 
     if (updatedUser != null) {
       setState(() {
@@ -412,16 +437,9 @@ class _PublicBody extends StatelessWidget {
             // View All
             cards.add(ViewAllCard(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) {
-                      return AllClipsScreen(
-                        data: snapshot.data,
-                        displayName: user.displayName,
-                        me: me,
-                      );
-                    },
-                  ),
+                Routes.router.navigateTo(
+                  context,
+                  'clip/all/${user.uid}/${user.displayName}/$me',
                 );
               },
             ));
@@ -442,13 +460,7 @@ class _PublicBody extends StatelessWidget {
 
                             if (subscriber) {
                               if (snapshot.data.length < kSubClipLimit) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => CreateClipScreen(
-                                      user: user,
-                                    ),
-                                  ),
-                                );
+                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
                               } else {
                                 helper.showErrorDialog(
                                   context: context,
@@ -458,13 +470,7 @@ class _PublicBody extends StatelessWidget {
                               }
                             } else {
                               if (snapshot.data.length < kNoSubClipLimit) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => CreateClipScreen(
-                                      user: user,
-                                    ),
-                                  ),
-                                );
+                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
                               } else {
                                 helper.showSubscribeDialog(
                                   context: context,

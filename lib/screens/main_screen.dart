@@ -1,3 +1,4 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
@@ -12,7 +13,17 @@ import 'package:swat_nation/themes/dark_theme.dart';
 
 /// Main screen that holds the bottom navigation bar.
 class MainScreen extends StatefulWidget {
-  const MainScreen({ Key key }) : super(key: key);
+  const MainScreen({
+    Key key
+  }) : super(key: key);
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        return const MainScreen();
+      }
+    );
+  }
   
   @override
   State<StatefulWidget> createState() => _MainScreenState();

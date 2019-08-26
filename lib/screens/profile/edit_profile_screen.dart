@@ -3,6 +3,7 @@ import 'dart:io' show File, Platform;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -18,10 +19,36 @@ import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 /// Represents the edit profile screen.
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({
+    Key key,
     @required this.model,
-  });
+  }) : super(key: key);
 
   final UserModel model;
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        final UserBloc bloc = UserBloc();
+        final String uid = parameters['uid'].first;
+
+        return FutureBuilder<UserModel>(
+          future: bloc.userByUid(uid),
+          builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Center(
+                  child: const CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            return EditProfileScreen(model: snapshot.data);
+          },
+        );
+      }
+    );
+  }
   
   @override
   State<StatefulWidget> createState() => _EditProfileScreenState();
