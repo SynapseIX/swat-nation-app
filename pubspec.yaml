@@ -43,6 +43,7 @@ dependencies:
 
   # Community Packages
   rxdart: ^0.22.0
+  fluro: ^1.5.1
   flutter_facebook_login: ^2.0.1
   material_design_icons_flutter: ^3.2.3895
   cached_network_image: ^1.1.1
