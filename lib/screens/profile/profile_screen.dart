@@ -384,7 +384,7 @@ class _PublicBody extends StatelessWidget {
               OutlineButton.icon(
                 icon: const Icon(MdiIcons.instagram),
                 label: Text(user.instagram),
-                onPressed: () => openUrl('https://instragram.com/${user.instagram}'),
+                onPressed: () => openUrl('https://instagram.com/${user.instagram}'),
               ),
 
               if (user.facebook != null)
