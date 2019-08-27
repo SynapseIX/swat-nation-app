@@ -1,20 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
-import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
@@ -60,11 +62,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  AchievementsBloc achievementsBloc;
   ClipsBloc clipsBloc;
   UserModel user;
 
   @override
   void initState() {
+    achievementsBloc = AchievementsBloc(uid: widget.model.uid);
     clipsBloc = ClipsBloc();
     user = widget.model;
     super.initState();
@@ -72,6 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
+    achievementsBloc.dispose();
     clipsBloc.dispose();
     super.dispose();
   }
@@ -109,7 +114,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ]
           ),
           body: me || !user.private
-            ? _PublicBody(bloc: clipsBloc, user: user, me: me)
+            ? _PublicBody(
+                achievementsBloc: achievementsBloc,
+                clipsBloc: clipsBloc,
+                user: user,
+                me: me,
+              )
             : _PrivateBody(user: user),
         );
       },
@@ -342,12 +352,14 @@ class _PrivateHeader extends StatelessWidget {
 
 class _PublicBody extends StatelessWidget {
   const _PublicBody({
-    @required this.bloc,
+    @required this.achievementsBloc,
+    @required this.clipsBloc,
     @required this.user,
     this.me = false,
   });
 
-  final ClipsBloc bloc;
+  final AchievementsBloc achievementsBloc;
+  final ClipsBloc clipsBloc;
   final UserModel user;
   final bool me;
 
@@ -465,9 +477,23 @@ class _PublicBody extends StatelessWidget {
           ),
         ),
 
+        // Achievements
+        StreamBuilder<List<AchievementModel>>(
+          stream: achievementsBloc.unlockedAchievements,
+          builder: (BuildContext context, AsyncSnapshot<List<AchievementModel>> snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox();
+            }
+
+            final DocumentReference ref = snapshot.data.first.badge;
+            print(ref);
+            return Container();
+          },
+        ),
+
         // Clips
         StreamBuilder<List<ClipModel>>(
-          stream: bloc.allClipsForUser(user.uid),
+          stream: clipsBloc.allClipsForUser(user.uid),
           builder: (BuildContext context, AsyncSnapshot<List<ClipModel>> snapshot) {
             final Widget Function(ClipModel) cardMapper = (ClipModel model) {
               return ClipCard(

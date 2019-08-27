@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_bloc.dart';
+import 'package:swat_nation/mixins/achievement_transformer.dart';
+import 'package:swat_nation/models/achievement_model.dart';
 
 /// BLoC that contains logic to manage achievements.
-class AchievementsBloc extends BaseBloc {
+class AchievementsBloc extends BaseBloc with AchievementTransformer {
   AchievementsBloc({
     @required this.uid,
   });
@@ -17,9 +19,10 @@ class AchievementsBloc extends BaseBloc {
     .collection(badgeCollection)
     .snapshots();
   
-  Stream<dynamic> get unlockedAchievements => _firestore
+  Stream<List<AchievementModel>> get unlockedAchievements => _firestore
     .collection('users/$uid/achievements')
-    .snapshots();
+    .snapshots()
+    .transform(transformAchievements);
 
   @override
   void dispose() {
