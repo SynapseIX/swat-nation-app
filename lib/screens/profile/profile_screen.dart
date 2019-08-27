@@ -455,10 +455,6 @@ class _PublicBody extends StatelessWidget {
         StreamBuilder<List<ClipModel>>(
           stream: bloc.allClipsForUser(user.uid),
           builder: (BuildContext context, AsyncSnapshot<List<ClipModel>> snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            }
-
             final Widget Function(ClipModel) cardMapper = (ClipModel model) {
               return ClipCard(
                 key: ValueKey<String>(model.uid),
@@ -468,65 +464,87 @@ class _PublicBody extends StatelessWidget {
 
             // TODO(itsprof): validate if subscriber
             const bool subscriber = true;
-            final bool largeList = snapshot.data.length > kNoSubClipLimit;
-            final List<Widget> cards = largeList
-              ? snapshot.data
-                .sublist(0, kNoSubClipLimit)
-                .map(cardMapper).toList()
-              : snapshot.data
-                .map(cardMapper).toList();
-            
-            // View All
-            cards.add(ViewAllCard(
-              onTap: () {
-                Routes.router.navigateTo(
-                  context,
-                  'clip/all/${user.uid}/${user.displayName}/$me',
-                );
-              },
-            ));
+            Widget clipsContent;
+            int numberOfClips = 0;
+
+            if (snapshot.hasData) {
+              numberOfClips = snapshot.data.length;
+              final bool largeList = numberOfClips > kNoSubClipLimit;
+              final List<Widget> cards = largeList
+                ? snapshot.data
+                  .sublist(0, kNoSubClipLimit)
+                  .map(cardMapper).toList()
+                : snapshot.data
+                  .map(cardMapper).toList();
+              
+              // View All
+              cards.add(ViewAllCard(
+                onTap: () {
+                  Routes.router.navigateTo(
+                    context,
+                    'clip/all/${user.uid}/${user.displayName}/$me',
+                  );
+                },
+              ));
+
+              clipsContent = HorizontalCardList(cards: cards);
+            } else {
+              clipsContent = Container(
+                height: 200.0,
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: Center(
+                    child: const Text(
+                      'You don\'t have any clips.\nReady to add your first one?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
             
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CardSection(
-                  header: TextHeader(
-                    'Clips',
-                    actions: me
-                      ? <Widget>[
-                        IconButton(
-                          icon: Icon(MdiIcons.plusCircleOutline),
-                          onPressed: () {
-                            final DialogHelper helper = DialogHelper.instance();
+                TextHeader(
+                  'Clips',
+                  actions: me
+                    ? <Widget>[
+                      IconButton(
+                        icon: Icon(MdiIcons.plusCircleOutline),
+                        onPressed: () {
+                          final DialogHelper helper = DialogHelper.instance();
 
-                            if (subscriber) {
-                              if (snapshot.data.length < kSubClipLimit) {
-                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
-                              } else {
-                                helper.showErrorDialog(
-                                  context: context,
-                                  title: 'Can\'t Add More Clips',
-                                  message: kSubClipLimitMessage,
-                                );
-                              }
+                          if (subscriber) {
+                            if (numberOfClips < kSubClipLimit) {
+                              Routes.router.navigateTo(context, 'clip/create/${user.uid}');
                             } else {
-                              if (snapshot.data.length < kNoSubClipLimit) {
-                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
-                              } else {
-                                helper.showSubscribeDialog(
-                                  context: context,
-                                  message: kNoSubClipLimitMessage,
-                                );
-                              }
+                              helper.showErrorDialog(
+                                context: context,
+                                title: 'Can\'t Add More Clips',
+                                message: kSubClipLimitMessage,
+                              );
                             }
-                          },
-                        )
-                      ]
-                      : <Widget>[],
-                  ),
-                  cardList: HorizontalCardList(cards: cards),
+                          } else {
+                            if (numberOfClips < kNoSubClipLimit) {
+                              Routes.router.navigateTo(context, 'clip/create/${user.uid}');
+                            } else {
+                              helper.showSubscribeDialog(
+                                context: context,
+                                message: kNoSubClipLimitMessage,
+                              );
+                            }
+                          }
+                        },
+                      )
+                    ]
+                  : <Widget>[],
                 ),
+                clipsContent,
               ],
             );
           },
