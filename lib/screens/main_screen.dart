@@ -37,9 +37,9 @@ class _MainScreenState extends State<MainScreen> {
     tabs = <BaseTab>[
       const HomeTab(),
       const TourneysTab(),
-      const FinderTab(),
       const ChatTab(),
       const RankingTab(),
+      const FinderTab(),
     ];
 
     super.initState();
