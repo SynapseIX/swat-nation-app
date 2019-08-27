@@ -14,50 +14,36 @@ class UserBloc extends BaseBloc with UserTransformer {
     .orderBy('displayName')
     .snapshots()
     .transform(userTransformer);
-  
-  Stream<List<UserModel>> allUsersWithDisplayName(String query) {
-    return _firestore
-      .collection(userCollection)
-      .where('displayName', isGreaterThanOrEqualTo: query)
-      .snapshots()
-      .transform(userTransformer);
-  } 
 
   Future<UserModel> userByUid(String uid) async {
-    final QuerySnapshot snapshot = await _firestore
-      .collection(userCollection)
-      .where('uid', isEqualTo: uid)
-      .limit(1)
-      .getDocuments();
-
-    final List<DocumentSnapshot> docs = snapshot.documents;
-    return docs.isNotEmpty
-      ? UserModel.fromSnapshot(docs.first)
-      : null;
+    try {
+      final DocumentSnapshot snapshot = await _firestore
+        .collection(userCollection)
+        .document(uid)
+        .snapshots()
+        .first;
+      
+      return UserModel.fromSnapshot(snapshot);
+    } catch (e) {
+      return null;
+    }
   }
 
-  Future<DocumentReference> create(UserModel model) {
+  Future<void> create(UserModel model) {
     return _firestore
       .collection(userCollection)
-      .add(model.toMap());
+      .document(model.uid)
+      .setData(model.toMap());
   }
 
   Future<void> update({
     @required String uid,
     @required Map<String, dynamic> data,
   }) async {
-    final QuerySnapshot snapshot = await _firestore
+    return _firestore
       .collection(userCollection)
-      .where('uid', isEqualTo: uid)
-      .limit(1)
-      .getDocuments();
-    
-    final DocumentReference ref = snapshot.documents.first.reference;
-    
-    return ref.setData(
-      data,
-      merge: true,
-    );
+      .document(uid)
+      .updateData(data);
   }
 
   Future<bool> displayNameExists(String displayName) async {

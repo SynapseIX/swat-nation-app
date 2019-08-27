@@ -308,7 +308,7 @@ class _SignInScreenState extends State<SignInScreen> {
       helper.showErrorDialog(
         context: context,
         title: 'Can\'t Log In With Facebook',
-        message: e.message,
+        message: e.message ?? 'Unexpected error.',
       );
     } finally {
       TabBarBloc.instance().setCurrentIndex(0);
