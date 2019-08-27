@@ -15,6 +15,10 @@ import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
 class SettingsDrawer extends StatelessWidget {
+  const SettingsDrawer({
+    Key key,
+  }) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     final ThemeBloc themeBloc = ThemeBloc.instance();

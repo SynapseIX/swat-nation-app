@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: SettingsDrawer(),
+      endDrawer: const SettingsDrawer(),
       body: PageView(
         controller: TabBarBloc.instance().controller,
         physics: const NeverScrollableScrollPhysics(),
