@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
@@ -131,9 +132,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class _PublicHeader extends StatelessWidget {
   const _PublicHeader({
     @required this.user,
+    this.me = false,
   });
 
   final UserModel user;
+  final bool me;
   
   @override
   Widget build(BuildContext context) {
@@ -205,7 +208,7 @@ class _PublicHeader extends StatelessWidget {
                         color: Colors.white,
                         fontStyle: FontStyle.italic,
                       ),
-                    ),
+                    ),                    
                   ],
                 ),
               ],
@@ -221,6 +224,45 @@ class _PublicHeader extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                 ),
+              ),
+            ),
+
+            if (me)
+            GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: user.uid));
+                Scaffold.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                    content: const Text('Your Support ID has been copied.'),
+                  ));
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(top: 16.0),
+                    child: const Text(
+                      'Support ID:',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      user.uid,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -314,7 +356,7 @@ class _PublicBody extends StatelessWidget {
     return ListView(
       children: <Widget>[
         // Profile header
-        _PublicHeader(user: user),
+        _PublicHeader(user: user, me: me),
 
         // Socials
         Container(
