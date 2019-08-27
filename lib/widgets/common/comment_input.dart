@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swat_nation/constants.dart';
 
 /// Input text widget for chat and comments.
 class CommentInput extends StatelessWidget {
@@ -11,6 +12,7 @@ class CommentInput extends StatelessWidget {
     this.hintText = 'Say something...',
     this.keyboardAppearance = Brightness.light,
     this.fillColor,
+    this.maxLength = kMaxMessageCharacters,
   }) : super(key: key);
   
   final TextEditingController controller;
@@ -20,6 +22,7 @@ class CommentInput extends StatelessWidget {
   final String hintText;
   final Brightness keyboardAppearance;
   final Color fillColor;
+  final int maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class CommentInput extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         keyboardAppearance: keyboardAppearance,
-        maxLength: 140,
+        maxLength: maxLength,
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.send,
         decoration: InputDecoration(

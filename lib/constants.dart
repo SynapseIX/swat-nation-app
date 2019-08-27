@@ -42,3 +42,4 @@ const String kNoSubClipLimitMessage = 'You have reached your clip limit! Subscri
 
 // Chat
 const int kMaxChatMessages = 200;
+const int kMaxMessageCharacters = 140;

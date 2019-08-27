@@ -219,35 +219,35 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF333333),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 3.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(60.0),
+                    child: CachedNetworkImage(
+                      imageUrl: model.photoUrl ?? kDefaultAvi,
+                      width: 60.0,
+                      height: 60.0,
+                      fit: BoxFit.cover,
+                      fadeInDuration: const Duration(milliseconds: 300),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF333333),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 3.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: CachedNetworkImage(
-                          imageUrl: model.photoUrl ?? kDefaultAvi,
-                          width: 20.0,
-                          height: 20.0,
-                          fit: BoxFit.cover,
-                          fadeInDuration: const Duration(milliseconds: 300),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8.0),
                     Text(
                       model.displayName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                        fontSize: 22.0,
                       ),
                     ),
                     if (model.verified)
@@ -256,6 +256,8 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8.0),
+                Text(model.message),
                 const SizedBox(height: 16.0),
                 Container(
                   width: double.infinity,
@@ -263,18 +265,8 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                   child: RaisedButton(
                     child: const Text('View Profile'),
                     onPressed: () async {
-                      DialogHelper.instance().showWaitingDialog(
-                        context: context,
-                        title: 'Fetching profile...',
-                      );
-
-                      final UserModel user
-                        = await userBloc.userByUid(model.author);
-                      
-                      Navigator.of(context)
-                        ..pop()
-                        ..pop();
-                      Routes.router.navigateTo(context, 'profile/${user.uid}');
+                      Navigator.pop(context);
+                      Routes.router.navigateTo(context, 'profile/${model.author}');
                     },
                   ),
                 ),
