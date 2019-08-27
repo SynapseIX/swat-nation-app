@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
 import 'package:swat_nation/base/base_theme.dart';
+import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
@@ -199,10 +201,24 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                           ),
                         ],
                       ),
-                      trailing: model.private
-                        ? const Icon(MdiIcons.lock)
-                        : null,
-                        onTap: () => Routes.router.navigateTo(context, 'profile/${model.uid}'),
+                      trailing: StreamBuilder<FirebaseUser>(
+                        stream: AuthBloc.instance().onAuthStateChanged,
+                        builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+                          if (snapshot.hasData && model.uid == snapshot.data.uid) {
+                            return const Icon(
+                              MdiIcons.account,
+                              color: Colors.amber,
+                            );
+                          }
+                          
+                          if (model.private) {
+                            return const Icon(MdiIcons.lock);
+                          }
+
+                          return const SizedBox();
+                        },
+                      ),
+                      onTap: () => Routes.router.navigateTo(context, 'profile/${model.uid}'),
                     );
                   },
                   childCount: data.length,
