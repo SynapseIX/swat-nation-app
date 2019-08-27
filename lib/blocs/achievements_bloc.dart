@@ -9,15 +9,9 @@ class AchievementsBloc extends BaseBloc with AchievementTransformer {
   AchievementsBloc({
     @required this.uid,
   });
-  
-  static const String badgeCollection = 'badges';
 
   final Firestore _firestore = Firestore.instance;
   final String uid;
-
-  Stream<dynamic> get allBadges => _firestore
-    .collection(badgeCollection)
-    .snapshots();
   
   Stream<List<AchievementModel>> get unlockedAchievements => _firestore
     .collection('users/$uid/achievements')

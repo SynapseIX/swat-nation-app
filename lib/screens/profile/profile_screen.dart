@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,9 @@ import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/cards/achievement_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
+import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
@@ -480,15 +481,44 @@ class _PublicBody extends StatelessWidget {
         // Achievements
         StreamBuilder<List<AchievementModel>>(
           stream: achievementsBloc.unlockedAchievements,
-          builder: (BuildContext context, AsyncSnapshot<List<AchievementModel>> snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            }
+          builder:
+            (BuildContext context, AsyncSnapshot<List<AchievementModel>> snapshot) {
+              if (!snapshot.hasData) {
+                return const SizedBox();
+              }
 
-            final DocumentReference ref = snapshot.data.first.badge;
-            print(ref);
-            return Container();
-          },
+              final Widget Function(AchievementModel) cardMapper = (AchievementModel model) {
+                return AchievementCard(
+                  key: UniqueKey(),
+                  model: model,
+                  uid: user.uid,
+                );
+              };
+
+              final bool largeList = snapshot.data.length > kMaxAchievementCards;
+              final List<Widget> cards = largeList
+                ? snapshot.data
+                  .sublist(0, kMaxAchievementCards)
+                  .map(cardMapper).toList()
+                : snapshot.data
+                  .map(cardMapper).toList();
+
+              // if (cards.length > kMaxAchievementCards) {
+              //   cards.add(ViewAllCard(
+              //     onTap: () => print(''),
+              //   ));
+              // }
+              cards.add(ViewAllCard(
+                onTap: () => print(''),
+              ));
+
+              return CardSection(
+                header: const TextHeader('Achievements'),
+                cardList: HorizontalCardList(
+                  cards: cards,
+                ),
+              );
+            },
         ),
 
         // Clips
