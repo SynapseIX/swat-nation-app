@@ -380,6 +380,20 @@ class _PublicBody extends StatelessWidget {
                 onPressed: () => openUrl('https://twitter.com/${user.twitter}'),
               ),
 
+              if (user.instagram != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.instagram),
+                label: Text(user.instagram),
+                onPressed: () => openUrl('https://instragram.com/${user.instagram}'),
+              ),
+
+              if (user.facebook != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.facebook),
+                label: Text(user.facebook),
+                onPressed: () => openUrl('https://facebook.com/${user.facebook}'),
+              ),
+
               if (user.mixer != null)
               OutlineButton.icon(
                 icon: const Icon(MdiIcons.mixer),

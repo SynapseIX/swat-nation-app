@@ -1,6 +1,9 @@
 import 'package:url_launcher/url_launcher.dart';
 
-Future<bool> openUrl(String url) async {
+Future<bool> openUrl(
+  String url,
+  [bool forceSafariVC = false]
+) async {
   if (url == null || url.isEmpty) {
     return false;
   }
@@ -10,7 +13,7 @@ Future<bool> openUrl(String url) async {
   if (await canLaunch(encodedUrl)) {
     return launch(
       encodedUrl,
-      forceSafariVC: false,
+      forceSafariVC: forceSafariVC,
     );
   } else {
     throw 'Could not launch $url';

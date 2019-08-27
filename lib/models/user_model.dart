@@ -17,6 +17,8 @@ class UserModel extends BaseModel {
     this.platform,
     this.gamertag,
     this.twitter,
+    this.instagram,
+    this.facebook,
     this.mixer,
     this.twitch,
     this.bio,
@@ -36,6 +38,8 @@ class UserModel extends BaseModel {
     platform = document.data['platform'];
     gamertag = document.data['gamertag'];
     twitter = document.data['twitter'];
+    instagram = document.data['instagram'];
+    facebook = document.data['facebook'];
     mixer = document.data['mixer'];
     twitch = document.data['twitch'];
     bio = document.data['bio'];
@@ -57,6 +61,8 @@ class UserModel extends BaseModel {
   bool verified;
   String gamertag;
   String twitter;
+  String instagram;
+  String facebook;
   String mixer;
   String twitch;
   String bio;
@@ -75,6 +81,8 @@ class UserModel extends BaseModel {
     platform: $platform
     gamertag" $gamertag
     twitter: $twitter
+    instagram: $instagram
+    facebook: $facebook
     mixer: $mixer
     twitch: $twitch
     bio: $bio
@@ -95,6 +103,8 @@ class UserModel extends BaseModel {
       'platform': platform,
       'gamertag': gamertag,
       'twitter': twitter,
+      'instagram': instagram,
+      'facebook': facebook,
       'mixer': mixer,
       'twitch': twitch,
       'bio': bio,
