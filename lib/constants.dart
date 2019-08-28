@@ -30,6 +30,10 @@ const String kDefaultSubscribeMessage = 'Subscribe to SWAT Nation Pro to access 
 const String kDefaultSignInMessage = 'SWAT Nation is better enjoyed if you Sign In. Please sign in to register for tourneys, chat, subscribe, and more.\n\nYou can also create an account if needed.';
 
 // Achievements
+const String kBecomeLegendTitle = 'Become Legend';
+const String kBecomeLegendDescription = 'You\'ve taken your place among the legends of SWAT Nation.';
+const String kBecomeLegendBadge = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/badges%2Fbecome_legend.png?alt=media&token=cf6f903e-cd33-4c04-ab69-2d9858dda41c';
+const int kBecomeLegendPoints = 50;
 const int kMaxAchievementCards = 5;
 
 // Clips

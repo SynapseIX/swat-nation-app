@@ -18,6 +18,12 @@ class AchievementsBloc extends BaseBloc with AchievementTransformer {
     .snapshots()
     .transform(transformAchievements);
 
+  Future<DocumentReference> create(AchievementModel model) async {
+    return _firestore
+      .collection('users/$uid/achievements')
+      .add(model.toMap());
+  }
+
   @override
   void dispose() {
     print('AchievementsBloc disposed');
