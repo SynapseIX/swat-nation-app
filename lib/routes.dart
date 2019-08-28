@@ -7,6 +7,7 @@ import 'package:swat_nation/screens/clips/all_clips_screen.dart';
 import 'package:swat_nation/screens/clips/clip_screen.dart';
 import 'package:swat_nation/screens/clips/create_clip_screen.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/screens/profile/change_email_screen.dart';
 import 'package:swat_nation/screens/profile/edit_profile_screen.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
 
@@ -23,6 +24,7 @@ class Routes {
   
   static String profile = '/profile/:uid';
   static String editProfile = '/profile/edit/:uid';
+  static String changeEmail = 'profile/change-email';
 
   static String achievements = '/achievements/:uid/:me';
   
@@ -62,6 +64,11 @@ class Routes {
     router.define(
       editProfile,
       handler: EditProfileScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+    router.define(
+      changeEmail,
+      handler: ChangeEmailScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
 

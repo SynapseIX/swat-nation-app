@@ -1,3 +1,4 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:swat_nation/blocs/change_email_bloc.dart';
@@ -9,6 +10,14 @@ class ChangeEmailScreen extends StatefulWidget {
   const ChangeEmailScreen({
     Key key,
   }) : super(key: key);
+
+  static Handler routeHandler() {
+    return Handler(
+      handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        return const ChangeEmailScreen();
+      }
+    );
+  }
 
   @override
   State<ChangeEmailScreen> createState() => _ChangeEmailScreenState();
