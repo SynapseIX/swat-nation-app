@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/screens/achievements/achievements_screen.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
@@ -22,6 +23,8 @@ class Routes {
   
   static String profile = '/profile/:uid';
   static String editProfile = '/profile/edit/:uid';
+
+  static String achievements = '/achievements/:uid/:me';
   
   static String clip = '/clip/:uid';
   static String clipAll = '/clip/all/:uid/:displayName/:me';
@@ -59,6 +62,13 @@ class Routes {
     router.define(
       editProfile,
       handler: EditProfileScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Achievements
+    router.define(
+      achievements,
+      handler: AchievementsScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
 

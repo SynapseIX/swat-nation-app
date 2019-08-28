@@ -23,6 +23,7 @@ class UserModel extends BaseModel {
     this.twitch,
     this.bio,
     this.private = false,
+    this.score = 0,
   });
 
   UserModel.fromSnapshot(DocumentSnapshot document) {
@@ -44,6 +45,7 @@ class UserModel extends BaseModel {
     twitch = document.data['twitch'];
     bio = document.data['bio'];
     private = document.data['private'];
+    score = document.data['score'];
   }
 
   UserModel.blank();
@@ -67,6 +69,7 @@ class UserModel extends BaseModel {
   String twitch;
   String bio;
   bool private;
+  int score;
 
   @override
   String toString() {
@@ -87,6 +90,7 @@ class UserModel extends BaseModel {
     twitch: $twitch
     bio: $bio
     private: $private
+    score: $score
     ''';
   }
 
@@ -109,6 +113,7 @@ class UserModel extends BaseModel {
       'twitch': twitch,
       'bio': bio,
       'private': private,
+      'score': score,
     };
   }
 }

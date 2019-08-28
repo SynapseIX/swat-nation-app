@@ -219,7 +219,24 @@ class _PublicHeader extends StatelessWidget {
                         color: Colors.white,
                         fontStyle: FontStyle.italic,
                       ),
-                    ),                    
+                    ),
+                    const SizedBox(height: 4.0),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          MdiIcons.heart,
+                          color: Colors.amber,
+                        ),
+                        const SizedBox(width: 4.0),
+                        Text(
+                          '${user.score}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -491,7 +508,6 @@ class _PublicBody extends StatelessWidget {
                 return AchievementCard(
                   key: UniqueKey(),
                   model: model,
-                  uid: user.uid,
                 );
               };
 
@@ -503,14 +519,13 @@ class _PublicBody extends StatelessWidget {
                 : snapshot.data
                   .map(cardMapper).toList();
 
-              // if (cards.length > kMaxAchievementCards) {
-              //   cards.add(ViewAllCard(
-              //     onTap: () => print(''),
-              //   ));
-              // }
-              cards.add(ViewAllCard(
-                onTap: () => print(''),
-              ));
+              if (cards.length > kMaxAchievementCards) {
+                cards.add(ViewAllCard(
+                  onTap: () => Routes
+                    .router
+                    .navigateTo(context, '/achievements/${user.uid}/$me'),
+                ));
+              }
 
               return CardSection(
                 header: const TextHeader('Achievements'),
@@ -565,7 +580,7 @@ class _PublicBody extends StatelessWidget {
                 child: Card(
                   child: Center(
                     child: const Text(
-                      'You don\'t have any clips.\nReady to add your first one?',
+                      kNoClipsCopy,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

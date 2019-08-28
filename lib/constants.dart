@@ -42,7 +42,9 @@ const int kSubClipLimit = 20;
 const int kNoSubClipLimit = 3;
 const String kSubClipLimitMessage = 'You have reached your clip limit! Please remove older clips to make space for more.';
 const String kNoSubClipLimitMessage = 'You have reached your clip limit! Subscribe to SWAT Nation PRO to add up to $kSubClipLimit clips + access to other exlusive benefits.';
+const String kNoClipsCopy = 'There are no clips yet.';
 
 // Chat
 const int kMaxChatMessages = 200;
 const int kMaxMessageCharacters = 140;
+const int kAchievementColumnCount = 3;
