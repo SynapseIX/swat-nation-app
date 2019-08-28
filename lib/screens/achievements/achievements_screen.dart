@@ -78,6 +78,7 @@ class AchievementsScreen extends StatelessWidget {
                   return AchievementCard(
                     key: UniqueKey(),
                     model: model,
+                    uid: user.uid,
                   );
                 }).toList(),
               );

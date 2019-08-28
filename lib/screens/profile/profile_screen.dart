@@ -508,6 +508,7 @@ class _PublicBody extends StatelessWidget {
                 return AchievementCard(
                   key: UniqueKey(),
                   model: model,
+                  uid: user.uid,
                 );
               };
 
