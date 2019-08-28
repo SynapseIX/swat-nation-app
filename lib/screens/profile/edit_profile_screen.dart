@@ -55,8 +55,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final Map<String, dynamic> data = <String, dynamic>{};
-
   final TextEditingController displayNameController = TextEditingController();
   final TextEditingController gamertagController = TextEditingController();
   final TextEditingController twitterController = TextEditingController();
@@ -495,46 +493,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final String displayName = bloc.displayNameValue;
     model.displayName = displayName;
     info.displayName = displayName;
-    data['displayName'] = displayName;
 
     // Gamertag
     final String gamertag = gamertagController.text.isNotEmpty
       ? gamertagController.text
       : null;
     model.gamertag = gamertag;
-    data['gamertag'] = gamertag;
 
     // Twitter
     final String twitter = twitterController.text.isNotEmpty
       ? twitterController.text
       : null;
     model.twitter = twitter;
-    data['twitter'] = twitter;
 
     // Mixer
     final String mixer = mixerController.text.isNotEmpty
       ? mixerController.text
       : null;
     model.mixer = mixer;
-    data['mixer'] = mixer;
 
     // Twitch
     final String twitch = twitchController.text.isNotEmpty
       ? twitchController.text
       : null;
     model.twitch = twitch;
-    data['twitch'] = twitch;
 
     // Twitch
     final String bio = bioController.text.isNotEmpty
       ? bioController.text
       : null;
     model.bio = bio;
-    data['bio'] = bio;
 
     // Privacy
     model.private = bloc.privacyValue;
-    data['private'] = bloc.privacyValue;
       
     if (photoFile != null) {
       final StorageReference pictureRef = FirebaseStorage
@@ -549,9 +540,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final String photoUrl = await pictureRef.getDownloadURL();
       info.photoUrl = photoUrl;
       model.photoUrl = photoUrl;
-      data['photoUrl'] = photoUrl;
-    } else {
-      data['photoUrl'] = model.photoUrl;
     }
 
     if (headerFile != null) {
@@ -567,18 +555,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       
       final String headerUrl = await headerRef.getDownloadURL();
       model.headerUrl = headerUrl;
-      data['headerUrl'] = headerUrl;
-    } else {
-      data['headerUrl'] = model.headerUrl;
     }
 
     await firebaseUser.updateProfile(info);
     await firebaseUser.reload();
 
-    await userBloc.update(
-      uid: model.uid,
-      data: data,
-    );
+    await userBloc.update(model);
 
     Navigator.of(context)
       ..pop()

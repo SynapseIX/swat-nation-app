@@ -5,12 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
@@ -281,6 +283,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         platform: Platform.isIOS ? 'iOS' : 'Android',
       );
       await userBloc.create(model);
+
+      final AchievementModel becomeLegend = AchievementModel(
+        badge: kBecomeLegendBadge,
+        title: kBecomeLegendTitle,
+        description: kBecomeLegendDescription,
+        points: kBecomeLegendPoints,
+        unlocked: Timestamp.now(),
+      );
+      final AchievementsBloc achievementsBloc = AchievementsBloc(uid: user.uid);
+      await achievementsBloc.create(becomeLegend);
+      achievementsBloc.dispose();
 
       Navigator.pushNamedAndRemoveUntil(
         context,

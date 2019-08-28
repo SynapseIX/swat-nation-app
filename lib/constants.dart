@@ -29,6 +29,13 @@ const String kDefaultSubscribeMessage = 'Subscribe to SWAT Nation Pro to access 
 // Sign In
 const String kDefaultSignInMessage = 'SWAT Nation is better enjoyed if you Sign In. Please sign in to register for tourneys, chat, subscribe, and more.\n\nYou can also create an account if needed.';
 
+// Achievements
+const String kBecomeLegendTitle = 'Become Legend';
+const String kBecomeLegendDescription = 'You\'ve taken your place among the legends of SWAT Nation.';
+const String kBecomeLegendBadge = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/badges%2Fbecome_legend.png?alt=media&token=cf6f903e-cd33-4c04-ab69-2d9858dda41c';
+const int kBecomeLegendPoints = 50;
+const int kMaxAchievementCards = 5;
+
 // Clips
 const String kXboxClipsHost = 'https://xboxclips.com/';
 const String kDefaultClipThumbnail = 'https://firebasestorage.googleapis.com/v0/b/swat-nation.appspot.com/o/assets%2Fthumbnail.webp?alt=media&token=d6a53308-b3f2-4146-a371-6b852da0232f';
@@ -39,7 +46,9 @@ const int kSubClipLimit = 20;
 const int kNoSubClipLimit = 3;
 const String kSubClipLimitMessage = 'You have reached your clip limit! Please remove older clips to make space for more.';
 const String kNoSubClipLimitMessage = 'You have reached your clip limit! Subscribe to SWAT Nation PRO to add up to $kSubClipLimit clips + access to other exlusive benefits.';
+const String kNoClipsCopy = 'There are no clips yet.';
 
 // Chat
 const int kMaxChatMessages = 200;
 const int kMaxMessageCharacters = 140;
+const int kAchievementColumnCount = 3;

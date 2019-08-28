@@ -7,12 +7,14 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
@@ -233,13 +235,10 @@ class _SignInScreenState extends State<SignInScreen> {
         email: uiBloc.emailValue,
         password: uiBloc.passwordValue,
       );
-
-      await userBloc.update(
-        uid: user.uid,
-        data: <String, dynamic>{
-          'platform': Platform.isIOS ? 'iOS' : 'Android',
-        },
-      );
+      
+      final UserModel model = await userBloc.userByUid(user.uid);
+      model.platform = Platform.isIOS ? 'iOS' : 'Android';
+      await userBloc.update(model);
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -290,12 +289,20 @@ class _SignInScreenState extends State<SignInScreen> {
       model.platform = platform;
 
       if (displayNameExists) {
-        await userBloc.update(
-          uid: user.uid,
-          data: model.toMap(),
-        );
+        await userBloc.update(model);
       } else {
         await userBloc.create(model);
+
+        final AchievementModel becomeLegend = AchievementModel(
+          badge: kBecomeLegendBadge,
+          title: kBecomeLegendTitle,
+          description: kBecomeLegendDescription,
+          points: kBecomeLegendPoints,
+          unlocked: Timestamp.now(),
+        );
+        final AchievementsBloc achievementsBloc = AchievementsBloc(uid: user.uid);
+        await achievementsBloc.create(becomeLegend);
+        achievementsBloc.dispose();
       }
 
       Navigator.pushNamedAndRemoveUntil(
@@ -308,7 +315,7 @@ class _SignInScreenState extends State<SignInScreen> {
       helper.showErrorDialog(
         context: context,
         title: 'Can\'t Log In With Facebook',
-        message: e.message,
+        message: e.message ?? 'Unexpected error.',
       );
     } finally {
       TabBarBloc.instance().setCurrentIndex(0);

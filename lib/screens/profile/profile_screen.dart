@@ -4,15 +4,18 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
+import 'package:swat_nation/widgets/cards/achievement_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
@@ -60,11 +63,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  AchievementsBloc achievementsBloc;
   ClipsBloc clipsBloc;
   UserModel user;
 
   @override
   void initState() {
+    achievementsBloc = AchievementsBloc(uid: widget.model.uid);
     clipsBloc = ClipsBloc();
     user = widget.model;
     super.initState();
@@ -72,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
+    achievementsBloc.dispose();
     clipsBloc.dispose();
     super.dispose();
   }
@@ -109,7 +115,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ]
           ),
           body: me || !user.private
-            ? _PublicBody(bloc: clipsBloc, user: user, me: me)
+            ? _PublicBody(
+                achievementsBloc: achievementsBloc,
+                clipsBloc: clipsBloc,
+                user: user,
+                me: me,
+              )
             : _PrivateBody(user: user),
         );
       },
@@ -208,7 +219,24 @@ class _PublicHeader extends StatelessWidget {
                         color: Colors.white,
                         fontStyle: FontStyle.italic,
                       ),
-                    ),                    
+                    ),
+                    const SizedBox(height: 4.0),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          MdiIcons.heart,
+                          color: Colors.amber,
+                        ),
+                        const SizedBox(width: 4.0),
+                        Text(
+                          '${user.score}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -342,12 +370,14 @@ class _PrivateHeader extends StatelessWidget {
 
 class _PublicBody extends StatelessWidget {
   const _PublicBody({
-    @required this.bloc,
+    @required this.achievementsBloc,
+    @required this.clipsBloc,
     @required this.user,
     this.me = false,
   });
 
-  final ClipsBloc bloc;
+  final AchievementsBloc achievementsBloc;
+  final ClipsBloc clipsBloc;
   final UserModel user;
   final bool me;
 
@@ -378,6 +408,20 @@ class _PublicBody extends StatelessWidget {
                 icon: const Icon(MdiIcons.twitter),
                 label: Text(user.twitter),
                 onPressed: () => openUrl('https://twitter.com/${user.twitter}'),
+              ),
+
+              if (user.instagram != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.instagram),
+                label: Text(user.instagram),
+                onPressed: () => openUrl('https://instagram.com/${user.instagram}'),
+              ),
+
+              if (user.facebook != null)
+              OutlineButton.icon(
+                icon: const Icon(MdiIcons.facebook),
+                label: Text(user.facebook),
+                onPressed: () => openUrl('https://facebook.com/${user.facebook}'),
               ),
 
               if (user.mixer != null)
@@ -451,14 +495,51 @@ class _PublicBody extends StatelessWidget {
           ),
         ),
 
+        // Achievements
+        StreamBuilder<List<AchievementModel>>(
+          stream: achievementsBloc.unlockedAchievements,
+          builder:
+            (BuildContext context, AsyncSnapshot<List<AchievementModel>> snapshot) {
+              if (!snapshot.hasData) {
+                return const SizedBox();
+              }
+
+              final Widget Function(AchievementModel) cardMapper = (AchievementModel model) {
+                return AchievementCard(
+                  key: UniqueKey(),
+                  model: model,
+                );
+              };
+
+              final bool largeList = snapshot.data.length > kMaxAchievementCards;
+              final List<Widget> cards = largeList
+                ? snapshot.data
+                  .sublist(0, kMaxAchievementCards)
+                  .map(cardMapper).toList()
+                : snapshot.data
+                  .map(cardMapper).toList();
+
+              if (cards.length > kMaxAchievementCards) {
+                cards.add(ViewAllCard(
+                  onTap: () => Routes
+                    .router
+                    .navigateTo(context, '/achievements/${user.uid}/$me'),
+                ));
+              }
+
+              return CardSection(
+                header: const TextHeader('Achievements'),
+                cardList: HorizontalCardList(
+                  cards: cards,
+                ),
+              );
+            },
+        ),
+
         // Clips
         StreamBuilder<List<ClipModel>>(
-          stream: bloc.allClipsForUser(user.uid),
+          stream: clipsBloc.allClipsForUser(user.uid),
           builder: (BuildContext context, AsyncSnapshot<List<ClipModel>> snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox();
-            }
-
             final Widget Function(ClipModel) cardMapper = (ClipModel model) {
               return ClipCard(
                 key: ValueKey<String>(model.uid),
@@ -468,65 +549,87 @@ class _PublicBody extends StatelessWidget {
 
             // TODO(itsprof): validate if subscriber
             const bool subscriber = true;
-            final bool largeList = snapshot.data.length > kNoSubClipLimit;
-            final List<Widget> cards = largeList
-              ? snapshot.data
-                .sublist(0, kNoSubClipLimit)
-                .map(cardMapper).toList()
-              : snapshot.data
-                .map(cardMapper).toList();
-            
-            // View All
-            cards.add(ViewAllCard(
-              onTap: () {
-                Routes.router.navigateTo(
-                  context,
-                  'clip/all/${user.uid}/${user.displayName}/$me',
-                );
-              },
-            ));
+            Widget clipsContent;
+            int numberOfClips = 0;
+
+            if (snapshot.hasData) {
+              numberOfClips = snapshot.data.length;
+              final bool largeList = numberOfClips > kNoSubClipLimit;
+              final List<Widget> cards = largeList
+                ? snapshot.data
+                  .sublist(0, kNoSubClipLimit)
+                  .map(cardMapper).toList()
+                : snapshot.data
+                  .map(cardMapper).toList();
+              
+              // View All
+              cards.add(ViewAllCard(
+                onTap: () {
+                  Routes.router.navigateTo(
+                    context,
+                    'clip/all/${user.uid}/${user.displayName}/$me',
+                  );
+                },
+              ));
+
+              clipsContent = HorizontalCardList(cards: cards);
+            } else {
+              clipsContent = Container(
+                height: 200.0,
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: Center(
+                    child: const Text(
+                      kNoClipsCopy,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
             
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                CardSection(
-                  header: TextHeader(
-                    'Clips',
-                    actions: me
-                      ? <Widget>[
-                        IconButton(
-                          icon: Icon(MdiIcons.plusCircleOutline),
-                          onPressed: () {
-                            final DialogHelper helper = DialogHelper.instance();
+                TextHeader(
+                  'Clips',
+                  actions: me
+                    ? <Widget>[
+                      IconButton(
+                        icon: Icon(MdiIcons.plusCircleOutline),
+                        onPressed: () {
+                          final DialogHelper helper = DialogHelper.instance();
 
-                            if (subscriber) {
-                              if (snapshot.data.length < kSubClipLimit) {
-                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
-                              } else {
-                                helper.showErrorDialog(
-                                  context: context,
-                                  title: 'Can\'t Add More Clips',
-                                  message: kSubClipLimitMessage,
-                                );
-                              }
+                          if (subscriber) {
+                            if (numberOfClips < kSubClipLimit) {
+                              Routes.router.navigateTo(context, 'clip/create/${user.uid}');
                             } else {
-                              if (snapshot.data.length < kNoSubClipLimit) {
-                                Routes.router.navigateTo(context, 'clip/create/${user.uid}');
-                              } else {
-                                helper.showSubscribeDialog(
-                                  context: context,
-                                  message: kNoSubClipLimitMessage,
-                                );
-                              }
+                              helper.showErrorDialog(
+                                context: context,
+                                title: 'Can\'t Add More Clips',
+                                message: kSubClipLimitMessage,
+                              );
                             }
-                          },
-                        )
-                      ]
-                      : <Widget>[],
-                  ),
-                  cardList: HorizontalCardList(cards: cards),
+                          } else {
+                            if (numberOfClips < kNoSubClipLimit) {
+                              Routes.router.navigateTo(context, 'clip/create/${user.uid}');
+                            } else {
+                              helper.showSubscribeDialog(
+                                context: context,
+                                message: kNoSubClipLimitMessage,
+                              );
+                            }
+                          }
+                        },
+                      )
+                    ]
+                  : <Widget>[],
                 ),
+                clipsContent,
               ],
             );
           },
