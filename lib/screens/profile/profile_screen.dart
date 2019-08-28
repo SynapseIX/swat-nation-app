@@ -504,7 +504,7 @@ class _PublicBody extends StatelessWidget {
 
                     Navigator.pop(context);
                     
-                    final String message = error != null
+                    final String message = error == null
                       ? kResetPasswordRequestSent
                       : error.message;
                     Scaffold.of(context)
