@@ -484,8 +484,20 @@ class _PublicBody extends StatelessWidget {
                     ),
                   ),
                   color: Colors.red,
-                  // TODO(itsprof): implement
-                  onPressed: () {},
+                  onPressed: () async {
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Requesting password reset...'
+                    );
+
+                    await AuthBloc.instance().requestPasswordReset();
+                    Navigator.pop(context);
+                    Scaffold.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: const Text(kResetPasswordRequestSent),
+                    ));
+                  },
                 ),
               ),
             ],
