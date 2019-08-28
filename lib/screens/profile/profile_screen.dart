@@ -459,8 +459,19 @@ class _PublicBody extends StatelessWidget {
                     ),
                   ),
                   color: Colors.red,
-                  // TODO(itsprof): implement
-                  onPressed: () {},
+                  onPressed: () async {
+                    final Object error = await Routes
+                      .router
+                      .navigateTo(context, Routes.changeEmail);
+
+                    Scaffold.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: error == null
+                          ? const Text('Your email was successfully changed.')
+                          : Text('$error'),
+                    ));
+                  },
                 ),
               ),
               const SizedBox(width: 8.0),
@@ -473,8 +484,20 @@ class _PublicBody extends StatelessWidget {
                     ),
                   ),
                   color: Colors.red,
-                  // TODO(itsprof): implement
-                  onPressed: () {},
+                  onPressed: () async {
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Requesting password reset...'
+                    );
+
+                    await AuthBloc.instance().requestPasswordReset();
+                    Navigator.pop(context);
+                    Scaffold.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: const Text(kResetPasswordRequestSent),
+                    ));
+                  },
                 ),
               ),
             ],
