@@ -82,7 +82,7 @@ class AuthBloc extends BaseBloc {
     String _email;
 
     if (email == null) {
-      final FirebaseUser user = await _firebaseAuth.currentUser();
+      final FirebaseUser user = await currentUser;
       _email = user.email;
     } else {
       _email = email;
