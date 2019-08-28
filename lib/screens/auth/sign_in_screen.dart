@@ -84,140 +84,158 @@ class _SignInScreenState extends State<SignInScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: GestureDetector(
-        onTap: () => _dismissKeyboard(),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  children: <Widget>[
-                    // Logo
-                    Container(
-                      margin: const EdgeInsets.only(top: 16.0),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF333333),
-                        shape: BoxShape.circle,
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: kLogo,
-                        fadeInDuration: const Duration(milliseconds: 300),
-                        width: 120.0,
-                        height: 120.0,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8.0),
-
-                    // Email field
-                    StreamBuilder<String>(
-                      stream: uiBloc.emailStream,
-                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                        return TextField(
-                          keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                                ? Brightness.dark
-                                : Brightness.light,
-                          controller: emailController,
-                          autocorrect: false,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          focusNode: emailNode,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'user@example.com',
-                            errorText: snapshot.error,
-                          ),
-                          onSubmitted: (String value) {
-                            emailNode.nextFocus();
-                          },
-                          onChanged: uiBloc.onChangeEmail,
-                        );
-                      },
-                    ),
-
-                    // Password field
-                    StreamBuilder<String>(
-                      stream: uiBloc.passwordStream,
-                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                        return TextField(
-                          keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                                ? Brightness.dark
-                                : Brightness.light,
-                          controller: passwordController,
-                          autocorrect: false,
-                          obscureText: true,
-                          textInputAction: TextInputAction.go,
-                          focusNode: passwordNode,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            hintText: 'password',
-                            errorText: snapshot.error,
-                          ),
-                          onSubmitted: (String value) => _dismissKeyboard(),
-                          onChanged: uiBloc.onChangePassword,
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 24.0),
-
-                    // Sign In button
-                    Container(
-                      width: double.infinity,
-                      height: 40.0,
-                      child: StreamBuilder<bool>(
-                        stream: uiBloc.signInValidStream,
-                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                          return RaisedButton(
-                            child: const Text('Sign In'),
-                            onPressed: snapshot.hasData
-                              ? () => _submitSignIn(context)
-                              : null,
-                          );
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 16.0),
-
-                    // Create Account / Forgot Password
-                    Row(
+      body: Builder(
+        builder: (BuildContext context) {
+          return GestureDetector(
+            onTap: () => _dismissKeyboard(),
+            child: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            _dismissKeyboard();
-                            Routes.router.navigateTo(context, Routes.createAccount);
-                          },
-                          child: const Text(
-                            'Create Account',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                        // Logo
+                        Container(
+                          margin: const EdgeInsets.only(top: 16.0),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF333333),
+                            shape: BoxShape.circle,
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: kLogo,
+                            fadeInDuration: const Duration(milliseconds: 300),
+                            width: 120.0,
+                            height: 120.0,
                           ),
                         ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () => print('TODO: implement'),
-                          child: const Text(
-                            'Forgot Password?',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+
+                        const SizedBox(height: 8.0),
+
+                        // Email field
+                        StreamBuilder<String>(
+                          stream: uiBloc.emailStream,
+                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                            return TextField(
+                              keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                                    ? Brightness.dark
+                                    : Brightness.light,
+                              controller: emailController,
+                              autocorrect: false,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              focusNode: emailNode,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                hintText: 'user@example.com',
+                                errorText: snapshot.error,
+                              ),
+                              onSubmitted: (String value) {
+                                emailNode.nextFocus();
+                              },
+                              onChanged: uiBloc.onChangeEmail,
+                            );
+                          },
+                        ),
+
+                        // Password field
+                        StreamBuilder<String>(
+                          stream: uiBloc.passwordStream,
+                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                            return TextField(
+                              keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                                    ? Brightness.dark
+                                    : Brightness.light,
+                              controller: passwordController,
+                              autocorrect: false,
+                              obscureText: true,
+                              textInputAction: TextInputAction.go,
+                              focusNode: passwordNode,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                hintText: 'password',
+                                errorText: snapshot.error,
+                              ),
+                              onSubmitted: (String value) => _dismissKeyboard(),
+                              onChanged: uiBloc.onChangePassword,
+                            );
+                          },
+                        ),
+
+                        const SizedBox(height: 24.0),
+
+                        // Sign In button
+                        Container(
+                          width: double.infinity,
+                          height: 40.0,
+                          child: StreamBuilder<bool>(
+                            stream: uiBloc.signInValidStream,
+                            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                              return RaisedButton(
+                                child: const Text('Sign In'),
+                                onPressed: snapshot.hasData
+                                  ? () => _submitSignIn(context)
+                                  : null,
+                              );
+                            },
                           ),
+                        ),
+
+                        const SizedBox(height: 16.0),
+
+                        // Create Account / Forgot Password
+                        Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                _dismissKeyboard();
+                                Routes.router.navigateTo(context, Routes.createAccount);
+                              },
+                              child: const Text(
+                                'Create Account',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () async {
+                                final PlatformException error = await Routes
+                                  .router
+                                  .navigateTo(context, Routes.forgotPassword);
+
+                                print('Error type: ${error.runtimeType}');
+                                
+                                Scaffold.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(SnackBar(
+                                    content: error == null
+                                      ? const Text(kResetPasswordRequestSent)
+                                      : Text(error.message),
+                                ));
+                              },
+                              child: const Text(
+                                'Forgot Password?',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24.0),
+
+                        // Login with Facebook button
+                        FlatButton(
+                          child: Image.asset('assets/images/continue_with_facebook.png'),
+                          onPressed: () => _loginWithFacebook(context),
                         ),
                       ],
                     ),
-
-                    const SizedBox(height: 24.0),
-
-                    // Login with Facebook button
-                    FlatButton(
-                      child: Image.asset('assets/images/continue_with_facebook.png'),
-                      onPressed: () => _loginWithFacebook(context),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -100,7 +100,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                     controller: confirmEmailController,
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
                     focusNode: confirmEmailNode,
                     decoration: InputDecoration(
                       labelText: 'Confirm Email',

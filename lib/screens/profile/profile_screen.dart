@@ -460,7 +460,7 @@ class _PublicBody extends StatelessWidget {
                   ),
                   color: Colors.red,
                   onPressed: () async {
-                    final Object error = await Routes
+                    final PlatformException error = await Routes
                       .router
                       .navigateTo(context, Routes.changeEmail);
 
@@ -469,7 +469,7 @@ class _PublicBody extends StatelessWidget {
                       ..showSnackBar(SnackBar(
                         content: error == null
                           ? const Text('Your email was successfully changed.')
-                          : Text('$error'),
+                          : Text(error.message),
                     ));
                   },
                 ),

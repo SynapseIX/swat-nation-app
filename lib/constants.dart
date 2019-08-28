@@ -23,6 +23,7 @@ const String kDefaultProfileHeader = 'https://firebasestorage.googleapis.com/v0/
 const String kGamertag = 'https://account.xbox.com/en-us/profile?gamertag=';
 const String kVerifiedCopy = 'The blue verified badge on SWAT Nation lets people know that an account of public interest is authentic.';
 const String kResetPasswordRequestSent = 'Instructions on how to reset your password have been sent to your account email address.';
+const String kEmailAddressForPasswordReset = 'Enter your SWAT Nation account\'s email address.';
 
 // Subscriptions
 const String kDefaultSubscribeMessage = 'Subscribe to SWAT Nation Pro to access exclusive benefits:\n\n- Early tourney registration\n- Increase your clips from 3 to 20\n- Earn more ranking points\n- Exclusive profile badge\n- Access exclusive chat rooms\n- No ads\n- More to come 😃';

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter/services.dart';
 import 'package:swat_nation/base/base_bloc.dart';
 
 /// Authentication management BLoC.
@@ -70,16 +71,29 @@ class AuthBloc extends BaseBloc {
     final FirebaseUser user = await _firebaseAuth.currentUser();
     
     try {
-      user.updateEmail(email);
+      await user.updateEmail(email);
       return null;
-    } catch (e) {
-      return e;
+    } on PlatformException catch (error) {
+      return error;
     }
   }
 
-  Future<void> requestPasswordReset() async {
-    final FirebaseUser user = await _firebaseAuth.currentUser();
-    return _firebaseAuth.sendPasswordResetEmail(email: user.email);
+  Future<Object> requestPasswordReset([String email]) async {
+    String _email;
+
+    if (email == null) {
+      final FirebaseUser user = await _firebaseAuth.currentUser();
+      _email = user.email;
+    } else {
+      _email = email;
+    }
+
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: _email);
+      return null;
+    } on PlatformException catch (error) {
+      return error;
+    }
   }
 
   Future<void> signOut() {

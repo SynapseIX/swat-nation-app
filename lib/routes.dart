@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:swat_nation/screens/achievements/achievements_screen.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
+import 'package:swat_nation/screens/auth/forgot_password_screen.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
 import 'package:swat_nation/screens/clips/clip_screen.dart';
@@ -21,6 +22,7 @@ class Routes {
   
   static String signIn = '/sign-in';
   static String createAccount = '/create-account';
+  static String forgotPassword = '/forgot-password';
   
   static String profile = '/profile/:uid';
   static String editProfile = '/profile/edit/:uid';
@@ -52,6 +54,11 @@ class Routes {
     router.define(
       createAccount,
       handler: CreateAccountScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+    router.define(
+      forgotPassword,
+      handler: ForgotPasswordScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
 
