@@ -167,7 +167,7 @@ class DialogHelper {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16.0),
-                Text(kDefaultSignInMessage),
+                const Text(kDefaultSignInMessage),
                 const SizedBox(height: 24.0),
                 Container(
                   width: double.infinity,
