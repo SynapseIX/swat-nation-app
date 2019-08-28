@@ -281,7 +281,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         createdAt: Timestamp.now(),
         provider: UserProvider.email,
         platform: Platform.isIOS ? 'iOS' : 'Android',
-        score: 50,
       );
       await userBloc.create(model);
 

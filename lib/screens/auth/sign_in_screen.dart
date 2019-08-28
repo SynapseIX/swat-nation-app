@@ -235,13 +235,10 @@ class _SignInScreenState extends State<SignInScreen> {
         email: uiBloc.emailValue,
         password: uiBloc.passwordValue,
       );
-
-      await userBloc.update(
-        uid: user.uid,
-        data: <String, dynamic>{
-          'platform': Platform.isIOS ? 'iOS' : 'Android',
-        },
-      );
+      
+      final UserModel model = await userBloc.userByUid(user.uid);
+      model.platform = Platform.isIOS ? 'iOS' : 'Android';
+      await userBloc.update(model);
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -288,15 +285,11 @@ class _SignInScreenState extends State<SignInScreen> {
         photoUrl: user.photoUrl,
         createdAt: Timestamp.now(),
         provider: UserProvider.facebook,
-        score: 50,
       );
       model.platform = platform;
 
       if (displayNameExists) {
-        await userBloc.update(
-          uid: user.uid,
-          data: model.toMap(),
-        );
+        await userBloc.update(model);
       } else {
         await userBloc.create(model);
 

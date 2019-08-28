@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/mixins/user_transformer.dart';
 import 'package:swat_nation/models/user_model.dart';
@@ -36,14 +35,11 @@ class UserBloc extends BaseBloc with UserTransformer {
       .setData(model.toMap());
   }
 
-  Future<void> update({
-    @required String uid,
-    @required Map<String, dynamic> data,
-  }) async {
+  Future<void> update(UserModel user) async {
     return _firestore
       .collection(userCollection)
-      .document(uid)
-      .updateData(data);
+      .document(user.uid)
+      .updateData(user.toMap());
   }
 
   Future<bool> displayNameExists(String displayName) async {
