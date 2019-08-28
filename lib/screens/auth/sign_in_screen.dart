@@ -15,6 +15,7 @@ import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/achievement_model.dart';
+import 'package:swat_nation/models/badge_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
@@ -292,17 +293,7 @@ class _SignInScreenState extends State<SignInScreen> {
         await userBloc.update(model);
       } else {
         await userBloc.create(model);
-
-        final AchievementModel becomeLegend = AchievementModel(
-          badge: kBecomeLegendBadge,
-          title: kBecomeLegendTitle,
-          description: kBecomeLegendDescription,
-          points: kBecomeLegendPoints,
-          unlocked: Timestamp.now(),
-        );
-        final AchievementsBloc achievementsBloc = AchievementsBloc(uid: user.uid);
-        await achievementsBloc.create(becomeLegend);
-        achievementsBloc.dispose();
+        await _unlockDefaultAchievement(model.uid);
       }
 
       Navigator.pushNamedAndRemoveUntil(
@@ -320,6 +311,22 @@ class _SignInScreenState extends State<SignInScreen> {
     } finally {
       TabBarBloc.instance().setCurrentIndex(0);
     }
+  }
+
+  Future<void> _unlockDefaultAchievement(String uid) async {
+    final AchievementsBloc bloc = AchievementsBloc(uid: uid);
+    final DocumentReference badge = Firestore
+      .instance
+      .collection('badges')
+      .document(BadgeModel.becomeLegend);
+    
+    final AchievementModel achievement = AchievementModel(
+      badge: badge,
+      unlocked: Timestamp.now(),
+    );
+    
+    await bloc.unlock(achievement);
+    bloc.dispose();
   }
 
   void _dismissKeyboard() {

@@ -4,6 +4,7 @@ import 'package:swat_nation/base/base_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/mixins/achievement_transformer.dart';
 import 'package:swat_nation/models/achievement_model.dart';
+import 'package:swat_nation/models/badge_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 
 /// BLoC that contains logic to manage achievements.
@@ -19,12 +20,25 @@ class AchievementsBloc extends BaseBloc with AchievementTransformer {
     .collection('users/$uid/achievements')
     .snapshots()
     .transform(transformAchievements);
+  
+  Future<BadgeModel> badgeWithPath(String path) async {
+    final DocumentSnapshot snapshot = await _firestore
+      .collection('badges')
+      .document(path.replaceAll('badges/', ''))
+      .snapshots()
+      .first;
+    
+    return BadgeModel.fromSnapshot(snapshot);
+  }
 
-  Future<DocumentReference> create(AchievementModel model) async {
+  Future<DocumentReference> unlock(AchievementModel model) async {
     final UserBloc userBloc = UserBloc();
     final UserModel user = await userBloc.userByUid(uid);
+
+    final BadgeModel badge = await badgeWithPath(model.badge.path);
     final int score = user.score ?? 0;
-    user.score = score + model.points;
+
+    user.score = score + badge.points;
     await userBloc.update(user);
     userBloc.dispose();
 
