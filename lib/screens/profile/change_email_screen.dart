@@ -1,9 +1,11 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/change_email_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
+import 'package:swat_nation/models/navigation_result.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
@@ -136,13 +138,20 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                             title: 'Changing email...',
                           );
 
-                          final Object error = await AuthBloc
+                          final PlatformException error = await AuthBloc
                             .instance()
                             .changeEmail(bloc.emailValue);
                           
+                          final NavigationResult result = NavigationResult();
+                          if (error == null) {
+                            result.payload = 'Your email was successfully changed.';
+                          } else {
+                            result.error = error.message;
+                          }
+                          
                           Navigator.of(context)
                             ..pop()
-                            ..pop(error);
+                            ..pop(result);
                         }
                         : null,
                     );

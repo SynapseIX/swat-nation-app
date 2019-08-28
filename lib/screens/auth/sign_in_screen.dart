@@ -16,6 +16,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/badge_model.dart';
+import 'package:swat_nation/models/navigation_result.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
@@ -199,19 +200,25 @@ class _SignInScreenState extends State<SignInScreen> {
                             Spacer(),
                             GestureDetector(
                               onTap: () async {
-                                final PlatformException error = await Routes
+                                final NavigationResult result = await Routes
                                   .router
                                   .navigateTo(context, Routes.forgotPassword);
 
-                                print('Error type: ${error.runtimeType}');
-                                
-                                Scaffold.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(SnackBar(
-                                    content: error == null
-                                      ? const Text(kResetPasswordRequestSent)
-                                      : Text(error.message),
-                                ));
+                                if (result != null) {
+                                  String message;
+                                  if (result.payload != null) {
+                                    message = result.payload;
+                                  }
+                                  if (result.error != null) {
+                                    message = result.error;
+                                  }
+
+                                  Scaffold.of(context)
+                                    ..hideCurrentSnackBar()
+                                    ..showSnackBar(SnackBar(
+                                      content: Text(message),
+                                  ));
+                                }
                               },
                               child: const Text(
                                 'Forgot Password?',

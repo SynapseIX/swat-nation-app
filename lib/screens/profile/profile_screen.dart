@@ -11,6 +11,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/models/navigation_result.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
@@ -460,17 +461,25 @@ class _PublicBody extends StatelessWidget {
                   ),
                   color: Colors.red,
                   onPressed: () async {
-                    final PlatformException error = await Routes
+                    final NavigationResult result = await Routes
                       .router
                       .navigateTo(context, Routes.changeEmail);
+                    
+                    if (result != null) {
+                      String message;
+                      if (result.payload != null) {
+                        message = result.payload;
+                      }
+                      if (result.error != null) {
+                        message = result.error;
+                      }
 
-                    Scaffold.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(SnackBar(
-                        content: error == null
-                          ? const Text('Your email was successfully changed.')
-                          : Text(error.message),
-                    ));
+                      Scaffold.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(SnackBar(
+                          content: Text(message),
+                      ));
+                    }
                   },
                 ),
               ),
@@ -490,12 +499,18 @@ class _PublicBody extends StatelessWidget {
                       title: 'Requesting password reset...'
                     );
 
-                    await AuthBloc.instance().requestPasswordReset();
+                    final PlatformException error = await AuthBloc
+                      .instance().requestPasswordReset();
+
                     Navigator.pop(context);
+                    
+                    final String message = error != null
+                      ? kResetPasswordRequestSent
+                      : error.message;
                     Scaffold.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(SnackBar(
-                        content: const Text(kResetPasswordRequestSent),
+                        content: Text(message),
                     ));
                   },
                 ),

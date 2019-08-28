@@ -1,10 +1,12 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/auth_screens_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/navigation_result.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
@@ -105,10 +107,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             title: 'Requesting password email...',
                           );
 
-                          final Object error = await AuthBloc.instance().requestPasswordReset(bloc.emailValue);
+                          final PlatformException error = await AuthBloc
+                            .instance()
+                            .requestPasswordReset(bloc.emailValue);
+                          
+                          final NavigationResult result = NavigationResult();
+                          if (error == null) {
+                            result.payload = kResetPasswordRequestSent;
+                          } else {
+                            result.error = error.message;
+                          }
+                          
                           Navigator.of(context)
                             ..pop()
-                            ..pop(error);
+                            ..pop(result);
                         }
                         : null,
                     ),
