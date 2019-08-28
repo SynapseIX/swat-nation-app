@@ -24,7 +24,7 @@ class DialogHelper {
           onWillPop: () => Future<bool>(() => false),
           child: Dialog(
             child: Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(32.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

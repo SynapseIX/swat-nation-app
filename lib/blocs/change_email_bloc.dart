@@ -17,8 +17,6 @@ class ChangeEmailBloc extends BaseBloc with AuthScreensdValidator {
     .stream
     .transform(validateEmail)
     .doOnData((String data) {
-      print('Hello: ${data.compareTo(emailValue)}');
-
       if (data.compareTo(emailValue) != 0) {
         _confirmEmailSubject.addError('Emails don\'t match');
       }

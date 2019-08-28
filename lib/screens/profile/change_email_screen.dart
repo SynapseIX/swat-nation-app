@@ -1,9 +1,11 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/change_email_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Screen where users can change their account emails.
 class ChangeEmailScreen extends StatefulWidget {
@@ -128,7 +130,20 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                         ),
                       ),
                       onPressed: snapshot.hasData 
-                        ? () {}
+                        ? () async {
+                          DialogHelper.instance().showWaitingDialog(
+                            context: context,
+                            title: 'Changing email...',
+                          );
+
+                          final Object error = await AuthBloc
+                            .instance()
+                            .changeEmail(bloc.emailValue);
+                          
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop(error);
+                        }
                         : null,
                     );
                   }

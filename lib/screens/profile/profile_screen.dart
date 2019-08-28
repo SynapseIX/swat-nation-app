@@ -459,7 +459,19 @@ class _PublicBody extends StatelessWidget {
                     ),
                   ),
                   color: Colors.red,
-                  onPressed: () => Routes.router.navigateTo(context, Routes.changeEmail),
+                  onPressed: () async {
+                    final Object error = await Routes
+                      .router
+                      .navigateTo(context, Routes.changeEmail);
+
+                    Scaffold.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: error == null
+                          ? const Text('Your email was successfully changed.')
+                          : Text('$error'),
+                    ));
+                  },
                 ),
               ),
               const SizedBox(width: 8.0),

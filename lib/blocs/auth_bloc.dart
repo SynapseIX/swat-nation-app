@@ -66,6 +66,17 @@ class AuthBloc extends BaseBloc {
     return result.user;
   }
 
+  Future<Object> changeEmail(String email) async {
+    final FirebaseUser user = await _firebaseAuth.currentUser();
+    
+    try {
+      user.updateEmail(email);
+      return null;
+    } catch (e) {
+      return e;
+    }
+  }
+
   Future<void> signOut() {
     return _firebaseAuth.signOut();
   }
