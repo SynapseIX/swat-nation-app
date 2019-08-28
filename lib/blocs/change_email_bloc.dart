@@ -22,7 +22,7 @@ class ChangeEmailBloc extends BaseBloc with AuthScreensdValidator {
       }
     });
 
-  Stream<bool> get signInValidStream => Observable
+  Stream<bool> get changeEmailValidStream => Observable
     .combineLatest2(
       emailStream,
       confirmEmailStream,

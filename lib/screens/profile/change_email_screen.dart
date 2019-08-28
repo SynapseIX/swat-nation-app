@@ -111,10 +111,17 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
             Container(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
-                color: Colors.green,
-                child: const Text('Change Email'),
-                onPressed: null,
+              child: StreamBuilder<bool>(
+                stream: bloc.changeEmailValidStream,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return RaisedButton(
+                    color: Colors.green,
+                    child: const Text('Change Email'),
+                    onPressed: snapshot.hasData 
+                      ? () {}
+                      : null,
+                  );
+                }
               ),
             )
           ],
