@@ -58,73 +58,84 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
         appBar: AppBar(
           title: const Text('Change Email'),
         ),
-        body: ListView(
-          children: <Widget>[
-            StreamBuilder<String>(
-              stream: null,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                return TextField(
-                  keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                        ? Brightness.dark
-                        : Brightness.light,
-                  controller: emailController,
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  focusNode: emailNode,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'user@example.com',
-                    errorText: snapshot.error,
-                  ),
-                  onSubmitted: (String value) {
-                    emailNode.nextFocus();
-                  },
-                  onChanged: bloc.onChangeEmail,
-                );
-              }
-            ),
-
-            StreamBuilder<String>(
-              stream: null,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                return TextField(
-                  keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                        ? Brightness.dark
-                        : Brightness.light,
-                  controller: confirmEmailController,
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  focusNode: confirmEmailNode,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'user@example.com',
-                    errorText: snapshot.error,
-                  ),
-                  onSubmitted: (String value) => _dismissKeyboard(),
-                  onChanged: bloc.onChangeConfirmEmail,
-                );
-              }
-            ),
-
-            Container(
-              width: double.infinity,
-              height: 40.0,
-              child: StreamBuilder<bool>(
-                stream: bloc.changeEmailValidStream,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  return RaisedButton(
-                    color: Colors.green,
-                    child: const Text('Change Email'),
-                    onPressed: snapshot.hasData 
-                      ? () {}
-                      : null,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+            children: <Widget>[
+              StreamBuilder<String>(
+                stream: bloc.emailStream,
+                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  return TextField(
+                    keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                          ? Brightness.dark
+                          : Brightness.light,
+                    controller: emailController,
+                    autocorrect: false,
+                    autofocus: true,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    focusNode: emailNode,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'user@example.com',
+                      errorText: snapshot.error,
+                    ),
+                    onSubmitted: (String value) {
+                      emailNode.nextFocus();
+                    },
+                    onChanged: bloc.onChangeEmail,
                   );
                 }
               ),
-            )
-          ],
+
+              StreamBuilder<String>(
+                stream: bloc.confirmEmailStream,
+                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  return TextField(
+                    keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                          ? Brightness.dark
+                          : Brightness.light,
+                    controller: confirmEmailController,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    focusNode: confirmEmailNode,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Email',
+                      hintText: 'user@example.com',
+                      errorText: snapshot.error,
+                    ),
+                    onSubmitted: (String value) => _dismissKeyboard(),
+                    onChanged: bloc.onChangeConfirmEmail,
+                  );
+                }
+              ),
+
+              const SizedBox(height:24.0),
+
+              Container(
+                width: double.infinity,
+                height: 40.0,
+                child: StreamBuilder<bool>(
+                  stream: bloc.changeEmailValidStream,
+                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    return RaisedButton(
+                      color: Colors.green,
+                      child: const Text(
+                        'Change Email',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: snapshot.hasData 
+                        ? () {}
+                        : null,
+                    );
+                  }
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

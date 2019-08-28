@@ -459,8 +459,7 @@ class _PublicBody extends StatelessWidget {
                     ),
                   ),
                   color: Colors.red,
-                  // TODO(itsprof): implement
-                  onPressed: () {},
+                  onPressed: () => Routes.router.navigateTo(context, Routes.changeEmail),
                 ),
               ),
               const SizedBox(width: 8.0),

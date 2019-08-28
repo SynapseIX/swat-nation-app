@@ -24,7 +24,7 @@ class Routes {
   
   static String profile = '/profile/:uid';
   static String editProfile = '/profile/edit/:uid';
-  static String changeEmail = 'profile/change-email';
+  static String changeEmail = '/profile/change-email/';
 
   static String achievements = '/achievements/:uid/:me';
   

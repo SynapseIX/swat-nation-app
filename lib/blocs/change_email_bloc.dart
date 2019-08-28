@@ -7,7 +7,7 @@ class ChangeEmailBloc extends BaseBloc with AuthScreensdValidator {
   final BehaviorSubject<String> _confirmEmailSubject = BehaviorSubject<String>();
 
   void Function(String) get onChangeEmail => _emailSubject.sink.add;
-  void Function(String) get onChangeConfirmEmail => _emailSubject.sink.add;
+  void Function(String) get onChangeConfirmEmail => _confirmEmailSubject.sink.add;
 
   Stream<String> get emailStream => _emailSubject
     .stream
@@ -17,6 +17,8 @@ class ChangeEmailBloc extends BaseBloc with AuthScreensdValidator {
     .stream
     .transform(validateEmail)
     .doOnData((String data) {
+      print('Hello: ${data.compareTo(emailValue)}');
+
       if (data.compareTo(emailValue) != 0) {
         _confirmEmailSubject.addError('Emails don\'t match');
       }
