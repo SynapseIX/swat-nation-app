@@ -309,10 +309,10 @@ class _AuthHeader extends StatelessWidget {
           );
         }
         
-        return DrawerHeader(
+        return const DrawerHeader(
           margin: EdgeInsets.zero,
           child: Center(
-            child: const CircularProgressIndicator(),
+            child: CircularProgressIndicator(),
           ),
         );
       }

@@ -37,8 +37,8 @@ class EditProfileScreen extends StatefulWidget {
             if (!snapshot.hasData) {
               return Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                child: Center(
-                  child: const CircularProgressIndicator(),
+                child: const Center(
+                  child: CircularProgressIndicator(),
                 ),
               );
             }

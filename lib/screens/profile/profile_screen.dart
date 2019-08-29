@@ -44,8 +44,8 @@ class ProfileScreen extends StatefulWidget {
             if (!snapshot.hasData) {
               return Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                child: Center(
-                  child: const CircularProgressIndicator(),
+                child: const Center(
+                  child: CircularProgressIndicator(),
                 ),
               );
             }
@@ -617,8 +617,8 @@ class _PublicBody extends StatelessWidget {
                 height: 200.0,
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
-                  child: Center(
-                    child: const Text(
+                  child: const Center(
+                    child: Text(
                       kNoClipsCopy,
                       textAlign: TextAlign.center,
                       style: TextStyle(
