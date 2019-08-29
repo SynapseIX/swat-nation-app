@@ -99,7 +99,12 @@ class _MemberCardState extends State<MemberCard> {
                             size: 14.0,
                           ),
                           const SizedBox(width: 4.0),
-                          Text(humanizeTimestamp(widget.model.birthday, 'MMMM dd')),                          
+                          Text(
+                            humanizeTimestamp(widget.model.birthday, 'MMMM dd'),
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                       Row(
@@ -111,7 +116,12 @@ class _MemberCardState extends State<MemberCard> {
                             size: 14.0,
                           ),
                           const SizedBox(width: 4.0),
-                          Text(widget.model.twitter),                          
+                          Text(
+                            widget.model.twitter,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -146,7 +156,7 @@ class _MemberCardState extends State<MemberCard> {
           CachedNetworkImage(
             imageUrl: widget.model.photoUrl,
             fit: BoxFit.cover,
-            color: Theme.of(context).cardColor,
+            color: const Color(0xFF333333),
             fadeInDuration: const Duration(milliseconds: 300),
             placeholder: (BuildContext context, String url) {
               return const Center(
