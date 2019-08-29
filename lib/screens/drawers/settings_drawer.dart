@@ -49,9 +49,7 @@ class SettingsDrawer extends StatelessWidget {
               leading: const Icon(MdiIcons.information),
               title: const Text('About SWAT Nation'),
               trailing: const Icon(MdiIcons.chevronRight),
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: () => Routes.router.navigateTo(context, Routes.aboutUs),
             ),
 
             // Store
