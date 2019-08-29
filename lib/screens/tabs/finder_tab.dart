@@ -13,6 +13,7 @@ import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the team finder tab screen.
 class FinderTab extends StatefulWidget implements BaseTab {
@@ -218,7 +219,27 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                           return const SizedBox();
                         },
                       ),
-                      onTap: () => Routes.router.navigateTo(context, 'profile/${model.uid}'),
+                      onTap: () async {
+                        _dismissKeyboard();
+
+                        Future<void>.delayed(
+                          kKeyboardAnimationDuration,
+                          () async {
+                            final FirebaseUser currentUser = await AuthBloc
+                              .instance()
+                              .currentUser;
+                            if (currentUser == null) {
+                              return DialogHelper
+                                .instance()
+                                .showSignInDIalog(context: context);
+                            } else {
+                              Routes
+                                .router
+                                .navigateTo(context, 'profile/${model.uid}');
+                            }
+                          }
+                        );
+                      }
                     );
                   },
                   childCount: data.length,

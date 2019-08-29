@@ -2,6 +2,9 @@
 const String kAppIdiOS = '1:688037325190:ios:27b7368339d68b43';
 const String kAppIdAndroid = '1:688037325190:android:67e68583ed1a2d49';
 
+// Keyboard appear/dismiss
+const Duration kKeyboardAnimationDuration = Duration(milliseconds: 350);
+
 // Account constants
 const int kPasswordMinLength = 6;
 const int kDisplayNameMaxChararcters = 15;

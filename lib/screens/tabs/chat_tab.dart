@@ -131,14 +131,25 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                         key: UniqueKey(),
                         model: model,
                         onTap: (ChatModel model) async {
-                          final FirebaseUser currentUser = await AuthBloc.instance().currentUser;
-                          if (currentUser == null) {
-                            return DialogHelper.instance().showSignInDIalog(context: context);
-                          }
+                          _dismissKeyboard();
 
-                          if (model.author != currentUser.uid) {
-                            _showMessageOptions(context, model);
-                          }
+                          Future<void>.delayed(
+                            kKeyboardAnimationDuration,
+                            () async {
+                              final FirebaseUser currentUser = await AuthBloc
+                                .instance()
+                                .currentUser;
+                              if (currentUser == null) {
+                                return DialogHelper
+                                  .instance()
+                                  .showSignInDIalog(context: context);
+                              }
+
+                              if (model.author != currentUser.uid) {
+                                _showMessageOptions(context, model);
+                              }
+                            }
+                          );
                         },
                       );
                     },
