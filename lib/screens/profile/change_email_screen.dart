@@ -80,7 +80,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                     textInputAction: TextInputAction.next,
                     focusNode: emailNode,
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'New Email',
                       hintText: 'user@example.com',
                       errorText: snapshot.error,
                     ),

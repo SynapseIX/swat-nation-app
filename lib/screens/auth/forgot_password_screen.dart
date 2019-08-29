@@ -95,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     child: RaisedButton(
                       color: Colors.green,
                       child: const Text(
-                        'Change Email',
+                        'Reset Password',
                         style: TextStyle(
                           color: Colors.white,
                         ),
