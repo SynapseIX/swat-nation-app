@@ -7,6 +7,8 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
   final BehaviorSubject<String> _passwordSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _confirmPasswordSubject = BehaviorSubject<String>();
   final BehaviorSubject<String> _displayNameSubject = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _signInValidSubject = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _createAccountValidSubject = BehaviorSubject<bool>();
 
   Stream<String> get emailStream => _emailSubject
     .stream
@@ -29,25 +31,31 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
     .stream
     .transform(validateDisplayName);
   
-  BehaviorSubject<bool> get signInValidStream => Observable
+  Stream<bool> get signInValidStream => Observable
     .combineLatest2(
       emailStream,
       passwordStream,
       (String e, String p) => true,
-    );
+    ).doOnData((bool data) {
+      _signInValidSubject.add(data);
+    });
 
-  BehaviorSubject<bool> get createAccountValidStream => Observable
+  Stream<bool> get createAccountValidStream => Observable
     .combineLatest4(
       emailStream,
       passwordStream,
       confirmPasswordStream,
       displayNameStream,
       (String e, String p, String cp, String u) => true,
-    );
+    ).doOnData((bool data) {
+      _createAccountValidSubject.add(data);
+    });
 
   String get emailValue => _emailSubject.value;
   String get passwordValue => _passwordSubject.value;
   String get displayNameValue => _displayNameSubject.value;
+  bool get signInValidValue => _signInValidSubject.value;
+  bool get createAccountValidValue => _createAccountValidSubject.value;
 
   void Function(String) get onChangeEmail => _emailSubject.sink.add;
   void Function(String) get onChangePassword => _passwordSubject.sink.add;
@@ -61,5 +69,7 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
     _passwordSubject.close();
     _confirmPasswordSubject.close();
     _displayNameSubject.close();
+    _signInValidSubject.close();
+    _createAccountValidSubject.close();
   }
 }

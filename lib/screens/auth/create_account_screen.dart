@@ -214,7 +214,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               onSubmitted: (String value) {
                                 _dismissKeyboard();
 
-                                if (uiBloc.createAccountValidStream.value) {
+                                if (uiBloc.createAccountValidValue) {
                                   _submitCreateAccount(context);
                                 }
                               },

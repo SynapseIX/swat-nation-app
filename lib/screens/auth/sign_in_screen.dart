@@ -160,7 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               onSubmitted: (String value) {
                                 _dismissKeyboard();
 
-                                if (uiBloc.signInValidStream.value) {
+                                if (uiBloc.signInValidValue) {
                                   _submitSignIn(context);
                                 }
                               },
