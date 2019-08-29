@@ -78,7 +78,10 @@ class _AboutScreenState extends State<AboutScreen> {
                 cardList: HorizontalCardList(
                   height: 300.0,
                   cards: model.team.map((TeamMemberModel member) {
-                    return MemberCard(model: member);
+                    return MemberCard(
+                      key: UniqueKey(),
+                      model: member,
+                    );
                   }).toList(),
                 ),
               ),
