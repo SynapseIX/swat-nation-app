@@ -294,9 +294,7 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                       ),
                     ),
                     // TODO(itsprof): implement
-                    onPressed: () {
-                      Navigator.of(context).pop();                                      
-                    },
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ),
               ],

@@ -223,7 +223,7 @@ class _ClipScreenState extends State<ClipScreen>
                     fontSize: 18.0,
                   ),
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.pop(context),
               )
             ],
           ));

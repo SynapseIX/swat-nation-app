@@ -263,7 +263,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       final bool displayNameExists = await userBloc.displayNameExists(uiBloc.displayNameValue);
       if (displayNameExists) {
-        Navigator.of(context).pop();
+        Navigator.pop(context);
         return helper.showErrorDialog(
           context: context,
           title: 'Can\'t Create Account',
@@ -299,7 +299,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       helper.showErrorDialog(
         context: context,
         title: 'Can\'t Create Account',

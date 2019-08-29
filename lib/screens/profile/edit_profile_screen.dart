@@ -456,7 +456,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 leading: const Icon(MdiIcons.camera),
                 title: const Text('Take Picture'),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                   cameraCallBack();
                 },
               ),
@@ -466,7 +466,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Platform.isIOS ? 'Camera Roll' : 'Gallery'
                 ),
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                   galleryCallback();
                 },
               ),

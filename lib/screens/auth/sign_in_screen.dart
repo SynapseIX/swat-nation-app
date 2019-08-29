@@ -278,7 +278,7 @@ class _SignInScreenState extends State<SignInScreen> {
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       helper.showErrorDialog(
         context: context,
         title: 'Can\'t Sign In',
@@ -333,11 +333,13 @@ class _SignInScreenState extends State<SignInScreen> {
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       helper.showErrorDialog(
         context: context,
         title: 'Can\'t Log In With Facebook',
-        message: e.message ?? 'Unexpected error.',
+        message: e is String 
+          ? e
+          : e.message ?? 'Unexpected error.',
       );
     } finally {
       TabBarBloc.instance().setCurrentIndex(0);

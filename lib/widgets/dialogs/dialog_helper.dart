@@ -71,7 +71,7 @@ class DialogHelper {
                   width: double.infinity,
                   height: 40.0,
                   child: RaisedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.pop(context),
                     child: const Text('Dismiss'),
                   ),
                 ),
@@ -116,7 +116,7 @@ class DialogHelper {
                   width: double.infinity,
                   height: 40.0,
                   child: RaisedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.pop(context),
                     color: Colors.green,
                     child: const Text(
                       'Learn More',
@@ -131,7 +131,7 @@ class DialogHelper {
                   width: double.infinity,
                   height: 40.0,
                   child: RaisedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.pop(context),
                     child: const Text('Cancel'),
                   ),
                 ),
@@ -191,7 +191,7 @@ class DialogHelper {
                   width: double.infinity,
                   height: 40.0,
                   child: RaisedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.pop(context),
                     child: const Text('Cancel'),
                   ),
                 ),
