@@ -109,7 +109,17 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                       hintText: 'user@example.com',
                       errorText: snapshot.error,
                     ),
-                    onSubmitted: (String value) => _dismissKeyboard(),
+                    onSubmitted: (String value) {
+                      _dismissKeyboard();
+
+                      final bool emailIsValid = bloc.confirmEmailValue != null;
+                      final bool confirmEmailIsValid = bloc.confirmEmailValue != null;
+                      final bool formValid = emailIsValid && confirmEmailIsValid;
+
+                      if (formValid) {
+                        _submit(context);
+                      }
+                    },
                     onChanged: bloc.onChangeConfirmEmail,
                   );
                 }
@@ -132,27 +142,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                         ),
                       ),
                       onPressed: snapshot.hasData 
-                        ? () async {
-                          DialogHelper.instance().showWaitingDialog(
-                            context: context,
-                            title: 'Changing email...',
-                          );
-
-                          final PlatformException error = await AuthBloc
-                            .instance()
-                            .changeEmail(bloc.emailValue);
-                          
-                          final NavigationResult result = NavigationResult();
-                          if (error == null) {
-                            result.payload = 'Your email was successfully changed.';
-                          } else {
-                            result.error = error.message;
-                          }
-                          
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop(result);
-                        }
+                        ? () => _submit(context)
                         : null,
                     );
                   }
@@ -163,6 +153,28 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _submit(BuildContext context) async {
+    DialogHelper.instance().showWaitingDialog(
+      context: context,
+      title: 'Changing email...',
+    );
+
+    final PlatformException error = await AuthBloc
+      .instance()
+      .changeEmail(bloc.emailValue);
+    
+    final NavigationResult result = NavigationResult();
+    if (error == null) {
+      result.payload = 'Your email was successfully changed.';
+    } else {
+      result.error = error.message;
+    }
+    
+    Navigator.of(context)
+      ..pop()
+      ..pop(result);
   }
 
   void _dismissKeyboard() {

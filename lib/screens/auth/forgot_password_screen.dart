@@ -79,7 +79,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       errorText: snapshot.error,
                     ),
                     onSubmitted: (String value) {
-                      emailNode.nextFocus();
+                      _dismissKeyboard();
+
+                      if (snapshot.hasData) {
+                        _submit();
+                      }
                     },
                     onChanged: bloc.onChangeEmail,
                   ),
@@ -101,27 +105,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                       ),
                       onPressed: snapshot.hasData 
-                        ? () async {
-                          DialogHelper.instance().showWaitingDialog(
-                            context: context,
-                            title: 'Requesting password email...',
-                          );
-
-                          final PlatformException error = await AuthBloc
-                            .instance()
-                            .requestPasswordReset(bloc.emailValue);
-                          
-                          final NavigationResult result = NavigationResult();
-                          if (error == null) {
-                            result.payload = kResetPasswordRequestSent;
-                          } else {
-                            result.error = error.message;
-                          }
-                          
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop(result);
-                        }
+                        ? _submit
                         : null,
                     ),
                   )
@@ -132,6 +116,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _submit() async {
+    DialogHelper.instance().showWaitingDialog(
+      context: context,
+      title: 'Requesting password email...',
+    );
+
+    final PlatformException error = await AuthBloc
+      .instance()
+      .requestPasswordReset(bloc.emailValue);
+    
+    final NavigationResult result = NavigationResult();
+    if (error == null) {
+      result.payload = kResetPasswordRequestSent;
+    } else {
+      result.error = error.message;
+    }
+    
+    Navigator.of(context)
+      ..pop()
+      ..pop(result);
   }
 
   void _dismissKeyboard() {
