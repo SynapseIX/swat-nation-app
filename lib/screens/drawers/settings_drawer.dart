@@ -50,7 +50,7 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('About SWAT Nation'),
               trailing: const Icon(MdiIcons.chevronRight),
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             ),
 
@@ -60,7 +60,7 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Visit the Store'),
               trailing: const Icon(MdiIcons.chevronRight),
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             ),
 
@@ -72,7 +72,6 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Browse our Website'),
               onTap: () {
                 openUrl(kWebsite);
-                Navigator.of(context).pop();
               },
             ),
             ListTile(
@@ -80,7 +79,6 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Join the Community'),
               onTap: () {
                 openUrl(kFacebookGroup);
-                Navigator.of(context).pop();
               },
             ),
             ListTile(
@@ -88,7 +86,6 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Follow us on Twitter'),
               onTap: () {
                 openUrl(kTwitter);
-                Navigator.of(context).pop();
               },
             ),
             ListTile(
@@ -96,7 +93,6 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Check our Instagram'),
               onTap: () {
                 openUrl(kInstagram);
-                Navigator.of(context).pop();
               },
             ),
             ListTile(
@@ -104,7 +100,6 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Join the Xbox Club'),
               onTap: () {
                 openUrl(kXboxClub);
-                Navigator.of(context).pop();
               },
             ),
 
@@ -130,7 +125,6 @@ class SettingsDrawer extends StatelessWidget {
                     leading: const Icon(MdiIcons.logout),
                     title: const Text('Sign Out...'),
                     onTap: () {
-                      Navigator.of(context).pop();
                       showDialog<Dialog>(
                         context: context,
                         builder: (BuildContext context) {
@@ -169,9 +163,10 @@ class SettingsDrawer extends StatelessWidget {
                                     child: RaisedButton(
                                       color: Colors.red,
                                       textColor: Colors.white,
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        AuthBloc.instance().signOut();
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        await AuthBloc.instance().signOut();
+                                        Navigator.pop(context);
                                         TabBarBloc.instance().controller.jumpToPage(0);
                                       },
                                       child: const Text('Yes, sign me out'),
@@ -182,7 +177,7 @@ class SettingsDrawer extends StatelessWidget {
                                     width: double.infinity,
                                     height: 40.0,
                                     child: RaisedButton(
-                                      onPressed: () => Navigator.of(context).pop(),
+                                      onPressed: () => Navigator.pop(context),
                                       child: const Text('No, take me back'),
                                     ),
                                   ),
@@ -239,8 +234,7 @@ class _NoAuthHeader extends StatelessWidget {
               ),
             ),
           ),
-          onTap: () {
-            Navigator.pop(context);
+          onTap: () async {
             Routes.router.navigateTo(context, Routes.signIn);
           },
         ),
