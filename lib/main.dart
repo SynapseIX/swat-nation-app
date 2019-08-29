@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +28,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
+    Firestore.instance.settings(persistenceEnabled: true);
     ThemeBloc.instance().retrieveSavedTheme();
 
     SystemChrome.setPreferredOrientations(
