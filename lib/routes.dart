@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/screens/about/about_screen.dart';
 import 'package:swat_nation/screens/achievements/achievements_screen.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
 import 'package:swat_nation/screens/auth/forgot_password_screen.dart';
@@ -33,6 +34,8 @@ class Routes {
   static String clip = '/clip/:uid';
   static String clipAll = '/clip/all/:uid/:displayName/:me';
   static String clipCreate = '/clip/create/:uid';
+
+  static String aboutUs = '/about-us';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
@@ -100,6 +103,13 @@ class Routes {
     router.define(
       clipCreate,
       handler: CreateClipScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // About Us
+    router.define(
+      aboutUs,
+      handler: AboutScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
   }
