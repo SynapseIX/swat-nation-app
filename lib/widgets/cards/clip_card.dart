@@ -75,7 +75,7 @@ class ClipCard extends StatelessWidget {
                           fadeInDuration: const Duration(milliseconds: 300),
                           fit: BoxFit.cover,
                           placeholder: (BuildContext context, String url) {
-                            return Center(child: const CircularProgressIndicator());
+                            return const Center(child: CircularProgressIndicator());
                           },
                         );
                       }
@@ -86,8 +86,8 @@ class ClipCard extends StatelessWidget {
                   Container(
                     color: Colors.black54,
                   ),
-                  Center(
-                    child: const Icon(
+                  const Center(
+                    child: Icon(
                       MdiIcons.play,
                       color: Colors.white,
                       size: 50.0,

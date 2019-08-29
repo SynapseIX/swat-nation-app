@@ -29,14 +29,14 @@ class AuthScreensBloc extends BaseBloc with AuthScreensdValidator {
     .stream
     .transform(validateDisplayName);
   
-  Stream<bool> get signInValidStream => Observable
+  BehaviorSubject<bool> get signInValidStream => Observable
     .combineLatest2(
       emailStream,
       passwordStream,
       (String e, String p) => true,
     );
 
-  Stream<bool> get createAccountValidStream => Observable
+  BehaviorSubject<bool> get createAccountValidStream => Observable
     .combineLatest4(
       emailStream,
       passwordStream,

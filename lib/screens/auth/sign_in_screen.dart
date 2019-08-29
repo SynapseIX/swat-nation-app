@@ -157,7 +157,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                 hintText: 'password',
                                 errorText: snapshot.error,
                               ),
-                              onSubmitted: (String value) => _dismissKeyboard(),
+                              onSubmitted: (String value) {
+                                _dismissKeyboard();
+
+                                if (uiBloc.signInValidStream.value) {
+                                  _submitSignIn(context);
+                                }
+                              },
                               onChanged: uiBloc.onChangePassword,
                             );
                           },

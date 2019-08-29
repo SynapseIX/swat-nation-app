@@ -31,21 +31,21 @@ dependencies:
 
   # Plugins
   shared_preferences: ^0.5.3+4
-  url_launcher: ^5.1.1
-  image_picker: ^0.6.1+3
+  url_launcher: ^5.1.2
+  image_picker: ^0.6.1+4
   video_player: ^0.10.2
 
   #FlutterFire
-  firebase_core: ^0.4.0+8
-  firebase_auth: ^0.14.0
-  cloud_firestore: ^0.12.9
-  firebase_storage: ^3.0.5
+  firebase_core: ^0.4.0+9
+  firebase_auth: ^0.14.0+4
+  cloud_firestore: ^0.12.9+1
+  firebase_storage: ^3.0.6
 
   # Community Packages
-  rxdart: ^0.22.0
+  rxdart: ^0.22.2
   fluro: ^1.5.1
   flutter_facebook_login: ^2.0.1
-  material_design_icons_flutter: ^3.2.3895
+  material_design_icons_flutter: ^3.2.4096
   cached_network_image: ^1.1.1
   wakelock: ^0.1.2+8
 
