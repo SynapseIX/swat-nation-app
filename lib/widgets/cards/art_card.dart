@@ -66,7 +66,7 @@ class ArtCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.bottomLeft,
                     child: const Text(
-                      'Discover this week\'s art piece by Zombie AZF',
+                      'Discover this week\'s art piece',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
