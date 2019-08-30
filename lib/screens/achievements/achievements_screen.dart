@@ -32,8 +32,8 @@ class AchievementsScreen extends StatelessWidget {
             if (!snapshot.hasData) {
               return Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                child: Center(
-                  child: const CircularProgressIndicator(),
+                child: const Center(
+                  child: CircularProgressIndicator(),
                 ),
               );
             }

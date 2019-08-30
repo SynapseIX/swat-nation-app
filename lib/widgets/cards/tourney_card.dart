@@ -34,7 +34,7 @@ class TourneyCard extends StatelessWidget {
           height: double.infinity,
           fit: BoxFit.fill,
           placeholder: (BuildContext context, String url) {
-            return Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

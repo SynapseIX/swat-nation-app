@@ -2,6 +2,10 @@
 const String kAppIdiOS = '1:688037325190:ios:27b7368339d68b43';
 const String kAppIdAndroid = '1:688037325190:android:67e68583ed1a2d49';
 
+// Microsoft's "Game Content Usage Rules"
+const String kGameContentUsageRules = 'Halo Infinite, Halo 5: Guardians, Halo: The Master Chief Collection, Halo 4, Halo 3 © Microsoft Corporation. SWAT Nation was created under Microsoft\'s "Game Content Usage Rules" using assets from Halo Infinite, Halo 5: Guardians, Halo: The Master Chief Collection, Halo 4, Halo 3, and it is not endorsed by or affiliated with Microsoft.';
+const String kContentUsageRulesUrl = 'https://www.xbox.com/en-US/developers/rules';
+
 // Keyboard appear/dismiss
 const Duration kKeyboardAnimationDuration = Duration(milliseconds: 350);
 

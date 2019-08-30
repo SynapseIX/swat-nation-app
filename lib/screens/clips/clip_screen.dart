@@ -26,8 +26,8 @@ class ClipScreen extends StatefulWidget {
 
         final Widget emptyState = Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: Center(
-            child: const CircularProgressIndicator(),
+          child: const Center(
+            child: CircularProgressIndicator(),
           ),
         );
 
