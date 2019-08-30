@@ -77,8 +77,8 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
       slivers: <Widget>[
         _AppBar(userBloc: userBloc),
 
-        // Upcoming Tournaments
         // TODO(itsprof): implement
+        // Upcoming Tournaments
         CardSection(
           header: const TextHeader('Upcoming\nTournaments'),
           cardList: HorizontalCardList(
@@ -145,8 +145,8 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
           },
         ),
 
-        // #swatisart
         // TODO(itsprof): implement
+        // #swatisart
         CardSection(
           header: const TextHeader('#swatisart',),
           cardList: HorizontalCardList(
