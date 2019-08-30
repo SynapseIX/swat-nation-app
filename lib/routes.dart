@@ -116,6 +116,7 @@ class Routes {
       transitionType: TransitionType.native,
     );
 
+    // Image Viewer
     router.define(
       imageViewer,
       handler: ImageViewer.routeHandler(),
