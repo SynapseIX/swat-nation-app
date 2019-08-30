@@ -50,7 +50,7 @@ class NewsCard extends StatelessWidget {
                 height: double.infinity,
                 fit: BoxFit.cover,
                 placeholder: (BuildContext context, String url) {
-                  return Center(child: const CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 },
               ),
               if (thumbnailSrc != null)

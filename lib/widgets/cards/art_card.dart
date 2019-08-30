@@ -46,7 +46,7 @@ class ArtCard extends StatelessWidget {
                   imageUrl: src,
                   fadeInDuration: const Duration(milliseconds: 300),
                   placeholder: (BuildContext context, String url) {
-                    return Center(child: const CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   },
                 ),
                 if (latest)
