@@ -15,6 +15,7 @@ import 'package:swat_nation/models/announcement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/device_model.dart';
+import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/art_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
 import 'package:swat_nation/widgets/cards/news_card.dart';
@@ -129,16 +130,26 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
               return const SliverToBoxAdapter(child: SizedBox());
             }
 
+            final Widget Function(AnnouncementModel) cardMapper = (AnnouncementModel model) {
+                return NewsCard(
+                  key: UniqueKey(),
+                  model: model,
+                  width: cardWidth,
+                );
+            };
+
+            final List<Widget> cards = snapshot
+              .data
+              .map(cardMapper)
+              .toList()
+              ..add(ViewAllCard(
+                onTap: () => openUrl('https://swatnation.net/community'),
+              ));
+
             return CardSection(
               header: const TextHeader('Announcements'),
               cardList: HorizontalCardList(
-                cards: snapshot.data.map((AnnouncementModel announcement) {
-                  return NewsCard(
-                    key: UniqueKey(),
-                    model: announcement,
-                    width: cardWidth,
-                  );
-                }).toList(),
+                cards: cards,
               ),
               sliver: true,
             );

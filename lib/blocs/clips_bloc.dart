@@ -79,6 +79,9 @@ class ClipsBloc extends BaseBloc with ClipTransformer {
               (ClipModel data) {
                 _randomClipSubject.add(data);
               },
+              onError: (Object error) {
+                _randomClipSubject.addError('There are no clips to choose from');
+              }
             );
         }
       );
