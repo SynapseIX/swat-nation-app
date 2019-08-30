@@ -28,8 +28,6 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('THUMB ${model.thumbnail}');
-
     final Widget card = Container(
       margin: margin,
       padding: padding,
