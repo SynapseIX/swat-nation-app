@@ -9,7 +9,7 @@ class TourneyCard extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
     this.width = 356.0,
-    this.height = 200.0,
+    this.height = double.infinity,
     this.sliver = false,
   }) : super(key: key);
 
