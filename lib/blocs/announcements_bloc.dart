@@ -9,6 +9,7 @@ class AnnouncementsBloc extends BaseBloc with AnnouncementsTransformer {
 
   Stream<List<AnnouncementModel>> get latest => _firestore
     .collection(announcements)
+    .orderBy('isNew', descending: true)
     .limit(5)
     .snapshots()
     .transform(transformAnnouncements);
