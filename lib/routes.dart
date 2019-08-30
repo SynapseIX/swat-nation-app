@@ -8,6 +8,7 @@ import 'package:swat_nation/screens/auth/sign_in_screen.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
 import 'package:swat_nation/screens/clips/clip_screen.dart';
 import 'package:swat_nation/screens/clips/create_clip_screen.dart';
+import 'package:swat_nation/screens/images/image_viewer.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/screens/profile/change_email_screen.dart';
 import 'package:swat_nation/screens/profile/edit_profile_screen.dart';
@@ -37,11 +38,13 @@ class Routes {
 
   static String aboutUs = '/about-us';
 
+  static String imageViewer = '/image-viewer/:url';
+
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
         // TODO(itsprof): create Not Found screen
-        return null;
+        return Center(child: const Text('404'),);
       },
     );
 
@@ -111,6 +114,12 @@ class Routes {
       aboutUs,
       handler: AboutScreen.routeHandler(),
       transitionType: TransitionType.native,
+    );
+
+    router.define(
+      imageViewer,
+      handler: ImageViewer.routeHandler(),
+      transitionType: TransitionType.fadeIn,
     );
   }
 }

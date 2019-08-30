@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:swat_nation/blocs/about_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/about_model.dart';
 import 'package:swat_nation/models/team_member_model.dart';
+import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/member_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
@@ -56,15 +59,12 @@ class _AboutScreenState extends State<AboutScreen> {
         stream: bloc.infoStream,
         builder: (BuildContext context, AsyncSnapshot<AboutModel> snapshot) {
           if (snapshot.hasError) {
-            print(snapshot.error);
+            print('About error: ${snapshot.error}');
+            return const SizedBox();
           }
 
           if (!snapshot.hasData) {
-            return const SliverToBoxAdapter(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           final AboutModel model = snapshot.data;
@@ -96,8 +96,11 @@ class _AboutScreenState extends State<AboutScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  // TODO(itsprof): implement image viewer
-                  onTap: () {},
+                  onTap: () {
+                    final List<int> bytes = utf8.encode(model.roadmapUrl);
+                    final String encodedUrl = base64.encode(bytes);
+                    Routes.router.navigateTo(context, '/image-viewer/$encodedUrl');
+                  },
                   child: Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     semanticContainer: true,

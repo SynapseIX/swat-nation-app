@@ -92,7 +92,7 @@ class _ClipScreenState extends State<ClipScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        print('Readding listener');
+        print('Re-adding listener');
         controller.addListener(_listener);
         break;
       case AppLifecycleState.paused:

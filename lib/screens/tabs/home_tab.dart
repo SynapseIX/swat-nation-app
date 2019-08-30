@@ -98,7 +98,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         StreamBuilder<ClipModel>(
           stream: clipsBloc.randomClipStream,
           builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
-            if (!snapshot.hasData) {
+            if (snapshot.hasError || !snapshot.hasData) {
               return const SliverToBoxAdapter(child: SizedBox());
             }
 

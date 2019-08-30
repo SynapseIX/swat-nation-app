@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
@@ -169,23 +171,29 @@ class _PublicHeader extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF333333),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      width: 3.0,
-                      color: Colors.white,
-                    ),
+                GestureDetector(
+                  onTap: () => _navigateToImageViewer(
+                    context: context,
+                    imageUrl: user.photoUrl ?? kDefaultAvi,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(80.0),
-                    child: CachedNetworkImage(
-                      imageUrl: user.photoUrl ?? kDefaultAvi,
-                      width: 80.0,
-                      height: 80.0,
-                      fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 300),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF333333),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 3.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(80.0),
+                      child: CachedNetworkImage(
+                        imageUrl: user.photoUrl ?? kDefaultAvi,
+                        width: 80.0,
+                        height: 80.0,
+                        fit: BoxFit.cover,
+                        fadeInDuration: const Duration(milliseconds: 300),
+                      ),
                     ),
                   ),
                 ),
@@ -299,6 +307,15 @@ class _PublicHeader extends StatelessWidget {
       ),
     );
   }
+
+  Future<dynamic> _navigateToImageViewer({
+    @required BuildContext context,
+    @required String imageUrl,
+  }) {
+    final List<int> bytes = utf8.encode(imageUrl);
+    final String encodedUrl = base64.encode(bytes);
+    return Routes.router.navigateTo(context, '/image-viewer/$encodedUrl');
+  }
 }
 
 class _PrivateHeader extends StatelessWidget {
@@ -325,23 +342,29 @@ class _PrivateHeader extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF333333),
-              shape: BoxShape.circle,
-              border: Border.all(
-                width: 3.0,
-                color: Colors.white,
-              ),
+          GestureDetector(
+            onTap: () => _navigateToImageViewer(
+              context: context,
+              imageUrl: user.photoUrl ?? kDefaultAvi,
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40.0),
-              child: CachedNetworkImage(
-                imageUrl: user.photoUrl ?? kDefaultAvi,
-                width: 40.0,
-                height: 40.0,
-                fit: BoxFit.cover,
-                fadeInDuration: const Duration(milliseconds: 300),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF333333),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  width: 3.0,
+                  color: Colors.white,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(40.0),
+                child: CachedNetworkImage(
+                  imageUrl: user.photoUrl ?? kDefaultAvi,
+                  width: 40.0,
+                  height: 40.0,
+                  fit: BoxFit.cover,
+                  fadeInDuration: const Duration(milliseconds: 300),
+                ),
               ),
             ),
           ),
@@ -366,6 +389,15 @@ class _PrivateHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<dynamic> _navigateToImageViewer({
+    @required BuildContext context,
+    @required String imageUrl,
+  }) {
+    final List<int> bytes = utf8.encode(imageUrl);
+    final String encodedUrl = base64.encode(bytes);
+    return Routes.router.navigateTo(context, '/image-viewer/$encodedUrl');
   }
 }
 
