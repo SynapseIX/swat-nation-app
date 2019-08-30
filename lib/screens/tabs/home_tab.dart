@@ -5,11 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_tab.dart';
+import 'package:swat_nation/blocs/announcements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/tab_bar_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/announcement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/device_model.dart';
@@ -40,6 +42,7 @@ class HomeTab extends StatefulWidget implements BaseTab {
 class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   UserBloc userBloc;
   ClipsBloc clipsBloc;
+  AnnouncementsBloc announcementsBloc;
 
   @override
   void initState() {
@@ -51,6 +54,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
     clipsBloc = ClipsBloc();
     clipsBloc.fetchRandomClip(seed);
 
+    announcementsBloc = AnnouncementsBloc();
     super.initState();
   }
 
@@ -58,6 +62,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
   void dispose() {
     userBloc.dispose();
     clipsBloc.dispose();
+    announcementsBloc.dispose();
     super.dispose();
   }
   
@@ -117,32 +122,27 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         ),
 
         // Announcements
-        // TODO(itsprof): implement
-        CardSection(
-          header: const TextHeader('Announcements'),
-          cardList: HorizontalCardList(
-            cards: <Widget>[
-              NewsCard(
-                title: 'New App Launched',
-                excerpt: 'We\'ve launched our new mobile app, and we\'re so excited about it! This is your new Swiss Army knife for all your SWAT needs.',
-                thumbnailSrc: 'https://picsum.photos/640/360?random=2',
-                width: cardWidth,
-                isNew: true,
+        StreamBuilder<List<AnnouncementModel>>(
+          stream: announcementsBloc.latest,
+          builder: (BuildContext context, AsyncSnapshot<List<AnnouncementModel>> snapshot) {
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const SliverToBoxAdapter(child: SizedBox());
+            }
+
+            return CardSection(
+              header: const TextHeader('Announcements'),
+              cardList: HorizontalCardList(
+                cards: snapshot.data.map((AnnouncementModel announcement) {
+                  return NewsCard(
+                    key: UniqueKey(),
+                    model: announcement,
+                    width: cardWidth,
+                  );
+                }).toList(),
               ),
-              NewsCard(
-                title: 'Tournament Rules',
-                excerpt: 'These are the rules that we’ve set for ANY tournament hosted by SWAT Nation. Knowledge is power.',
-                thumbnailSrc: 'https://picsum.photos/640/360?random=3',
-                width: cardWidth,
-              ),
-              NewsCard(
-                title: 'Tips For New Streamers',
-                excerpt: 'Prof discusses what, from his experience, is needed to grow a successful channel on Twitch or any other streaming platform.',
-                width: cardWidth,
-              ),
-            ],
-          ),
-          sliver: true,
+              sliver: true,
+            );
+          },
         ),
 
         // #swatisart

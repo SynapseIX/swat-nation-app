@@ -5,9 +5,10 @@ import 'package:swat_nation/models/announcement_model.dart';
 
 class AnnouncementsBloc extends BaseBloc with AnnouncementsTransformer {
   final Firestore _firestore = Firestore.instance;
+  final String announcements = 'announcements';
 
   Stream<List<AnnouncementModel>> get latest => _firestore
-    .collection('announcements')
+    .collection(announcements)
     .limit(5)
     .snapshots()
     .transform(transformAnnouncements);
