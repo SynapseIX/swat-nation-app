@@ -72,7 +72,7 @@ class AchievementCard extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        final String unlocked = humanizeTimestamp(model.unlocked, 'MMMM dd, yyyy');
+        final String unlocked = humanizeTimestamp(model.unlocked, 'MMMM d, yyyy');
 
         return Dialog(
           child: FutureBuilder<BadgeModel>(

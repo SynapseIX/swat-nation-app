@@ -7,6 +7,7 @@ class AboutModel extends BaseModel {
   AboutModel.fromSnapshot(DocumentSnapshot snapshot) {
     headerUrl = snapshot.data['headerUrl'];
     teamUrl = snapshot.data['teamUrl'];
+    roadmapUrl = snapshot.data['roadmapUrl'];
     text = snapshot.data['text'];
 
     final List<TeamMemberModel> members = <TeamMemberModel>[];
@@ -18,6 +19,7 @@ class AboutModel extends BaseModel {
   
   String headerUrl;
   String teamUrl;
+  String roadmapUrl;
   String text;
   List<TeamMemberModel> team;
 

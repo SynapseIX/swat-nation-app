@@ -57,8 +57,10 @@ class _AboutScreenState extends State<AboutScreen> {
           }
 
           if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return const SliverToBoxAdapter(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             );
           }
 
@@ -79,7 +81,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   height: 300.0,
                   cards: model.team.map((TeamMemberModel member) {
                     return MemberCard(
-                      key: UniqueKey(),
+                      key: PageStorageKey<String>(member.handle),
                       model: member,
                     );
                   }).toList(),
@@ -90,12 +92,16 @@ class _AboutScreenState extends State<AboutScreen> {
               TextHeader('The ${DateTime.now().year} Roadmap'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  semanticContainer: true,
-                  child: CachedNetworkImage(
-                    imageUrl: 'https://images.squarespace-cdn.com/content/v1/5bfb2111372b964077959077/1562944049862-3WTU5D09XURRSB97GF9R/ke17ZwdGBToddI8pDm48kNvT88LknE-K9M4pGNO0Iqd7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1USOFn4xF8vTWDNAUBm5ducQhX-V3oVjSmr829Rco4W2Uo49ZdOtO_QXox0_W7i2zEA/public.jpeg?format=500w',
-                    fadeInDuration: const Duration(milliseconds: 300),
+                child: GestureDetector(
+                  // TODO(itsprof): implement image viewer
+                  onTap: () {},
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    semanticContainer: true,
+                    child: CachedNetworkImage(
+                      imageUrl: model.roadmapUrl,
+                      fadeInDuration: const Duration(milliseconds: 300),
+                    ),
                   ),
                 ),
               )

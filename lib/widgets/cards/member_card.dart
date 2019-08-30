@@ -100,7 +100,7 @@ class _MemberCardState extends State<MemberCard> {
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            humanizeTimestamp(widget.model.birthday, 'MMMM dd'),
+                            humanizeTimestamp(widget.model.birthday, 'MMMM d'),
                             style: const TextStyle(
                               color: Colors.white,
                             ),
