@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^5.1.2
   image_picker: ^0.6.1+4
   video_player: ^0.10.2
+  share: ^0.6.2+1
 
   #FlutterFire
   firebase_core: ^0.4.0+9
@@ -49,6 +50,7 @@ dependencies:
   cached_network_image: ^1.1.1
   wakelock: ^0.1.2+8
   photo_view: ^0.4.2
+  sprintf: ^4.0.2
 
 dev_dependencies:
   flutter_test:

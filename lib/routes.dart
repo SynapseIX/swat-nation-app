@@ -44,7 +44,7 @@ class Routes {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
         // TODO(itsprof): create Not Found screen
-        return Center(child: const Text('404'),);
+        return Material(child: const Center(child: Text('404')));
       },
     );
 

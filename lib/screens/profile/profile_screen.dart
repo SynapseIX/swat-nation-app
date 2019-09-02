@@ -62,7 +62,7 @@ class ProfileScreen extends StatefulWidget {
   final UserModel model;
 
   @override
-  State<StatefulWidget> createState() => _ProfileScreenState();
+  State createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {

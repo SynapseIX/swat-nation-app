@@ -24,7 +24,7 @@ class ChangeEmailScreen extends StatefulWidget {
   }
 
   @override
-  State<ChangeEmailScreen> createState() => _ChangeEmailScreenState();
+  State createState() => _ChangeEmailScreenState();
 }
 
 class _ChangeEmailScreenState extends State<ChangeEmailScreen> {

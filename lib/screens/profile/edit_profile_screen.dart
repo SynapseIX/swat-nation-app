@@ -51,7 +51,7 @@ class EditProfileScreen extends StatefulWidget {
   }
   
   @override
-  State<StatefulWidget> createState() => _EditProfileScreenState();
+  State createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
