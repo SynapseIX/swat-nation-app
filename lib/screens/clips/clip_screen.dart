@@ -29,18 +29,11 @@ class ClipScreen extends StatefulWidget {
         final ClipsBloc bloc = ClipsBloc();
         final String uid = parameters['uid'].first;
 
-        final Widget emptyState = Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-
         return FutureBuilder<ClipModel>(
           future: bloc.clipByUid(uid),
           builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
             if (snapshot.hasError || !snapshot.hasData) {
-              return emptyState;
+              return _EmptyState();
             }
 
             final ClipModel clip = snapshot.data;
@@ -48,7 +41,7 @@ class ClipScreen extends StatefulWidget {
               future: extractClipInfo(clip.link),
               builder: (BuildContext context, AsyncSnapshot<ClipModelProxy> snapshot) {
                 if (!snapshot.hasData) {
-                  return emptyState;
+                  return _EmptyState();
                 }
                 
                 final ClipModelProxy clipInfo = snapshot.data;
@@ -238,23 +231,7 @@ class _ClipScreenState extends State<ClipScreen>
             );
           }
 
-          return Center(child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const CircularProgressIndicator(),
-              const SizedBox(height: 8.0),
-              FlatButton(
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 18.0,
-                  ),
-                ),
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
-          ));
+          return _EmptyState();
         },
       ),
     );
@@ -344,6 +321,31 @@ class _ControlsOverlay extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const CircularProgressIndicator(),
+          const SizedBox(height: 8.0),
+          FlatButton(
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 18.0,
+              ),
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
       ),
     );
   }

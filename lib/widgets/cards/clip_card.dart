@@ -105,15 +105,26 @@ class ClipCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(
-                              model.title ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0
-                              ),
+                            if (model.title != null)
+                            Row(
+                              children: <Widget>[
+                                const Icon(
+                                  MdiIcons.filmstrip,
+                                  color: Colors.white,
+                                  // size: 17.0,
+                                ),
+                                const SizedBox(width: 4.0),
+                                Text(
+                                  model.title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0
+                                  ),
+                                ),
+                              ],
                             ),
                             FutureBuilder<UserModel>(
                               future: userBloc.userByUid(model.author),
@@ -149,7 +160,7 @@ class ClipCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 4.0),
                             Text(
-                              'Created ${humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy')}',
+                              'Shared ${humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy')}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontStyle: FontStyle.italic
