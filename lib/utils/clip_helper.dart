@@ -2,12 +2,12 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/models/clip_info_model.dart';
+import 'package:swat_nation/models/clip_model_proxy.dart';
 
 /// Extract information from an XboxClips.com link.
 /// 
-/// Returns a decoded `ClipInfoModel` object with the clip's information.
-Future<ClipInfoModel> extractClipInfo(String link) async {
+/// Returns a decoded `ClipModelProxy` object with the clip's information.
+Future<ClipModelProxy> extractClipInfo(String link) async {
   if (link == null || link.isEmpty) {
     return null;
   }
@@ -24,7 +24,7 @@ Future<ClipInfoModel> extractClipInfo(String link) async {
     final String thumbnail = video.attributes['poster'];
     final String videoUrl = video.children.first.attributes['src'];
 
-    return ClipInfoModel(
+    return ClipModelProxy(
       thumbnail: thumbnail,
       videoUrl: videoUrl,
       link: link,

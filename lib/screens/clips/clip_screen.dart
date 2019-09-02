@@ -7,8 +7,8 @@ import 'package:sprintf/sprintf.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
-import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/models/clip_model_proxy.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/utils/clip_helper.dart';
 import 'package:video_player/video_player.dart';
@@ -21,7 +21,7 @@ class ClipScreen extends StatefulWidget {
     @required this.model,
   }) : super(key: key);
   
-  final ClipInfoModel model;
+  final ClipModelProxy model;
 
   static Handler routeHandler() {
     return Handler(
@@ -38,21 +38,23 @@ class ClipScreen extends StatefulWidget {
 
         return FutureBuilder<ClipModel>(
           future: bloc.clipByUid(uid),
-          builder: (BuildContext context, AsyncSnapshot<ClipModel> clipSnapshot) {
-            if (clipSnapshot.hasError || !clipSnapshot.hasData) {
+          builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
+            if (snapshot.hasError || !snapshot.hasData) {
               return emptyState;
             }
 
-            final ClipModel clip = clipSnapshot.data;
-            return FutureBuilder<ClipInfoModel>(
+            final ClipModel clip = snapshot.data;
+            return FutureBuilder<ClipModelProxy>(
               future: extractClipInfo(clip.link),
-              builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<ClipModelProxy> snapshot) {
                 if (!snapshot.hasData) {
                   return emptyState;
                 }
                 
-                snapshot.data.author = clipSnapshot.data.author;
-                return ClipScreen(model: snapshot.data);
+                final ClipModelProxy clipInfo = snapshot.data;
+                clipInfo.author = clip.author;
+                clipInfo.title = clip.title;
+                return ClipScreen(model: clipInfo);
               },
             );
           },
@@ -164,6 +166,10 @@ class _ClipScreenState extends State<ClipScreen>
                     widget.model.title ?? 'Watching a Clip',
                     overflow: TextOverflow.ellipsis,
                   ),
+                  leading: IconButton(
+                    icon: const Icon(MdiIcons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                   actions: <Widget>[
                     IconButton(
                       icon: const Icon(MdiIcons.share),
@@ -266,7 +272,7 @@ class _ControlsOverlay extends StatelessWidget {
   });
   
   final VideoPlayerController controller;
-  final ClipInfoModel model;
+  final ClipModelProxy model;
   final double opacity;
   final bool stopped;
   final VoidCallback onTapPlayback;

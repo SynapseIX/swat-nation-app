@@ -63,4 +63,4 @@ const int kMaxMessageCharacters = 140;
 const int kAchievementColumnCount = 3;
 
 // Share
-const String kShareClip = 'Clip shared on SWAT Nation by %s: %s';
+const String kShareClip = 'Clip from XboxClips.com shared on SWAT Nation by %s: %s';

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
-import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/models/clip_model_proxy.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/clip_helper.dart';
@@ -45,9 +45,9 @@ class ClipCard extends StatelessWidget {
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: FutureBuilder<ClipInfoModel>(
+          child: FutureBuilder<ClipModelProxy>(
             future: extractClipInfo(model.link),
-            builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<ClipModelProxy> snapshot) {
               if (snapshot.hasError) {
                 return Center(
                   child: Text(snapshot.error),

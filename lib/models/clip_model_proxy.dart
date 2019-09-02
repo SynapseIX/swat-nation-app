@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_model.dart';
 
 /// Represents an XboxClips.com clip information.
-class ClipInfoModel extends BaseModel {
-  ClipInfoModel({
+class ClipModelProxy extends BaseModel {
+  ClipModelProxy({
     @required this.thumbnail,
     @required this.videoUrl,
     @required this.link,
@@ -11,7 +11,7 @@ class ClipInfoModel extends BaseModel {
     this.author,
   });
 
-  ClipInfoModel.blank();
+  ClipModelProxy.blank();
 
   String thumbnail;
   String videoUrl;
