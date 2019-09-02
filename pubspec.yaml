@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^5.1.2
   image_picker: ^0.6.1+4
   video_player: ^0.10.2
+  share: ^0.6.2+1
 
   #FlutterFire
   firebase_core: ^0.4.0+9
