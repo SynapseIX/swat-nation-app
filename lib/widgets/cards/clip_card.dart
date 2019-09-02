@@ -45,7 +45,7 @@ class ClipCard extends StatelessWidget {
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          color: Colors.cyanAccent,
+          color: const Color(0xFF333333),
           child: FutureBuilder<ClipModelProxy>(
             future: extractClipInfo(model.link),
             builder: (BuildContext context, AsyncSnapshot<ClipModelProxy> snapshot) {
