@@ -45,117 +45,124 @@ class ClipCard extends StatelessWidget {
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.cyanAccent,
-            child: GestureDetector(
-              // TODO(itsprof): play insterstitial if not premium
-              onTap: () async {
-                DialogHelper.instance().showWaitingDialog(
-                  context: context,
-                  title: 'Loading clip...',
+          child: FutureBuilder<ClipInfoModel>(
+            future: extractClipInfo(model.link),
+            builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(snapshot.error),
                 );
+              }
 
-                await clipsBloc.reseed(model);
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
 
-                Navigator.pop(context);
-                Routes.router.navigateTo(context, 'clip/${model.uid}');
-              },
-              child: Stack(
-                children: <Widget>[
-                  FutureBuilder<ClipInfoModel>(
-                    future: extractClipInfo(model.link),
-                    builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
-                      if (snapshot.hasData) {
-                        return CachedNetworkImage(
-                          imageUrl: snapshot.data.thumbnail,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fadeInDuration: const Duration(milliseconds: 300),
-                          fit: BoxFit.cover,
-                          placeholder: (BuildContext context, String url) {
-                            return const Center(child: CircularProgressIndicator());
-                          },
-                        );
-                      }
+              return GestureDetector(
+                onTap: () async {
+                  DialogHelper.instance().showWaitingDialog(
+                    context: context,
+                    title: 'Loading clip...',
+                  );
 
-                      return const SizedBox();
-                    },
-                  ),
-                  Container(
-                    color: Colors.black54,
-                  ),
-                  const Center(
-                    child: Icon(
-                      MdiIcons.play,
-                      color: Colors.white,
-                      size: 50.0,
-                    ),
-                  ),
-                  Positioned(
-                    left: 8.0,
-                    bottom: 8.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          model.title ?? '',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0
-                          ),
-                        ),
-                        FutureBuilder<UserModel>(
-                          future: userBloc.userByUid(model.author),
-                          builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
-                            if (snapshot.hasData) {
-                              return Text(
-                                'Gameplay by ${snapshot.data.displayName}',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                ),
-                              );
-                            }
+                  await clipsBloc.reseed(model);
 
-                            return const SizedBox();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 8.0,
-                    right: 8.0,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const Icon(
-                          MdiIcons.calendar,
+                  Navigator.pop(context);
+                  Routes.router.navigateTo(context, 'clip/${model.uid}');
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.cyanAccent,
+                  child: Stack(
+                    children: <Widget>[
+                      CachedNetworkImage(
+                        imageUrl: snapshot.data.thumbnail,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fadeInDuration: const Duration(milliseconds: 300),
+                        fit: BoxFit.cover,
+                        placeholder: (BuildContext context, String url) {
+                          return const Center(child: CircularProgressIndicator());
+                        },
+                      ),
+                      Container(
+                        color: Colors.black54,
+                      ),
+                      const Center(
+                        child: Icon(
+                          MdiIcons.play,
                           color: Colors.white,
-                          size: 17.0,
+                          size: 50.0,
                         ),
-                        const SizedBox(width: 4.0),
-                        Text(
-                          'Created ${humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy')}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic
-                          ),
+                      ),
+                      Positioned(
+                        left: 8.0,
+                        bottom: 8.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              model.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0
+                              ),
+                            ),
+                            FutureBuilder<UserModel>(
+                              future: userBloc.userByUid(model.author),
+                              builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    'Gameplay by ${snapshot.data.displayName}',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                    ),
+                                  );
+                                }
+
+                                return const SizedBox();
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        top: 8.0,
+                        right: 8.0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Icon(
+                              MdiIcons.calendar,
+                              color: Colors.white,
+                              size: 17.0,
+                            ),
+                            const SizedBox(width: 4.0),
+                            Text(
+                              'Created ${humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy')}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontStyle: FontStyle.italic
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            }
           ),
         ),
       ),

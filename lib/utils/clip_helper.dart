@@ -14,8 +14,12 @@ Future<ClipInfoModel> extractClipInfo(String link) async {
 
   if (link.startsWith(kXboxClipsHost)) {
     final http.Response response = await http.get(link);
-    final dom.Document document = parser.parse(response.body);
 
+    if (response.statusCode != 200) {
+      throw '[${response.statusCode}] Error getting clip from XboxClips.com';
+    }
+
+    final dom.Document document = parser.parse(response.body);
     final dom.Element video = document.getElementById('videoPlayer');
     final String thumbnail = video.attributes['poster'];
     final String videoUrl = video.children.first.attributes['src'];
