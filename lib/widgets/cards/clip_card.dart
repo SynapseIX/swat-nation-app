@@ -45,6 +45,7 @@ class ClipCard extends StatelessWidget {
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
+          color: Colors.cyanAccent,
           child: FutureBuilder<ClipModelProxy>(
             future: extractClipInfo(model.link),
             builder: (BuildContext context, AsyncSnapshot<ClipModelProxy> snapshot) {
@@ -75,7 +76,6 @@ class ClipCard extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Colors.cyanAccent,
                   child: Stack(
                     children: <Widget>[
                       CachedNetworkImage(
