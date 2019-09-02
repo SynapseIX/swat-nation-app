@@ -34,7 +34,7 @@ class NewsCard extends StatelessWidget {
       width: width,
       height: height,
       child: GestureDetector(
-        onTap: () => openUrl(model.link, true),
+        onTap: () => openUrl(model.link),
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
