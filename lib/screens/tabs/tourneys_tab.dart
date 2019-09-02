@@ -7,7 +7,7 @@ class TourneysTab extends StatefulWidget implements BaseTab {
   const TourneysTab({ Key key }) : super(key: key);
   
   @override
-  State<StatefulWidget> createState() => _TourneysTabState();
+  State createState() => _TourneysTabState();
 
   @override
   IconData get icon => MdiIcons.trophy;

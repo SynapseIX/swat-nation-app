@@ -7,7 +7,7 @@ class RankingTab extends StatefulWidget implements BaseTab {
   const RankingTab({ Key key }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RankingTabState();
+  State createState() => _RankingTabState();
 
   @override
   IconData get icon => MdiIcons.medal;
