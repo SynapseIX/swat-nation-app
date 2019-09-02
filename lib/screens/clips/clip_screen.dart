@@ -2,9 +2,14 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:share/share.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
+import 'package:swat_nation/blocs/user_bloc.dart';
+import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/clip_info_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/utils/clip_helper.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
@@ -33,12 +38,12 @@ class ClipScreen extends StatefulWidget {
 
         return FutureBuilder<ClipModel>(
           future: bloc.clipByUid(uid),
-          builder: (BuildContext context, AsyncSnapshot<ClipModel> snapshot) {
-            if (!snapshot.hasData) {
+          builder: (BuildContext context, AsyncSnapshot<ClipModel> clipSnapshot) {
+            if (clipSnapshot.hasError || !clipSnapshot.hasData) {
               return emptyState;
             }
 
-            final ClipModel clip = snapshot.data;
+            final ClipModel clip = clipSnapshot.data;
             return FutureBuilder<ClipInfoModel>(
               future: extractClipInfo(clip.link),
               builder: (BuildContext context, AsyncSnapshot<ClipInfoModel> snapshot) {
@@ -46,6 +51,7 @@ class ClipScreen extends StatefulWidget {
                   return emptyState;
                 }
                 
+                snapshot.data.author = clipSnapshot.data.author;
                 return ClipScreen(model: snapshot.data);
               },
             );
@@ -158,6 +164,22 @@ class _ClipScreenState extends State<ClipScreen>
                     widget.model.title ?? 'Watching a Clip',
                     overflow: TextOverflow.ellipsis,
                   ),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: const Icon(MdiIcons.share),
+                      onPressed: () async {
+                        final UserBloc userBloc = UserBloc();
+                        final UserModel user = await userBloc.userByUid(widget.model.author);
+                        final String shareText = sprintf(
+                          kShareClip,
+                          <String>[user.displayName, widget.model.link],
+                        );
+                        
+                        await Share.share(shareText);
+                        userBloc.dispose();
+                      },
+                    ),
+                  ],
                 )
                 : null,
               body: Stack(

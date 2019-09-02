@@ -8,6 +8,7 @@ class ClipInfoModel extends BaseModel {
     @required this.videoUrl,
     @required this.link,
     this.title,
+    this.author,
   });
 
   ClipInfoModel.blank();
@@ -16,6 +17,7 @@ class ClipInfoModel extends BaseModel {
   String videoUrl;
   String link;
   String title;
+  String author;
 
   @override
   String toString() {
@@ -24,6 +26,7 @@ class ClipInfoModel extends BaseModel {
     videoUrl: $videoUrl
     link: $link
     title: $title
+    author: $author
     ''';
   }
   @override
@@ -33,6 +36,7 @@ class ClipInfoModel extends BaseModel {
       'videoUrl': videoUrl,
       'link': link,
       'title': title,
+      'author': author,
     };
   }
 }

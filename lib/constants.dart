@@ -61,3 +61,6 @@ const String kNoClipsCopy = 'There are no clips yet.';
 const int kMaxChatMessages = 200;
 const int kMaxMessageCharacters = 140;
 const int kAchievementColumnCount = 3;
+
+// Share
+const String kShareClip = 'Clip shared on SWAT Nation by %s: %s';
