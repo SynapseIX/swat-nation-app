@@ -253,32 +253,41 @@ class _AuthHeader extends StatelessWidget {
     return FutureBuilder<UserModel>(
       future: userBloc.userByUid(user.uid),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
-        if (snapshot.hasData) {
-          final UserModel model = snapshot.data;
-
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  model.headerUrl ?? kDefaultProfileHeader,
-                ),
-                fit: BoxFit.cover,
-              ),
+        if (!snapshot.hasData) {
+          return const DrawerHeader(
+            margin: EdgeInsets.zero,
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-            child: UserAccountsDrawerHeader(
-              margin: EdgeInsets.zero,
-              accountName: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(user.displayName),
-                  if (model.verified)
-                  const VerifiedBadge(
-                    margin: EdgeInsets.only(left: 4.0),
-                  ),
-                ],
+          );
+        }
+
+        final UserModel model = snapshot.data;
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: CachedNetworkImageProvider(
+                model.headerUrl ?? kDefaultProfileHeader,
               ),
-              accountEmail: Text(user.email),
-              currentAccountPicture: Container(
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: UserAccountsDrawerHeader(
+            margin: EdgeInsets.zero,
+            accountName: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(user.displayName),
+                if (model.verified)
+                const VerifiedBadge(
+                  margin: EdgeInsets.only(left: 4.0),
+                ),
+              ],
+            ),
+            accountEmail: Text(user.email),
+            currentAccountPicture: GestureDetector(
+              onTap: () => _navigateToProfile(context, model),
+              child: Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF333333),
                   shape: BoxShape.circle,
@@ -298,24 +307,19 @@ class _AuthHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Routes.router.navigateTo(context, '/profile/${model.uid}');
-              },
             ),
-          );
-        }
-        
-        return const DrawerHeader(
-          margin: EdgeInsets.zero,
-          child: Center(
-            child: CircularProgressIndicator(),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+            ),
+            onDetailsPressed: () => _navigateToProfile(context, model),
           ),
         );
       }
     );
+  }
+
+  void _navigateToProfile(BuildContext context, UserModel model) {
+    Navigator.pop(context);
+    Routes.router.navigateTo(context, '/profile/${model.uid}');
   }
 }
