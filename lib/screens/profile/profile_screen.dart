@@ -635,6 +635,7 @@ class _PublicBody extends StatelessWidget {
               
               // View All
               cards.add(ViewAllCard(
+                text: 'Manage',
                 onTap: () {
                   Routes.router.navigateTo(
                     context,

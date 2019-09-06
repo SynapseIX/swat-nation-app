@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class ViewAllCard extends StatelessWidget {
   ViewAllCard({
     @required this.onTap,
+    this.text = 'View All',
     this.widthMultiplier = 0.3,
     this.heightMultiplier = 1.0,
     this.backgroundColor = Colors.white60,
@@ -11,6 +12,7 @@ class ViewAllCard extends StatelessWidget {
         assert(!widthMultiplier.isNegative && widthMultiplier <= 1.0);
 
   final VoidCallback onTap;
+  final String text;
   final double widthMultiplier;
   final double heightMultiplier;
   final Color backgroundColor;
@@ -31,8 +33,8 @@ class ViewAllCard extends StatelessWidget {
               color: Theme.of(context).primaryColor,
               size: 60.0,
             ),
-            const Text(
-              'View All',
+            Text(
+              text,
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 14.0,
