@@ -160,7 +160,7 @@ class ClipCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 4.0),
                             Text(
-                              'Shared ${humanizeTimestamp(model.createdAt, 'MMMM dd, yyyy')}',
+                              'Shared ${humanizeTimestamp(model.createdAt, 'MMM d, yyyy')}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontStyle: FontStyle.italic
