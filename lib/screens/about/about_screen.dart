@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/blocs/about_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/about_model.dart';
@@ -113,18 +112,15 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
 
               // Legal
+              const TextHeader(
+                'Legal & Disclaimers',
+              ),
               GestureDetector(
                 onTap: () => openUrl(kContentUsageRulesUrl),
-                child: const TextHeader(
-                  'Legal & Disclaimers',
-                  actions: <Widget>[
-                    Icon(MdiIcons.chevronRight),
-                  ],
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(kGameContentUsageRules),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(kGameContentUsageRules),
               ),
             ],
           );
