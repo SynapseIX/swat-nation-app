@@ -37,6 +37,7 @@ const String kDefaultSubscribeMessage = 'Subscribe to SWAT Nation Pro to access 
 
 // Sign In
 const String kDefaultSignInMessage = 'SWAT Nation is better enjoyed if you Sign In. Please sign in to register for tourneys, chat, subscribe, and more.\n\nYou can also create an account if needed.';
+const int kFBPostFix = 1000;
 
 // Achievements
 const String kBecomeLegendTitle = 'Become Legend';

@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -310,10 +311,25 @@ class _SignInScreenState extends State<SignInScreen> {
       final bool displayNameExists = await userBloc.displayNameExists(user.displayName);
 
       final String platform = Platform.isIOS ? 'iOS' : 'Android';
+
+      final RegExp regExp = RegExp(r'\s+\b|\b\s|\s|\b');
+      final String trimmedDisplayName = user.displayName.replaceAll(regExp, '');
+      final int seed = DateTime.now().millisecondsSinceEpoch;
+      final int random = Random(seed).nextInt(kFBPostFix);
+      
+      final String displayName =
+            trimmedDisplayName.length > kDisplayNameMaxChararcters
+            ? '${trimmedDisplayName.substring(0, kDisplayNameMaxChararcters - 5)}$random'
+            : trimmedDisplayName;
+      final UserUpdateInfo info = UserUpdateInfo();
+      info.displayName = displayName;
+
+      await user.updateProfile(info);
+      await user.reload();
       
       final UserModel model = await userBloc.userByUid(user.uid) ?? UserModel(
         uid: user.uid,
-        displayName: user.displayName,
+        displayName: displayName,
         photoUrl: user.photoUrl,
         createdAt: Timestamp.now(),
         provider: UserProvider.facebook,
