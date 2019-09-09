@@ -27,6 +27,8 @@ import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 import 'package:swat_nation/widgets/headers/text_header.dart';
 import 'package:swat_nation/widgets/lists/horizontal_card_list.dart';
 
+enum ProfileAction { friend, unfriend, block, unblock, message, inbox, edit, report }
+
 /// Represents the user profile screen.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -102,21 +104,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () => Navigator.pop(context),
             ),
             actions: <Widget>[
-              if (me)
-              IconButton(
-                icon: const Icon(MdiIcons.accountEdit),
-                tooltip: 'Edit Profile',
-                onPressed: () => _navigateToEdit(),
-              ),
-              if (!me)
-              IconButton(
-                icon: const Icon(MdiIcons.alert),
-                tooltip: 'Report User',
-                // TODO(itsprof): implement report user
-                onPressed: () {},
-              ),
-            ]
+              _buildProfileActions(me),
+            ],
           ),
+          // TODO(itsprof): validate if friend or blocked
           body: me || !user.private
             ? _PublicBody(
                 achievementsBloc: achievementsBloc,
@@ -140,6 +131,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
         user = updatedUser;
       });
     }
+  }
+
+  // TODO(itsprof): add remaining actions and all required validations
+  Widget _buildProfileActions(bool me) {
+    if (me) {
+      return PopupMenuButton<ProfileAction>(
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
+          if (!widget.model.private)
+          PopupMenuItem<ProfileAction>(
+            value: ProfileAction.inbox,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const <Widget>[
+                Icon(MdiIcons.email),
+                SizedBox(width: 8.0),
+                Text('Inbox'),
+              ],
+            ),
+          ),
+          PopupMenuItem<ProfileAction>(
+            value: ProfileAction.edit,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const <Widget>[
+                Icon(MdiIcons.accountEdit),
+                SizedBox(width: 8.0),
+                Text('Edit'),
+              ],
+            ),
+          ),
+        ],
+        onSelected: (ProfileAction action) {
+          switch (action) {
+            case ProfileAction.edit:
+              _navigateToEdit();
+              break;
+            default:
+              break;
+          }
+        },
+      );
+    }
+
+    return PopupMenuButton<ProfileAction>(
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
+        if (!widget.model.private)
+        PopupMenuItem<ProfileAction>(
+          value: ProfileAction.message,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Icon(MdiIcons.email),
+              SizedBox(width: 8.0),
+              Text('Message'),
+            ],
+          ),
+        ),
+        PopupMenuItem<ProfileAction>(
+          value: ProfileAction.report,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Icon(MdiIcons.alertCircle),
+              SizedBox(width: 8.0),
+              Text('Report'),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
