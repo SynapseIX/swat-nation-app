@@ -7,17 +7,20 @@ class FriendModel extends BaseModel {
   FriendModel({
     @required this.uid,
     @required this.dateAdded,
+    @required this.outgoing,
     this.pending = true,
   });
 
   FriendModel.fromSnapshot(DocumentSnapshot snapshot) {
     uid = snapshot.data['uid'];
     dateAdded = snapshot.data['dateAdded'];
+    outgoing = snapshot.data['outgoing'];
     pending = snapshot.data['pending'];
   }
 
   String uid;
   Timestamp dateAdded;
+  bool outgoing;
   bool pending;
 
   @override
@@ -25,6 +28,7 @@ class FriendModel extends BaseModel {
     return '''
     uid: $uid
     dateAdded: $dateAdded
+    outgoing: $outgoing
     pending: $pending
     ''';
   }
@@ -34,6 +38,7 @@ class FriendModel extends BaseModel {
     return <String, dynamic>{
       'uid': uid,
       'dateAdded': dateAdded,
+      'outgoing': outgoing,
       'pending': pending,
     };
   }

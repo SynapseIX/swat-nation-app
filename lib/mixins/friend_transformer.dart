@@ -9,14 +9,9 @@ class FriendTransformer {
     = StreamTransformer<QuerySnapshot, List<FriendModel>>
       .fromHandlers(
         handleData: (QuerySnapshot snapshot, EventSink<List<FriendModel>> sink) {
-          if (snapshot.documents.isEmpty) {
-            sink.addError('User has no friends.');
-          } else {
-            sink.add(snapshot.documents.map((DocumentSnapshot doc) {
-              return FriendModel(
-                uid: doc.data['uid'],
-                pending: doc.data['pending'],
-              );
+          if (snapshot.documents.isNotEmpty) {
+            sink.add(snapshot.documents.map((DocumentSnapshot snapshot) {
+              return FriendModel.fromSnapshot(snapshot);
             }).toList());
           }
         },

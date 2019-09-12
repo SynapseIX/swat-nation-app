@@ -34,13 +34,13 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
   Future<bool> sendFriendRequest(String friendUid) async {
     final DocumentReference outgoingRequest = await _firestore
       .collection('users/$uid/friends')
-      .add(FriendModel(uid: friendUid,dateAdded: Timestamp.now()).toMap());
+      .add(FriendModel(uid: friendUid, outgoing: true, dateAdded: Timestamp.now()).toMap());
     
     final DocumentReference incomingRequest = await _firestore
       .collection('users/$friendUid/friends')
-      .add(FriendModel(uid: uid, dateAdded: Timestamp.now(),).toMap());
+      .add(FriendModel(uid: uid, outgoing: false, dateAdded: Timestamp.now(),).toMap());
 
-    if (outgoingRequest != null && incomingRequest != null) {
+    if (outgoingRequest == null || incomingRequest == null) {
       throw 'Could not send the friend request.';
     }
 

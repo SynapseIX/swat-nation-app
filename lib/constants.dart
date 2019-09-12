@@ -63,5 +63,11 @@ const int kMaxChatMessages = 200;
 const int kMaxMessageCharacters = 140;
 const int kAchievementColumnCount = 3;
 
+// Friends
+const int kMaxFriendsCards = 5;
+const String kFriendHasRequested = '%s has requested to be your friend.';
+const String kFriendRequestSent = 'Your friend request to %s has been sent.';
+const String kFriendRequestPending = 'Your friend request is pending.';
+
 // Share
 const String kShareClip = 'Clip from XboxClips.com shared on SWAT Nation by %s: %s';

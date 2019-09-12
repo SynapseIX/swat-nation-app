@@ -6,6 +6,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
@@ -22,6 +23,7 @@ import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/achievement_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
+import 'package:swat_nation/widgets/cards/friend_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
@@ -137,19 +139,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     me: me,
                   );
 
-                  if (snapshot.hasError) {
-                    if (snapshot.error == 'User has no friends.') {
-                      return user.private
-                        ? privateBody
-                        : publicBody;
-                    } else {
-                      return Center(child: Text(snapshot.error));
-                    }
+                  if (snapshot.hasData) {
+                    return publicBody;
+                  } else {
+                    return user.private
+                      ? privateBody
+                      : publicBody;
                   }
-
-                  return snapshot.data || !user.private
-                    ? publicBody
-                    : privateBody;
                 },
               ),
         );
@@ -254,9 +250,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ],
-          onSelected: (ProfileAction action) {
+          onSelected: (ProfileAction action) async {
             // TODO(itsprof): implement
             print('Selected: $action');
+            switch (action) {
+              // TODO(itsprof): check if blocked
+              case ProfileAction.friend:
+                final bool sent = await friendsBloc.sendFriendRequest(user.uid);
+                if (sent) {
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Sent Request'),
+                      content: Text(sprintf(kFriendRequestSent, <String>[user.displayName])),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Dismiss'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  DialogHelper.instance().showErrorDialog(
+                    context: context,
+                    title: 'Can\'t Send Request',
+                    message: 'Your friend request can\'t be sent. Please try again later.'
+                  );
+                }
+                break;
+              default:
+                break;
+            }
           },
         );
       }
@@ -697,8 +722,36 @@ class _PublicBody extends StatelessWidget {
               return const SizedBox();
             }
             
-            // TODO(itsprof): implement
-            return const Text('TODO');
+            final Widget Function(FriendModel) cardMapper = (FriendModel model) {
+              return FriendCard(
+                key: UniqueKey(),
+                model: model,
+              );
+            };
+
+            final bool largeList = snapshot.data.length > kMaxFriendsCards;
+            final List<Widget> cards = largeList
+              ? snapshot.data
+                .sublist(0, kMaxFriendsCards)
+                .map(cardMapper).toList()
+              : snapshot.data
+                .map(cardMapper).toList();
+
+              if (cards.length > kMaxFriendsCards) {
+                cards.add(ViewAllCard(
+                  text: 'Manage',
+                  onTap: () => Routes
+                    .router
+                    .navigateTo(context, '/friends/${user.uid}'),
+                ));
+              }
+
+              return CardSection(
+                header: const TextHeader('Friends'),
+                cardList: HorizontalCardList(
+                  cards: cards,
+                ),
+              );
           },
         ),
 
