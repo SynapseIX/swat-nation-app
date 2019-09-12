@@ -34,6 +34,38 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     return true;
   }
 
+  Future<bool> processFriendRequest(FriendModel request, bool accept) async {
+    final QuerySnapshot incomingRequest = await _firestore
+      .collection('users/$uid/friends')
+      .where('uid', isEqualTo: request.uid)
+      .snapshots()
+      .first;
+    final DocumentReference incomingRef = incomingRequest.documents.first.reference;
+
+    final QuerySnapshot outgoingRequest = await _firestore
+      .collection('users/${request.uid}/friends')
+      .where('uid', isEqualTo: uid)
+      .snapshots()
+      .first;
+    final DocumentReference outgoingRef = outgoingRequest.documents.first.reference;
+
+    if (accept) {
+      final Map<String, dynamic> acceptRequest = <String, dynamic>{
+        'pending': accept,
+      };
+
+      await incomingRef.updateData(acceptRequest);
+      await outgoingRef.updateData(acceptRequest);
+
+      return true;
+    } else {
+      await incomingRef.delete();
+      await outgoingRef.delete();
+
+      return false;
+    }
+  }
+
   @override
   void dispose() {
     print('FriendsBloc disposed');
