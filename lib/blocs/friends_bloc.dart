@@ -89,7 +89,6 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
       .snapshots()
       .first;
     final DocumentReference incomingRef = incomingRequest.documents.first.reference;
-    print('incomingRef: ${incomingRef.path}');
 
     final QuerySnapshot outgoingRequest = await _firestore
       .collection('users/$friendUid/friends')
@@ -97,7 +96,6 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
       .snapshots()
       .first;
     final DocumentReference outgoingRef = outgoingRequest.documents.first.reference;
-    print('outgoingRef: ${outgoingRef.path}');
 
     final WriteBatch batch = _firestore.batch();
     batch.delete(incomingRef);
