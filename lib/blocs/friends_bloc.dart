@@ -89,6 +89,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
 
   Future<bool> checkFriendship(String friendUid) async {
     final List<FriendModel> friends = await allFriends.first;
+    
     return friends?.contains(FriendModel(
       uid: friendUid,
       pending: false,
