@@ -264,7 +264,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             switch (action) {
               // TODO(itsprof): check if blocked
               case ProfileAction.friend:
+                DialogHelper.instance().showWaitingDialog(
+                  context: context,
+                  title: 'Sending friend request...',
+                );
+                
                 final bool sent = await friendsBloc.sendFriendRequest(user.uid);
+                Navigator.pop(context);
+
                 if (sent) {
                   showDialog<void>(
                     context: context,
@@ -298,6 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () async {
                           final bool removed = await friendsBloc.removeFriend(user.uid);
                           Navigator.pop(context);
+                          
                           if (removed) {
                             setState(() {});
                           } else {
