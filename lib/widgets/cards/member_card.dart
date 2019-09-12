@@ -110,7 +110,7 @@ class _MemberCardState extends State<MemberCard> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Icon(
+                          const Icon(
                             MdiIcons.twitter,
                             color: Colors.white,
                             size: 14.0,

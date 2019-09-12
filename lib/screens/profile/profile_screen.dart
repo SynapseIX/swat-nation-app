@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
+import 'package:swat_nation/blocs/friends_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/achievement_model.dart';
@@ -70,6 +71,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   AchievementsBloc achievementsBloc;
   ClipsBloc clipsBloc;
+  FriendsBloc friendsBloc;
   UserModel user;
 
   @override
@@ -84,6 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     achievementsBloc.dispose();
     clipsBloc.dispose();
+    friendsBloc.dispose();
     super.dispose();
   }
 
@@ -92,7 +95,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder<FirebaseUser>(
       future: AuthBloc.instance().currentUser,
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-        final bool me = snapshot.hasData && user.uid == snapshot.data.uid;
+        if (snapshot.hasError || !snapshot.hasData) {
+          return const Center(child: Text('laoding...'));
+        }
+
+        final bool me = user.uid == snapshot.data.uid;
+        friendsBloc = FriendsBloc(uid: snapshot.data.uid);
 
         return Scaffold(
           appBar: AppBar(
@@ -107,15 +115,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildProfileActions(me),
             ],
           ),
-          // TODO(itsprof): validate if friend or blocked
-          body: me || !user.private
+          body: me
             ? _PublicBody(
                 achievementsBloc: achievementsBloc,
                 clipsBloc: clipsBloc,
                 user: user,
                 me: me,
               )
-            : _PrivateBody(user: user),
+            : FutureBuilder<bool>(
+                future: friendsBloc.checkFriendship(user.uid),
+                initialData: false,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  final Widget privateBody = _PrivateBody(user:user);
+                  final Widget publicBody = _PublicBody(
+                    achievementsBloc: achievementsBloc,
+                    clipsBloc: clipsBloc,
+                    user: user,
+                    me: me,
+                  );
+
+                  if (snapshot.hasError) {
+                    if (snapshot.error == 'User has no friends.') {
+                      return user.private
+                        ? privateBody
+                        : publicBody;
+                    } else {
+                      return Center(child: Text(snapshot.error));
+                    }
+                  }
+
+                  return snapshot.data || !user.private
+                    ? publicBody
+                    : privateBody;
+                },
+              ),
         );
       },
     );
@@ -174,32 +207,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    return PopupMenuButton<ProfileAction>(
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
-        if (!widget.model.private)
-        PopupMenuItem<ProfileAction>(
-          value: ProfileAction.message,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
-              Icon(MdiIcons.email),
-              SizedBox(width: 8.0),
-              Text('Message'),
-            ],
-          ),
-        ),
-        PopupMenuItem<ProfileAction>(
-          value: ProfileAction.report,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
-              Icon(MdiIcons.alertCircle),
-              SizedBox(width: 8.0),
-              Text('Report'),
-            ],
-          ),
-        ),
-      ],
+    return FutureBuilder<bool>(
+      future: friendsBloc.checkFriendship(user.uid),
+      initialData: false,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        final bool isFriend = snapshot.hasData && snapshot.data;
+
+        return PopupMenuButton<ProfileAction>(
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
+            PopupMenuItem<ProfileAction>(
+              value: isFriend ? ProfileAction.unfriend : ProfileAction.friend,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(isFriend ? MdiIcons.accountMinus : MdiIcons.accountPlus),
+                  const SizedBox(width: 8.0),
+                  Text(isFriend ? 'Remove friend' : 'Add friend'),
+                ],
+              ),
+            ),
+
+            if (!widget.model.private || isFriend)
+            PopupMenuItem<ProfileAction>(
+              value: ProfileAction.message,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const <Widget>[
+                  Icon(MdiIcons.email),
+                  SizedBox(width: 8.0),
+                  Text('Message'),
+                ],
+              ),
+            ),
+            PopupMenuItem<ProfileAction>(
+              value: ProfileAction.report,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const <Widget>[
+                  Icon(MdiIcons.alertCircle),
+                  SizedBox(width: 8.0),
+                  Text('Report'),
+                ],
+              ),
+            ),
+          ],
+          onSelected: (ProfileAction action) {
+            // TODO(itsprof): implement
+            print('Selected: $action');
+          },
+        );
+      }
     );
   }
 }
