@@ -6,21 +6,25 @@ import 'package:swat_nation/base/base_model.dart';
 class FriendModel extends BaseModel {
   FriendModel({
     @required this.uid,
+    @required this.dateAdded,
     this.pending = true,
   });
 
   FriendModel.fromSnapshot(DocumentSnapshot snapshot) {
     uid = snapshot.data['uid'];
+    dateAdded = snapshot.data['dateAdded'];
     pending = snapshot.data['pending'];
   }
 
   String uid;
+  Timestamp dateAdded;
   bool pending;
 
   @override
   String toString() {
     return '''
     uid: $uid
+    dateAdded: $dateAdded
     pending: $pending
     ''';
   }
@@ -29,6 +33,7 @@ class FriendModel extends BaseModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uid': uid,
+      'dateAdded': dateAdded,
       'pending': pending,
     };
   }

@@ -14,6 +14,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/models/friend_model.dart';
 import 'package:swat_nation/models/navigation_result.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
@@ -119,6 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? _PublicBody(
                 achievementsBloc: achievementsBloc,
                 clipsBloc: clipsBloc,
+                friendsBloc: friendsBloc,
                 user: user,
                 me: me,
               )
@@ -130,6 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   final Widget publicBody = _PublicBody(
                     achievementsBloc: achievementsBloc,
                     clipsBloc: clipsBloc,
+                    friendsBloc: friendsBloc,
                     user: user,
                     me: me,
                   );
@@ -523,12 +526,14 @@ class _PublicBody extends StatelessWidget {
   const _PublicBody({
     @required this.achievementsBloc,
     @required this.clipsBloc,
+    @required this.friendsBloc,
     @required this.user,
     this.me = false,
   });
 
   final AchievementsBloc achievementsBloc;
   final ClipsBloc clipsBloc;
+  final FriendsBloc friendsBloc;
   final UserModel user;
   final bool me;
 
@@ -681,6 +686,20 @@ class _PublicBody extends StatelessWidget {
             onPressed: () {},
             child: const Text('Request Custom Logo'),
           ),
+        ),
+
+        // Friends
+        if (me)
+        StreamBuilder<List<FriendModel>>(
+          stream: friendsBloc.allFriends,
+          builder: (BuildContext context, AsyncSnapshot<List<FriendModel>> snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox();
+            }
+            
+            // TODO(itsprof): implement
+            return const Text('TODO');
+          },
         ),
 
         // Achievements

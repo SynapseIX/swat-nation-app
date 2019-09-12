@@ -15,17 +15,30 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
 
   Stream<List<FriendModel>> get allFriends => _firestore
     .collection('users/$uid/friends')
+    .orderBy('pending', descending: true)
+    .snapshots()
+    .transform(transformFriends);
+
+  Stream<List<FriendModel>> get acceptedFriends => _firestore
+    .collection('users/$uid/friends')
+    .where('pending', isEqualTo: false)
+    .snapshots()
+    .transform(transformFriends);
+
+  Stream<List<FriendModel>> get pendingFriends => _firestore
+    .collection('users/$uid/friends')
+    .where('pending', isEqualTo: true)
     .snapshots()
     .transform(transformFriends);
   
   Future<bool> sendFriendRequest(String friendUid) async {
     final DocumentReference outgoingRequest = await _firestore
       .collection('users/$uid/friends')
-      .add(FriendModel(uid: friendUid).toMap());
+      .add(FriendModel(uid: friendUid,dateAdded: Timestamp.now()).toMap());
     
     final DocumentReference incomingRequest = await _firestore
       .collection('users/$friendUid/friends')
-      .add(FriendModel(uid: uid).toMap());
+      .add(FriendModel(uid: uid, dateAdded: Timestamp.now(),).toMap());
 
     if (outgoingRequest != null && incomingRequest != null) {
       throw 'Could not send the friend request.';
@@ -89,11 +102,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
 
   Future<bool> checkFriendship(String friendUid) async {
     final List<FriendModel> friends = await allFriends.first;
-
-    return friends?.contains(FriendModel(
-      uid: friendUid,
-      pending: false,
-    ));
+    return friends?.firstWhere((FriendModel model) => model.uid == friendUid) != null;
   }
 
   @override
