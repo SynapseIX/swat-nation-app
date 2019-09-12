@@ -737,15 +737,12 @@ class _PublicBody extends StatelessWidget {
                 .map(cardMapper).toList()
               : snapshot.data
                 .map(cardMapper).toList();
-
-              if (cards.length > kMaxFriendsCards) {
-                cards.add(ViewAllCard(
-                  text: 'Manage',
-                  onTap: () => Routes
-                    .router
-                    .navigateTo(context, '/friends/${user.uid}'),
-                ));
-              }
+            cards.add(ViewAllCard(
+              text: 'Manage',
+              onTap: () => Routes
+                .router
+                .navigateTo(context, '/friends/${user.uid}'),
+            ));
 
               return CardSection(
                 header: const TextHeader('Friends'),

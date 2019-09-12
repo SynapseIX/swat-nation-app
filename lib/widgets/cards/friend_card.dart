@@ -96,8 +96,9 @@ class FriendCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 4.0),
                   Text(
-                    'Friends since ${humanizeTimestamp(model.dateAdded, 'MMM d, yyyy')}',
+                    'Friends since\n${humanizeTimestamp(model.dateAdded, 'MMM d, yyyy')}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
