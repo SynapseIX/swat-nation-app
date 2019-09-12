@@ -99,7 +99,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       future: AuthBloc.instance().currentUser,
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
         if (snapshot.hasError || !snapshot.hasData) {
-          return const Center(child: Text('laoding...'));
+          return Material(
+            child: Center(child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: const <Widget>[
+                CircularProgressIndicator(),
+                SizedBox(height: 4.0),
+                Text('Fetching profile...')
+              ],
+            )),
+          );
         }
 
         final bool me = user.uid == snapshot.data.uid;
@@ -251,8 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
           onSelected: (ProfileAction action) async {
-            // TODO(itsprof): implement
-            print('Selected: $action');
+            // TODO(itsprof): implement actions
             switch (action) {
               // TODO(itsprof): check if blocked
               case ProfileAction.friend:
@@ -278,6 +286,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     message: 'Your friend request can\'t be sent. Please try again later.'
                   );
                 }
+                break;
+              case ProfileAction.unfriend:
+                showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Remove Friend'),
+                    content: Text(sprintf(kFriendRemove, <String>[user.displayName])),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () async {
+                          final bool removed = await friendsBloc.removeFriend(user.uid);
+                          Navigator.pop(context);
+                          if (removed) {
+                            setState(() {});
+                          } else {
+                            DialogHelper.instance().showErrorDialog(
+                              context: context,
+                              title: 'Can\'t Remove',
+                              message: 'Friend can\'t be removed. Please try again later.'
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Remove',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Dismiss'),
+                      ),
+                    ],
+                  ),
+                );
                 break;
               default:
                 break;

@@ -137,7 +137,7 @@ class FriendCard extends StatelessWidget {
                             ),
                           ),
                           onPressed: () async {
-                            final bool removed = await bloc.removeFriend(model);
+                            final bool removed = await bloc.removeFriend(model.uid);
                             print('Removed? $removed');
                             Navigator.pop(context);
                           },
@@ -176,7 +176,7 @@ class FriendCard extends StatelessWidget {
                             ),
                           ),
                           onPressed: () async {
-                            await bloc.removeFriend(model);
+                            await bloc.removeFriend(model.uid);
                             Navigator.pop(context);
                           },
                         ),

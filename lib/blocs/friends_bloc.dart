@@ -82,17 +82,17 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     }
   }
 
-  Future<bool> removeFriend(FriendModel friend) async {
+  Future<bool> removeFriend(String friendUid) async {
     final QuerySnapshot incomingRequest = await _firestore
       .collection('users/$uid/friends')
-      .where('uid', isEqualTo: friend.uid)
+      .where('uid', isEqualTo: friendUid)
       .snapshots()
       .first;
     final DocumentReference incomingRef = incomingRequest.documents.first.reference;
     print('incomingRef: ${incomingRef.path}');
 
     final QuerySnapshot outgoingRequest = await _firestore
-      .collection('users/${friend.uid}/friends')
+      .collection('users/$friendUid/friends')
       .where('uid', isEqualTo: uid)
       .snapshots()
       .first;
