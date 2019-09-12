@@ -87,6 +87,14 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     return true;
   }
 
+  Future<bool> checkFriendship(String friendUid) async {
+    final List<FriendModel> friends = await allFriends.first;
+    return friends?.contains(FriendModel(
+      uid: friendUid,
+      pending: false,
+    ));
+  }
+
   @override
   void dispose() {
     print('FriendsBloc disposed');
