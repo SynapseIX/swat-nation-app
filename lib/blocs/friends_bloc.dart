@@ -16,7 +16,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
   Stream<List<FriendModel>> get allFriends => _firestore
     .collection('users/$uid/friends')
     .snapshots()
-    .transform(friendsTransformer);
+    .transform(transformFriends);
 
   @override
   void dispose() {

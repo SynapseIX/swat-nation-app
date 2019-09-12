@@ -5,7 +5,7 @@ import 'package:swat_nation/models/friend_model.dart';
 
 /// Mixin with methods to transform friend streams.
 class FriendTransformer {
-  final StreamTransformer<QuerySnapshot, List<FriendModel>> friendsTransformer
+  final StreamTransformer<QuerySnapshot, List<FriendModel>> transformFriends
     = StreamTransformer<QuerySnapshot, List<FriendModel>>
       .fromHandlers(
         handleData: (QuerySnapshot snapshot, EventSink<List<FriendModel>> sink) {
