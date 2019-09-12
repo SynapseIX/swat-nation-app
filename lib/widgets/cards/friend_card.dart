@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:swat_nation/blocs/friends_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
@@ -97,12 +98,21 @@ class FriendCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 4.0),
-                  Text(
-                    'Friends since\n${humanizeTimestamp(model.dateAdded, 'MMM d, yyyy')}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                    ),
+                  Row(
+                    children: <Widget>[
+                      const Icon(
+                        MdiIcons.accountMultiple,
+                        color: Colors.white,
+                        size: 20.0,
+                      ),
+                      const SizedBox(width: 4.0),
+                      Text(
+                        humanizeTimestamp(model.dateAdded, 'MMM d, yyyy'),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
