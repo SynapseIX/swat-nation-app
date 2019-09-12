@@ -718,7 +718,7 @@ class _PublicBody extends StatelessWidget {
         StreamBuilder<List<FriendModel>>(
           stream: friendsBloc.allFriends,
           builder: (BuildContext context, AsyncSnapshot<List<FriendModel>> snapshot) {
-            if (!snapshot.hasData) {
+            if (snapshot.hasError || !snapshot.hasData) {
               return const SizedBox();
             }
             
@@ -726,6 +726,7 @@ class _PublicBody extends StatelessWidget {
               return FriendCard(
                 key: UniqueKey(),
                 model: model,
+                bloc: friendsBloc,
               );
             };
 

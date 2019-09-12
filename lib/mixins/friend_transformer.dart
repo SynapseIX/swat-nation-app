@@ -13,6 +13,8 @@ class FriendTransformer {
             sink.add(snapshot.documents.map((DocumentSnapshot snapshot) {
               return FriendModel.fromSnapshot(snapshot);
             }).toList());
+          } else {
+            sink.addError('User has no friends.');
           }
         },
       );

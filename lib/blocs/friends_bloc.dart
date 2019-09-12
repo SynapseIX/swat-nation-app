@@ -47,7 +47,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     return true;
   }
 
-  Future<bool> processFriendRequest(FriendModel request, bool accept) async {
+  Future<bool> processFriendRequest(FriendModel request, bool pending) async {
     final QuerySnapshot incomingRequest = await _firestore
       .collection('users/$uid/friends')
       .where('uid', isEqualTo: request.uid)
@@ -62,18 +62,21 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
       .first;
     final DocumentReference outgoingRef = outgoingRequest.documents.first.reference;
 
-    if (accept) {
+    final WriteBatch batch = _firestore.batch();
+    if (!pending) {
       final Map<String, dynamic> acceptRequest = <String, dynamic>{
-        'pending': accept,
+        'pending': false,
       };
 
-      await incomingRef.updateData(acceptRequest);
-      await outgoingRef.updateData(acceptRequest);
-
+      batch.updateData(incomingRef, acceptRequest);
+      batch.updateData(outgoingRef, acceptRequest);
+      await batch.commit();
+      
       return true;
     } else {
-      await incomingRef.delete();
-      await outgoingRef.delete();
+      batch.delete(incomingRef);
+      batch.delete(outgoingRef);
+      await batch.commit();
 
       return false;
     }
@@ -86,6 +89,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
       .snapshots()
       .first;
     final DocumentReference incomingRef = incomingRequest.documents.first.reference;
+    print('incomingRef: ${incomingRef.path}');
 
     final QuerySnapshot outgoingRequest = await _firestore
       .collection('users/${friend.uid}/friends')
@@ -93,9 +97,12 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
       .snapshots()
       .first;
     final DocumentReference outgoingRef = outgoingRequest.documents.first.reference;
+    print('outgoingRef: ${outgoingRef.path}');
 
-    await incomingRef.delete();
-    await outgoingRef.delete();
+    final WriteBatch batch = _firestore.batch();
+    batch.delete(incomingRef);
+    batch.delete(outgoingRef);
+    await batch.commit();
 
     return true;
   }
