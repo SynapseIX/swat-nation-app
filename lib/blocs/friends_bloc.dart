@@ -17,6 +17,22 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     .collection('users/$uid/friends')
     .snapshots()
     .transform(transformFriends);
+  
+  Future<bool> sendFriendRequest(String friendUid) async {
+    final DocumentReference outgoingRequest = await _firestore
+      .collection('users/$uid/friends')
+      .add(FriendModel(uid: friendUid).toMap());
+    
+    final DocumentReference incomingRequest = await _firestore
+      .collection('users/$friendUid/friends')
+      .add(FriendModel(uid: uid).toMap());
+
+    if (outgoingRequest != null && incomingRequest != null) {
+      throw 'Could not send the friend request.';
+    }
+
+    return true;
+  }
 
   @override
   void dispose() {
