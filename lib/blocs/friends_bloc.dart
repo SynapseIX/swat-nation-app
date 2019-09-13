@@ -10,7 +10,6 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     @required this.uid,
   });
   
-  
   final Firestore _firestore = Firestore.instance;
   final String uid;
 

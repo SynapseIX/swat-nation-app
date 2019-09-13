@@ -956,19 +956,18 @@ class _PublicBody extends StatelessWidget {
                 .map(cardMapper).toList()
               : snapshot.data
                 .map(cardMapper).toList();
+                
             cards.add(ViewAllCard(
               text: 'Manage',
-              onTap: () => Routes
-                .router
-                .navigateTo(context, '/friends/${user.uid}'),
+              onTap: () => Routes.router.navigateTo(context, '/my-friends/${user.uid}'),
             ));
 
-              return CardSection(
-                header: const TextHeader('Friends'),
-                cardList: HorizontalCardList(
-                  cards: cards,
-                ),
-              );
+            return CardSection(
+              header: const TextHeader('Friends'),
+              cardList: HorizontalCardList(
+                cards: cards,
+              ),
+            );
           },
         ),
 

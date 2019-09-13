@@ -8,6 +8,7 @@ import 'package:swat_nation/screens/auth/sign_in_screen.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
 import 'package:swat_nation/screens/clips/clip_screen.dart';
 import 'package:swat_nation/screens/clips/create_clip_screen.dart';
+import 'package:swat_nation/screens/friends/friends_screen.dart';
 import 'package:swat_nation/screens/images/image_viewer.dart';
 import 'package:swat_nation/screens/main_screen.dart';
 import 'package:swat_nation/screens/profile/change_email_screen.dart';
@@ -29,6 +30,8 @@ class Routes {
   static String profile = '/profile/:myUid/:uid';
   static String editProfile = '/edit-profile/:uid';
   static String changeEmail = '/change-email/';
+
+  static String friends = '/my-friends/:uid';
 
   static String achievements = '/achievements/:uid/:me';
   
@@ -82,6 +85,13 @@ class Routes {
     router.define(
       changeEmail,
       handler: ChangeEmailScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Friends
+    router.define(
+      friends,
+      handler: FriendsScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
 
