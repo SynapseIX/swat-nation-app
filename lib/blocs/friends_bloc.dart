@@ -21,15 +21,21 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     .transform(transformFriends);
 
   Future<void> sendFriendRequest(String friendUid) async {
-    await _firestore
-      .collection('friends/$uid/list')
-      .document(friendUid)
-      .setData(FriendModel(incoming: false).toMap());
+    final bool isPending = await checkPendingRequest(friendUid);
 
-    await _firestore
-      .collection('friends/$friendUid/list')
-      .document(uid)
-      .setData(FriendModel(incoming: true).toMap());
+    if (isPending) {
+      throw 'Friend request still pending.';
+    } else {
+      await _firestore
+        .collection('friends/$uid/list')
+        .document(friendUid)
+        .setData(FriendModel(incoming: false).toMap());
+
+      await _firestore
+        .collection('friends/$friendUid/list')
+        .document(uid)
+        .setData(FriendModel(incoming: true).toMap());
+    }
   }
 
   Future<void> removeFriend(String friendUid) async {
