@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -79,6 +80,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   AchievementsBloc achievementsBloc;
   ClipsBloc clipsBloc;
+  UserBloc userBloc;
   FriendsBloc friendsBloc;
   UserModel user;
 
@@ -87,6 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     user = widget.model;
     achievementsBloc = AchievementsBloc(uid: user.uid);
     clipsBloc = ClipsBloc();
+    userBloc = UserBloc();
     friendsBloc = FriendsBloc(uid: widget.myUid);
     super.initState();
   }
@@ -95,6 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     achievementsBloc.dispose();
     clipsBloc.dispose();
+    userBloc.dispose();
     friendsBloc.dispose();
     super.dispose();
   }
@@ -120,6 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ? _PublicBody(
             achievementsBloc: achievementsBloc,
             clipsBloc: clipsBloc,
+            userBloc: userBloc,
             friendsBloc: friendsBloc,
             user: user,
             me: me,
@@ -132,12 +137,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final Widget publicBody = _PublicBody(
                 achievementsBloc: achievementsBloc,
                 clipsBloc: clipsBloc,
+                userBloc: userBloc,
                 friendsBloc: friendsBloc,
                 user: user,
                 me: me,
               );
 
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data) {
                 return publicBody;
               } else {
                 return user.private
@@ -278,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   DialogHelper.instance().showErrorDialog(
                     context: context,
                     title: 'Can\'t Send Request',
-                    message: 'Your friend request can\'t be sent. Please try again later.'
+                    message: error ?? 'Your friend request can\'t be sent. Please try again later.'
                   );
                 }
                 break;
@@ -591,6 +597,7 @@ class _PublicBody extends StatelessWidget {
   const _PublicBody({
     @required this.achievementsBloc,
     @required this.clipsBloc,
+    @required this.userBloc,
     @required this.friendsBloc,
     @required this.user,
     this.me = false,
@@ -598,6 +605,7 @@ class _PublicBody extends StatelessWidget {
 
   final AchievementsBloc achievementsBloc;
   final ClipsBloc clipsBloc;
+  final UserBloc userBloc;
   final FriendsBloc friendsBloc;
   final UserModel user;
   final bool me;
@@ -766,9 +774,176 @@ class _PublicBody extends StatelessWidget {
               return FriendCard(
                 key: UniqueKey(),
                 model: model,
-                // TODO(itsprof): implement
-                onTap: () {
+                onTap: () async {
+                  DialogHelper.instance().showWaitingDialog(context: context);
 
+                  final FirebaseUser myself = await AuthBloc.instance().currentUser;
+                  final UserModel friend = await userBloc.userByUid(model.uid);
+                  Navigator.pop(context);
+
+                  if (model.accepted) {
+                    Routes.router.navigateTo(context, '/profile/${myself.uid}/${model.uid}');
+                  } else {
+                    if (model.incoming) {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF333333),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        width: 3.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: friend.photoUrl ?? kDefaultAvi,
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(milliseconds: 300),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  const Text(
+                                    'Incoming Friend Request',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  Text(sprintf(kFriendHasRequested, <String>[friend.displayName])),
+                                  const SizedBox(height: 24.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () {
+                                        friendsBloc.processFriendRequest(model.uid, true);
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.green,
+                                      child: const Text(
+                                        'Accept',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () async {
+                                        friendsBloc.removeFriend(model.uid);
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.red,
+                                      child: const Text(
+                                        'Ignore',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Dismiss'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      );
+                    } else {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF333333),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        width: 3.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: friend.photoUrl ?? kDefaultAvi,
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(milliseconds: 300),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  const Text(
+                                    'Pending Friend Request',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  const Text(kFriendRequestPending),
+                                  const SizedBox(height: 24.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () async {
+                                        friendsBloc.removeFriend(model.uid);
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.red,
+                                      child: const Text(
+                                        'Cancel Request',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Dismiss'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      );
+                    }
+                  }
                 },
               );
             };

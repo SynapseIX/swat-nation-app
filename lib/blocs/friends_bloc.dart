@@ -45,6 +45,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     if (accepted) {
       final Map<String, dynamic> data = <String, dynamic>{
         'accepted': true,
+        'dateAdded': Timestamp.now(),
       };
       
       await myRef.updateData(data);

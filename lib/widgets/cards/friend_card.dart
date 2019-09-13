@@ -107,26 +107,29 @@ class FriendCard extends StatelessWidget {
             );
           }
 
-          return Card(
-            semanticContainer: true,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            color: Colors.lightGreenAccent,
-            child: Stack(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: friend.photoUrl ?? kDefaultAvi,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  fadeInDuration: const Duration(milliseconds: 300),
-                ),
-                Positioned(
-                  bottom: 0.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: content,
-                ),
-              ],
+          return GestureDetector(
+            onTap: onTap,
+            child: Card(
+              semanticContainer: true,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              color: Colors.lightGreenAccent,
+              child: Stack(
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: friend.photoUrl ?? kDefaultAvi,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                    fadeInDuration: const Duration(milliseconds: 300),
+                  ),
+                  Positioned(
+                    bottom: 0.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: content,
+                  ),
+                ],
+              ),
             ),
           );
         },
