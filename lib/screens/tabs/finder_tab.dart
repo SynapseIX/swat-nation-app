@@ -235,7 +235,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                             } else {
                               Routes
                                 .router
-                                .navigateTo(context, 'profile/${model.uid}');
+                                .navigateTo(context, '/profile/${currentUser.uid}/${model.uid}');
                             }
                           }
                         );

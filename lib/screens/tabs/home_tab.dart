@@ -238,7 +238,7 @@ class _AppBar extends StatelessWidget {
                 final FirebaseUser user = await AuthBloc.instance().currentUser;
 
                 Navigator.pop(context);
-                Routes.router.navigateTo(context, 'profile/${user.uid}');
+                Routes.router.navigateTo(context, '/profile/${user.uid}/${user.uid}');
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

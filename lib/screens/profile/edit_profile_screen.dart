@@ -409,7 +409,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     stream: bloc.privacyStream,
                     initialData: false,
                     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                      return Switch(
+                      return Switch.adaptive(
                         value: snapshot.data,
                         onChanged: bloc.onChangePrivacy,
                         activeColor: Theme.of(context).primaryColor,

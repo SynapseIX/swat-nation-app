@@ -107,7 +107,7 @@ class SettingsDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(MdiIcons.weatherNight),
               title: const Text('Dark Mode'),
-              trailing: Switch(
+              trailing: Switch.adaptive(
                 activeColor: Theme.of(context).primaryColor,
                 value: themeBloc.currentTheme is DarkTheme,
                 onChanged: (bool value) => themeBloc.changeTheme(value ? DarkTheme() : LightTheme()),
@@ -320,6 +320,6 @@ class _AuthHeader extends StatelessWidget {
 
   void _navigateToProfile(BuildContext context, UserModel model) {
     Navigator.pop(context);
-    Routes.router.navigateTo(context, '/profile/${model.uid}');
+    Routes.router.navigateTo(context, '/profile/${user.uid}/${model.uid}');
   }
 }

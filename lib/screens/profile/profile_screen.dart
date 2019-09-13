@@ -6,13 +6,16 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sprintf/sprintf.dart';
 import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
+import 'package:swat_nation/blocs/friends_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/achievement_model.dart';
 import 'package:swat_nation/models/clip_model.dart';
+import 'package:swat_nation/models/friend_model.dart';
 import 'package:swat_nation/models/navigation_result.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/routes.dart';
@@ -20,6 +23,7 @@ import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/utils/url_launcher.dart';
 import 'package:swat_nation/widgets/cards/achievement_card.dart';
 import 'package:swat_nation/widgets/cards/clip_card.dart';
+import 'package:swat_nation/widgets/cards/friend_card.dart';
 import 'package:swat_nation/widgets/common/card_section.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/common/view_all_card.dart';
@@ -34,12 +38,14 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     Key key,
     @required this.model,
+    @required this.myUid,
   }) : super(key: key);
 
   static Handler routeHandler() {
     return Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
         final UserBloc bloc = UserBloc();
+        final String myUid = parameters['myUid'].first;
         final String uid = parameters['uid'].first;
 
         return FutureBuilder<UserModel>(
@@ -54,7 +60,10 @@ class ProfileScreen extends StatefulWidget {
               );
             }
 
-            return ProfileScreen(model: snapshot.data);
+            return ProfileScreen(
+              model: snapshot.data,
+              myUid: myUid,
+            );
           },
         );
       }
@@ -62,6 +71,7 @@ class ProfileScreen extends StatefulWidget {
   }
   
   final UserModel model;
+  final String myUid;
 
   @override
   State createState() => _ProfileScreenState();
@@ -70,13 +80,17 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   AchievementsBloc achievementsBloc;
   ClipsBloc clipsBloc;
+  UserBloc userBloc;
+  FriendsBloc friendsBloc;
   UserModel user;
 
   @override
   void initState() {
-    achievementsBloc = AchievementsBloc(uid: widget.model.uid);
-    clipsBloc = ClipsBloc();
     user = widget.model;
+    achievementsBloc = AchievementsBloc(uid: user.uid);
+    clipsBloc = ClipsBloc();
+    userBloc = UserBloc();
+    friendsBloc = FriendsBloc(uid: widget.myUid);
     super.initState();
   }
 
@@ -84,47 +98,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     achievementsBloc.dispose();
     clipsBloc.dispose();
+    userBloc.dispose();
+    friendsBloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<FirebaseUser>(
-      future: AuthBloc.instance().currentUser,
-      builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-        final bool me = snapshot.hasData && user.uid == snapshot.data.uid;
-
-        return Scaffold(
-          appBar: AppBar(
-            title: me
-              ? const Text('My Profile')
-              : const Text('Member Profile'),
-            leading: IconButton(
-              icon: const Icon(MdiIcons.close),
-              onPressed: () => Navigator.pop(context),
-            ),
-            actions: <Widget>[
-              _buildProfileActions(me),
-            ],
-          ),
-          // TODO(itsprof): validate if friend or blocked
-          body: me || !user.private
-            ? _PublicBody(
+    final bool me = user.uid == widget.myUid;
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: me
+          ? const Text('My Profile')
+          : const Text('Member Profile'),
+        leading: IconButton(
+          icon: const Icon(MdiIcons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: <Widget>[
+          _buildProfileActions(me),
+        ],
+      ),
+      body: me
+        ? _PublicBody(
+            achievementsBloc: achievementsBloc,
+            clipsBloc: clipsBloc,
+            userBloc: userBloc,
+            friendsBloc: friendsBloc,
+            user: user,
+            me: me,
+          )
+        : FutureBuilder<bool>(
+            future: friendsBloc.checkFriendship(user.uid),
+            initialData: false,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              final Widget privateBody = _PrivateBody(user:user);
+              final Widget publicBody = _PublicBody(
                 achievementsBloc: achievementsBloc,
                 clipsBloc: clipsBloc,
+                userBloc: userBloc,
+                friendsBloc: friendsBloc,
                 user: user,
                 me: me,
-              )
-            : _PrivateBody(user: user),
-        );
-      },
+              );
+
+              if (snapshot.hasData && snapshot.data) {
+                return publicBody;
+              } else {
+                return user.private
+                  ? privateBody
+                  : publicBody;
+              }
+            },
+          ),
     );
   }
 
   Future<void> _navigateToEdit() async {
     final UserModel updatedUser = await Routes
       .router
-      .navigateTo(context, 'profile/edit/${user.uid}');
+      .navigateTo(context, '/edit-profile/${widget.myUid}');
 
     if (updatedUser != null) {
       setState(() {
@@ -138,7 +172,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (me) {
       return PopupMenuButton<ProfileAction>(
         itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
-          if (!widget.model.private)
           PopupMenuItem<ProfileAction>(
             value: ProfileAction.inbox,
             child: Row(
@@ -174,32 +207,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    return PopupMenuButton<ProfileAction>(
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
-        if (!widget.model.private)
-        PopupMenuItem<ProfileAction>(
-          value: ProfileAction.message,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
-              Icon(MdiIcons.email),
-              SizedBox(width: 8.0),
-              Text('Message'),
-            ],
-          ),
-        ),
-        PopupMenuItem<ProfileAction>(
-          value: ProfileAction.report,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
-              Icon(MdiIcons.alertCircle),
-              SizedBox(width: 8.0),
-              Text('Report'),
-            ],
-          ),
-        ),
-      ],
+    return FutureBuilder<bool>(
+      future: friendsBloc.checkFriendship(user.uid),
+      initialData: false,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        final bool isFriend = snapshot.hasData && snapshot.data;
+
+        return PopupMenuButton<ProfileAction>(
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
+            PopupMenuItem<ProfileAction>(
+              value: isFriend ? ProfileAction.unfriend : ProfileAction.friend,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(isFriend ? MdiIcons.accountMinus : MdiIcons.accountPlus),
+                  const SizedBox(width: 8.0),
+                  Text(isFriend ? 'Remove friend' : 'Add friend'),
+                ],
+              ),
+            ),
+
+            if (!widget.model.private || isFriend)
+            PopupMenuItem<ProfileAction>(
+              value: ProfileAction.message,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const <Widget>[
+                  Icon(MdiIcons.email),
+                  SizedBox(width: 8.0),
+                  Text('Message'),
+                ],
+              ),
+            ),
+            PopupMenuItem<ProfileAction>(
+              value: ProfileAction.report,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const <Widget>[
+                  Icon(MdiIcons.alertCircle),
+                  SizedBox(width: 8.0),
+                  Text('Report'),
+                ],
+              ),
+            ),
+          ],
+          onSelected: (ProfileAction action) async {
+            // TODO(itsprof): implement actions
+            switch (action) {
+              // TODO(itsprof): check if blocked
+              case ProfileAction.friend:
+                DialogHelper.instance().showWaitingDialog(
+                  context: context,
+                  title: 'Sending friend request...',
+                );
+
+                try {
+                  await friendsBloc.sendFriendRequest(user.uid);
+                  Navigator.pop(context);
+
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Sent Request'),
+                      content: Text(sprintf(kFriendRequestSent, <String>[user.displayName])),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () => Navigator.of(context)
+                            ..pop()
+                            ..pop(),
+                          child: const Text('Dismiss'),
+                        ),
+                      ],
+                    ),
+                  );
+                } catch (error) {
+                  Navigator.pop(context);
+                  DialogHelper.instance().showErrorDialog(
+                    context: context,
+                    title: 'Can\'t Send Request',
+                    message: error ?? 'Your friend request can\'t be sent. Please try again later.'
+                  );
+                }
+                break;
+              case ProfileAction.unfriend:
+                showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Remove Friend'),
+                    content: Text(sprintf(kFriendRemove, <String>[user.displayName])),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+
+                          try {
+                            await friendsBloc.removeFriend(user.uid);
+                            setState(() {});
+                          } catch (error) {
+                            DialogHelper.instance().showErrorDialog(
+                              context: context,
+                              title: 'Can\'t Remove',
+                              message: 'Friend can\'t be removed. Please try again later.'
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Remove',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Dismiss'),
+                      ),
+                    ],
+                  ),
+                );
+                break;
+              default:
+                break;
+            }
+          },
+        );
+      }
     );
   }
 }
@@ -466,12 +598,16 @@ class _PublicBody extends StatelessWidget {
   const _PublicBody({
     @required this.achievementsBloc,
     @required this.clipsBloc,
+    @required this.userBloc,
+    @required this.friendsBloc,
     @required this.user,
     this.me = false,
   });
 
   final AchievementsBloc achievementsBloc;
   final ClipsBloc clipsBloc;
+  final UserBloc userBloc;
+  final FriendsBloc friendsBloc;
   final UserModel user;
   final bool me;
 
@@ -624,6 +760,215 @@ class _PublicBody extends StatelessWidget {
             onPressed: () {},
             child: const Text('Request Custom Logo'),
           ),
+        ),
+
+        // Friends
+        if (me)
+        StreamBuilder<List<FriendModel>>(
+          stream: friendsBloc.allFriends,
+          builder: (BuildContext context, AsyncSnapshot<List<FriendModel>> snapshot) {
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const SizedBox();
+            }
+            
+            final Widget Function(FriendModel) cardMapper = (FriendModel model) {
+              return FriendCard(
+                key: UniqueKey(),
+                model: model,
+                onTap: () async {
+                  DialogHelper.instance().showWaitingDialog(context: context);
+
+                  final FirebaseUser myself = await AuthBloc.instance().currentUser;
+                  final UserModel friend = await userBloc.userByUid(model.uid);
+                  Navigator.pop(context);
+
+                  if (model.accepted) {
+                    Routes.router.navigateTo(context, '/profile/${myself.uid}/${model.uid}');
+                  } else {
+                    if (model.incoming) {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF333333),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        width: 3.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: friend.photoUrl ?? kDefaultAvi,
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(milliseconds: 300),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  const Text(
+                                    'Incoming Friend Request',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  Text(sprintf(kFriendHasRequested, <String>[friend.displayName])),
+                                  const SizedBox(height: 24.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () {
+                                        friendsBloc.processFriendRequest(model.uid, true);
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.green,
+                                      child: const Text(
+                                        'Accept',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () async {
+                                        friendsBloc.removeFriend(model.uid);
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.red,
+                                      child: const Text(
+                                        'Ignore',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Dismiss'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      );
+                    } else {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF333333),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        width: 3.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: friend.photoUrl ?? kDefaultAvi,
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(milliseconds: 300),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  const Text(
+                                    'Pending Friend Request',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  const Text(kFriendRequestPending),
+                                  const SizedBox(height: 24.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () async {
+                                        friendsBloc.removeFriend(model.uid);
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.red,
+                                      child: const Text(
+                                        'Cancel Request',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 40.0,
+                                    child: RaisedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Dismiss'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      );
+                    }
+                  }
+                },
+              );
+            };
+
+            final bool largeList = snapshot.data.length > kMaxFriendsCards;
+            final List<Widget> cards = largeList
+              ? snapshot.data
+                .sublist(0, kMaxFriendsCards)
+                .map(cardMapper).toList()
+              : snapshot.data
+                .map(cardMapper).toList();
+                
+            cards.add(ViewAllCard(
+              text: 'Manage',
+              onTap: () => Routes.router.navigateTo(context, '/my-friends/${user.uid}'),
+            ));
+
+            return CardSection(
+              header: const TextHeader('Friends'),
+              cardList: HorizontalCardList(
+                cards: cards,
+              ),
+            );
+          },
         ),
 
         // Achievements

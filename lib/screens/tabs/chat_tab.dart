@@ -277,7 +277,8 @@ class _ChatTabState extends State<ChatTab> with AutomaticKeepAliveClientMixin {
                     child: const Text('View Profile'),
                     onPressed: () async {
                       Navigator.pop(context);
-                      Routes.router.navigateTo(context, 'profile/${model.author}');
+                      final FirebaseUser user = await AuthBloc.instance().currentUser;
+                      Routes.router.navigateTo(context, '/profile/${user.uid}/${model.author}');
                     },
                   ),
                 ),
