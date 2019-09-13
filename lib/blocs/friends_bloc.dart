@@ -50,6 +50,19 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     return false;
   }
 
+  Future<bool> checkPendingRequest(String friendUid) async {
+    final DocumentSnapshot myDoc = await _firestore
+      .document('friends/$uid/list/$friendUid').get();
+    final DocumentSnapshot theirDoc = await _firestore
+      .document('friends/$friendUid/list/$uid').get();
+
+    if (myDoc.exists && theirDoc.exists) {
+      return !myDoc.data['accepted'] && !theirDoc.data['accepted'];
+    }
+
+    return false;
+  }
+
   @override
   void dispose() {
     print('FriendsBloc disposed');
