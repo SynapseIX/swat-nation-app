@@ -24,7 +24,7 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     final bool isPending = await checkPendingRequest(friendUid);
 
     if (isPending) {
-      throw 'Friend request still pending.';
+      throw 'There\'s still a pending friend request with this user.';
     } else {
       await _firestore
         .collection('friends/$uid/list')
@@ -35,6 +35,22 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
         .collection('friends/$friendUid/list')
         .document(uid)
         .setData(FriendModel(incoming: true).toMap());
+    }
+  }
+
+  Future<void> processFriendRequest(String friendUid, bool accepted) async {
+    final DocumentReference myRef = _firestore.document('friends/$uid/list/$friendUid');
+    final DocumentReference theirRef = _firestore.document('friends/$friendUid/list/$uid');
+
+    if (accepted) {
+      final Map<String, dynamic> data = <String, dynamic>{
+        'accepted': true,
+      };
+      
+      await myRef.updateData(data);
+      await theirRef.updateData(data);
+    } else {
+      removeFriend(friendUid);
     }
   }
 
