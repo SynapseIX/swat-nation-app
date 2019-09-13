@@ -65,7 +65,7 @@ const int kAchievementColumnCount = 3;
 
 // Friends
 const int kMaxFriendsCards = 5;
-const String kFriendHasRequested = '%s has requested to be your friend.';
+const String kFriendHasRequested = '%s sent you a friend request.';
 const String kFriendRequestSent = 'Your friend request to %s has been sent.';
 const String kFriendRequestPending = 'Your friend request is pending.';
 const String kFriendRemove = 'Are you sure you want to remove %s from your friends?';

@@ -261,9 +261,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: 'Sending friend request...',
                 );
 
-                Navigator.pop(context);
                 try {
                   await friendsBloc.sendFriendRequest(user.uid);
+                  Navigator.pop(context);
 
                   showDialog<void>(
                     context: context,
@@ -281,6 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 } catch (error) {
+                  Navigator.pop(context);
                   DialogHelper.instance().showErrorDialog(
                     context: context,
                     title: 'Can\'t Send Request',
