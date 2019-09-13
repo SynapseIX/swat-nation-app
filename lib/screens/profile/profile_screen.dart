@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,12 +37,14 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     Key key,
     @required this.model,
+    @required this.myUid,
   }) : super(key: key);
 
   static Handler routeHandler() {
     return Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
         final UserBloc bloc = UserBloc();
+        final String myUid = parameters['myUid'].first;
         final String uid = parameters['uid'].first;
 
         return FutureBuilder<UserModel>(
@@ -58,7 +59,10 @@ class ProfileScreen extends StatefulWidget {
               );
             }
 
-            return ProfileScreen(model: snapshot.data);
+            return ProfileScreen(
+              model: snapshot.data,
+              myUid: myUid,
+            );
           },
         );
       }
@@ -66,6 +70,7 @@ class ProfileScreen extends StatefulWidget {
   }
   
   final UserModel model;
+  final String myUid;
 
   @override
   State createState() => _ProfileScreenState();
@@ -79,9 +84,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    achievementsBloc = AchievementsBloc(uid: widget.model.uid);
-    clipsBloc = ClipsBloc();
     user = widget.model;
+    achievementsBloc = AchievementsBloc(uid: user.uid);
+    clipsBloc = ClipsBloc();
+    friendsBloc = FriendsBloc(uid: widget.myUid);
     super.initState();
   }
 
@@ -95,77 +101,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<FirebaseUser>(
-      future: AuthBloc.instance().currentUser,
-      builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-        if (snapshot.hasError || !snapshot.hasData) {
-          return Material(
-            child: Center(child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: const <Widget>[
-                CircularProgressIndicator(),
-                SizedBox(height: 4.0),
-                Text('Fetching profile...')
-              ],
-            )),
-          );
-        }
-
-        final bool me = user.uid == snapshot.data.uid;
-        friendsBloc = FriendsBloc(uid: snapshot.data.uid);
-
-        return Scaffold(
-          appBar: AppBar(
-            title: me
-              ? const Text('My Profile')
-              : const Text('Member Profile'),
-            leading: IconButton(
-              icon: const Icon(MdiIcons.close),
-              onPressed: () => Navigator.pop(context),
-            ),
-            actions: <Widget>[
-              _buildProfileActions(me),
-            ],
-          ),
-          body: me
-            ? _PublicBody(
+    final bool me = user.uid == widget.myUid;
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: me
+          ? const Text('My Profile')
+          : const Text('Member Profile'),
+        leading: IconButton(
+          icon: const Icon(MdiIcons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: <Widget>[
+          _buildProfileActions(me),
+        ],
+      ),
+      body: me
+        ? _PublicBody(
+            achievementsBloc: achievementsBloc,
+            clipsBloc: clipsBloc,
+            friendsBloc: friendsBloc,
+            user: user,
+            me: me,
+          )
+        : FutureBuilder<bool>(
+            future: friendsBloc.checkFriendship(user.uid),
+            initialData: false,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              final Widget privateBody = _PrivateBody(user:user);
+              final Widget publicBody = _PublicBody(
                 achievementsBloc: achievementsBloc,
                 clipsBloc: clipsBloc,
                 friendsBloc: friendsBloc,
                 user: user,
                 me: me,
-              )
-            : FutureBuilder<bool>(
-                future: friendsBloc.checkFriendship(user.uid),
-                initialData: false,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  final Widget privateBody = _PrivateBody(user:user);
-                  final Widget publicBody = _PublicBody(
-                    achievementsBloc: achievementsBloc,
-                    clipsBloc: clipsBloc,
-                    friendsBloc: friendsBloc,
-                    user: user,
-                    me: me,
-                  );
+              );
 
-                  if (snapshot.hasData) {
-                    return publicBody;
-                  } else {
-                    return user.private
-                      ? privateBody
-                      : publicBody;
-                  }
-                },
-              ),
-        );
-      },
+              if (snapshot.hasData) {
+                return publicBody;
+              } else {
+                return user.private
+                  ? privateBody
+                  : publicBody;
+              }
+            },
+          ),
     );
   }
 
   Future<void> _navigateToEdit() async {
     final UserModel updatedUser = await Routes
       .router
-      .navigateTo(context, 'profile/edit/${user.uid}');
+      .navigateTo(context, '/edit-profile/${widget.myUid}');
 
     if (updatedUser != null) {
       setState(() {
@@ -179,7 +166,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (me) {
       return PopupMenuButton<ProfileAction>(
         itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
-          if (!widget.model.private)
           PopupMenuItem<ProfileAction>(
             value: ProfileAction.inbox,
             child: Row(
@@ -268,11 +254,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context: context,
                   title: 'Sending friend request...',
                 );
-                
-                final bool sent = await friendsBloc.sendFriendRequest(user.uid);
-                Navigator.pop(context);
 
-                if (sent) {
+                Navigator.pop(context);
+                try {
+                  await friendsBloc.sendFriendRequest(user.uid);
+
                   showDialog<void>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -280,13 +266,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       content: Text(sprintf(kFriendRequestSent, <String>[user.displayName])),
                       actions: <Widget>[
                         FlatButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.of(context)
+                            ..pop()
+                            ..pop(),
                           child: const Text('Dismiss'),
                         ),
                       ],
                     ),
                   );
-                } else {
+                } catch (error) {
                   DialogHelper.instance().showErrorDialog(
                     context: context,
                     title: 'Can\'t Send Request',
@@ -303,12 +291,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () async {
-                          final bool removed = await friendsBloc.removeFriend(user.uid);
                           Navigator.pop(context);
-                          
-                          if (removed) {
+
+                          try {
+                            await friendsBloc.removeFriend(user.uid);
                             setState(() {});
-                          } else {
+                          } catch (error) {
                             DialogHelper.instance().showErrorDialog(
                               context: context,
                               title: 'Can\'t Remove',
@@ -778,7 +766,10 @@ class _PublicBody extends StatelessWidget {
               return FriendCard(
                 key: UniqueKey(),
                 model: model,
-                bloc: friendsBloc,
+                // TODO(itsprof): implement
+                onTap: () {
+
+                },
               );
             };
 

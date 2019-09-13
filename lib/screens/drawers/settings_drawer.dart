@@ -320,6 +320,6 @@ class _AuthHeader extends StatelessWidget {
 
   void _navigateToProfile(BuildContext context, UserModel model) {
     Navigator.pop(context);
-    Routes.router.navigateTo(context, '/profile/${model.uid}');
+    Routes.router.navigateTo(context, '/profile/${user.uid}/${model.uid}');
   }
 }

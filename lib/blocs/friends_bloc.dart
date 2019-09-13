@@ -10,104 +10,44 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     @required this.uid,
   });
   
-  final String uid;
+  
   final Firestore _firestore = Firestore.instance;
+  final String uid;
 
   Stream<List<FriendModel>> get allFriends => _firestore
-    .collection('users/$uid/friends')
-    .orderBy('pending', descending: true)
+    .collection('friends/$uid/list')
+    .orderBy('accepted', descending: true)
     .snapshots()
     .transform(transformFriends);
 
-  Stream<List<FriendModel>> get acceptedFriends => _firestore
-    .collection('users/$uid/friends')
-    .where('pending', isEqualTo: false)
-    .snapshots()
-    .transform(transformFriends);
+  Future<void> sendFriendRequest(String friendUid) async {
+    await _firestore
+      .collection('friends/$uid/list')
+      .document(friendUid)
+      .setData(FriendModel(incoming: false).toMap());
 
-  Stream<List<FriendModel>> get pendingFriends => _firestore
-    .collection('users/$uid/friends')
-    .where('pending', isEqualTo: true)
-    .snapshots()
-    .transform(transformFriends);
-  
-  Future<bool> sendFriendRequest(String friendUid) async {
-    final DocumentReference outgoingRequest = await _firestore
-      .collection('users/$uid/friends')
-      .add(FriendModel(uid: friendUid, outgoing: true, dateAdded: Timestamp.now()).toMap());
-    
-    final DocumentReference incomingRequest = await _firestore
-      .collection('users/$friendUid/friends')
-      .add(FriendModel(uid: uid, outgoing: false, dateAdded: Timestamp.now(),).toMap());
-
-    if (outgoingRequest == null || incomingRequest == null) {
-      throw 'Could not send the friend request.';
-    }
-
-    return true;
+    await _firestore
+      .collection('friends/$friendUid/list')
+      .document(uid)
+      .setData(FriendModel(incoming: true).toMap());
   }
 
-  Future<bool> processFriendRequest(FriendModel request, bool pending) async {
-    final QuerySnapshot incomingRequest = await _firestore
-      .collection('users/$uid/friends')
-      .where('uid', isEqualTo: request.uid)
-      .snapshots()
-      .first;
-    final DocumentReference incomingRef = incomingRequest.documents.first.reference;
-
-    final QuerySnapshot outgoingRequest = await _firestore
-      .collection('users/${request.uid}/friends')
-      .where('uid', isEqualTo: uid)
-      .snapshots()
-      .first;
-    final DocumentReference outgoingRef = outgoingRequest.documents.first.reference;
-
-    final WriteBatch batch = _firestore.batch();
-    if (!pending) {
-      final Map<String, dynamic> acceptRequest = <String, dynamic>{
-        'pending': false,
-      };
-
-      batch.updateData(incomingRef, acceptRequest);
-      batch.updateData(outgoingRef, acceptRequest);
-      await batch.commit();
-      
-      return true;
-    } else {
-      batch.delete(incomingRef);
-      batch.delete(outgoingRef);
-      await batch.commit();
-
-      return false;
-    }
-  }
-
-  Future<bool> removeFriend(String friendUid) async {
-    final QuerySnapshot incomingRequest = await _firestore
-      .collection('users/$uid/friends')
-      .where('uid', isEqualTo: friendUid)
-      .snapshots()
-      .first;
-    final DocumentReference incomingRef = incomingRequest.documents.first.reference;
-
-    final QuerySnapshot outgoingRequest = await _firestore
-      .collection('users/$friendUid/friends')
-      .where('uid', isEqualTo: uid)
-      .snapshots()
-      .first;
-    final DocumentReference outgoingRef = outgoingRequest.documents.first.reference;
-
-    final WriteBatch batch = _firestore.batch();
-    batch.delete(incomingRef);
-    batch.delete(outgoingRef);
-    await batch.commit();
-
-    return true;
+  Future<void> removeFriend(String friendUid) async {
+    await _firestore.document('friends/$uid/list/$friendUid').delete();
+    await _firestore.document('friends/$friendUid/list/$uid').delete();
   }
 
   Future<bool> checkFriendship(String friendUid) async {
-    final List<FriendModel> friends = await allFriends.first;
-    return friends?.firstWhere((FriendModel model) => model.uid == friendUid) != null;
+    final DocumentSnapshot myDoc = await _firestore
+      .document('friends/$uid/list/$friendUid').get();
+    final DocumentSnapshot theirDoc = await _firestore
+      .document('friends/$friendUid/list/$uid').get();
+
+    if (myDoc.exists && theirDoc.exists) {
+      return myDoc.data['accepted'] && theirDoc.data['accepted'];
+    }
+
+    return false;
   }
 
   @override

@@ -26,9 +26,9 @@ class Routes {
   static String createAccount = '/create-account';
   static String forgotPassword = '/forgot-password';
   
-  static String profile = '/profile/:uid';
-  static String editProfile = '/profile/edit/:uid';
-  static String changeEmail = '/profile/change-email/';
+  static String profile = '/profile/:myUid/:uid';
+  static String editProfile = '/edit-profile/:uid';
+  static String changeEmail = '/change-email/';
 
   static String achievements = '/achievements/:uid/:me';
   

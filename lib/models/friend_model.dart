@@ -5,41 +5,40 @@ import 'package:swat_nation/base/base_model.dart';
 /// Represents an instance of a friend.
 class FriendModel extends BaseModel {
   FriendModel({
-    @required this.uid,
-    @required this.dateAdded,
-    @required this.outgoing,
-    this.pending = true,
+    @required this.incoming,
+    this.uid,
+    this.dateAdded,
+    this.accepted = false,
   });
 
   FriendModel.fromSnapshot(DocumentSnapshot snapshot) {
-    uid = snapshot.data['uid'];
+    uid = snapshot.reference.documentID;
     dateAdded = snapshot.data['dateAdded'];
-    outgoing = snapshot.data['outgoing'];
-    pending = snapshot.data['pending'];
+    incoming = snapshot.data['incoming'];
+    accepted = snapshot.data['accepted'];
   }
 
   String uid;
   Timestamp dateAdded;
-  bool outgoing;
-  bool pending;
+  bool incoming;
+  bool accepted;
 
   @override
   String toString() {
     return '''
     uid: $uid
     dateAdded: $dateAdded
-    outgoing: $outgoing
-    pending: $pending
+    incoming: $incoming
+    accepted: $accepted
     ''';
   }
 
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'uid': uid,
       'dateAdded': dateAdded,
-      'outgoing': outgoing,
-      'pending': pending,
+      'incoming': incoming,
+      'accepted': accepted,
     };
   }
 }
