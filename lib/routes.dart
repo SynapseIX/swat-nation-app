@@ -5,6 +5,7 @@ import 'package:swat_nation/screens/achievements/achievements_screen.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
 import 'package:swat_nation/screens/auth/forgot_password_screen.dart';
 import 'package:swat_nation/screens/auth/sign_in_screen.dart';
+import 'package:swat_nation/screens/blocked/blocked_screen.dart';
 import 'package:swat_nation/screens/clips/all_clips_screen.dart';
 import 'package:swat_nation/screens/clips/clip_screen.dart';
 import 'package:swat_nation/screens/clips/create_clip_screen.dart';
@@ -32,6 +33,8 @@ class Routes {
   static String changeEmail = '/change-email/';
 
   static String friends = '/my-friends/:uid';
+
+  static String blocked = '/blocked/:uid';
 
   static String achievements = '/achievements/:uid/:me';
   
@@ -92,6 +95,13 @@ class Routes {
     router.define(
       friends,
       handler: FriendsScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Blocked
+    router.define(
+      blocked,
+      handler: BlockedScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
 

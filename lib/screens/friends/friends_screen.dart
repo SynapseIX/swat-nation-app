@@ -11,6 +11,7 @@ import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
+/// Represents the friend list screen for the authenticated user.
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({
     Key key,
