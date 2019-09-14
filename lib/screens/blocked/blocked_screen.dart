@@ -80,7 +80,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
 
                   final UserModel user = snapshot.data;
                   final String blockedDate
-                    = humanizeTimestamp(model.dateBlocked, 'MMM d, yyyy hh:mm A');
+                    = humanizeTimestamp(model.dateBlocked, 'MMM d, yyyy hh:mm a');
 
                   return ListTile(
                     leading: Container(
