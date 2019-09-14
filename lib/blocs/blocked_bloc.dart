@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_bloc.dart';
+import 'package:swat_nation/blocs/friends_bloc.dart';
 import 'package:swat_nation/mixins/blocked_transformer.dart';
 import 'package:swat_nation/models/blocked_model.dart';
 
@@ -22,6 +23,10 @@ class BlockedBloc extends BaseBloc with BlockedTransformer {
       .collection('blocked/$uid/list')
       .document(otherUid)
       .setData(BlockedModel(dateBlocked: Timestamp.now()).toMap());
+    
+    final FriendsBloc friendsBloc = FriendsBloc(uid: uid);
+    await friendsBloc.removeFriend(otherUid);
+    friendsBloc.dispose();
   }
 
   Future<void> unblock(String otherUid) async {
