@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swat_nation/base/base_bloc.dart';
+import 'package:swat_nation/blocs/blocked_bloc.dart';
 import 'package:swat_nation/mixins/friend_transformer.dart';
 import 'package:swat_nation/models/friend_model.dart';
 
@@ -20,21 +21,29 @@ class FriendsBloc extends BaseBloc with FriendTransformer {
     .transform(transformFriends);
 
   Future<void> sendFriendRequest(String friendUid) async {
+    final BlockedBloc blockedBloc = BlockedBloc(uid: uid);
+
+    final bool blocked = await blockedBloc.checkIfBlocked(friendUid);
     final bool isPending = await checkPendingRequest(friendUid);
+
+    if (blocked) {
+      blockedBloc.dispose();
+      throw 'This friend request can\'t be sent.';
+    }
 
     if (isPending) {
       throw 'There\'s still a pending friend request with this user.';
-    } else {
-      await _firestore
-        .collection('friends/$uid/list')
-        .document(friendUid)
-        .setData(FriendModel(incoming: false).toMap());
-
-      await _firestore
-        .collection('friends/$friendUid/list')
-        .document(uid)
-        .setData(FriendModel(incoming: true).toMap());
     }
+
+    await _firestore
+      .collection('friends/$uid/list')
+      .document(friendUid)
+      .setData(FriendModel(incoming: false).toMap());
+
+    await _firestore
+      .collection('friends/$friendUid/list')
+      .document(uid)
+      .setData(FriendModel(incoming: true).toMap());
   }
 
   Future<void> processFriendRequest(String friendUid, bool accepted) async {
