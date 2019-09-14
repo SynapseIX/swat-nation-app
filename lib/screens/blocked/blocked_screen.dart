@@ -7,6 +7,7 @@ import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
 import 'package:swat_nation/models/blocked_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
 /// Represents the blocked users screen for the authenticated user.
@@ -64,10 +65,12 @@ class _BlockedScreenState extends State<BlockedScreen> {
           }
           
           final List<BlockedModel> data = snapshot.data;
+          
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (BuildContext context, int index) {
               final BlockedModel model = data[index];
+              
               return FutureBuilder<UserModel>(
                 future: userBloc.userByUid(model.uid),
                 builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
@@ -76,6 +79,9 @@ class _BlockedScreenState extends State<BlockedScreen> {
                   }
 
                   final UserModel user = snapshot.data;
+                  final String blockedDate
+                    = humanizeTimestamp(model.dateBlocked, 'MMM d, yyyy hh:mm A');
+
                   return ListTile(
                     leading: Container(
                       decoration: BoxDecoration(
@@ -112,6 +118,7 @@ class _BlockedScreenState extends State<BlockedScreen> {
                         ),
                       ],
                     ),
+                    subtitle: Text('Blocked on $blockedDate'),
                     trailing: const Icon(MdiIcons.accountOff),
                     onTap: () => _showOptions(context, model, user),
                   );

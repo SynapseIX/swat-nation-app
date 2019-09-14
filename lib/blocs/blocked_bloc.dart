@@ -5,6 +5,7 @@ import 'package:swat_nation/blocs/friends_bloc.dart';
 import 'package:swat_nation/mixins/blocked_transformer.dart';
 import 'package:swat_nation/models/blocked_model.dart';
 
+/// BLoC with logic to handle blocking/unblocking of users.
 class BlockedBloc extends BaseBloc with BlockedTransformer {
   BlockedBloc({
     @required this.uid,
