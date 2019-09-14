@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:sprintf/sprintf.dart';
 import 'package:swat_nation/blocs/achievements_bloc.dart';
 import 'package:swat_nation/blocs/auth_bloc.dart';
+import 'package:swat_nation/blocs/blocked_bloc.dart';
 import 'package:swat_nation/blocs/clips_bloc.dart';
 import 'package:swat_nation/blocs/friends_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
@@ -82,6 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ClipsBloc clipsBloc;
   UserBloc userBloc;
   FriendsBloc friendsBloc;
+  BlockedBloc blockedBloc;
   UserModel user;
 
   @override
@@ -91,6 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     clipsBloc = ClipsBloc();
     userBloc = UserBloc();
     friendsBloc = FriendsBloc(uid: widget.myUid);
+    blockedBloc = BlockedBloc(uid: widget.myUid);
     super.initState();
   }
 
@@ -100,6 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     clipsBloc.dispose();
     userBloc.dispose();
     friendsBloc.dispose();
+    blockedBloc.dispose();
     super.dispose();
   }
 
@@ -173,6 +177,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return PopupMenuButton<ProfileAction>(
         itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
           PopupMenuItem<ProfileAction>(
+            value: ProfileAction.edit,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const <Widget>[
+                Icon(MdiIcons.accountEdit),
+                SizedBox(width: 8.0),
+                Text('Edit'),
+              ],
+            ),
+          ),
+          PopupMenuItem<ProfileAction>(
             value: ProfileAction.inbox,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -184,13 +199,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           PopupMenuItem<ProfileAction>(
-            value: ProfileAction.edit,
+            value: ProfileAction.block,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: const <Widget>[
-                Icon(MdiIcons.accountEdit),
+                Icon(MdiIcons.accountOff),
                 SizedBox(width: 8.0),
-                Text('Edit'),
+                Text('Blocked Users'),
               ],
             ),
           ),
@@ -199,6 +214,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           switch (action) {
             case ProfileAction.edit:
               _navigateToEdit();
+              break;
+            case ProfileAction.block:
+              Routes.router.navigateTo(context, '/blocked/${widget.myUid}');
               break;
             default:
               break;
@@ -213,122 +231,204 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         final bool isFriend = snapshot.hasData && snapshot.data;
 
-        return PopupMenuButton<ProfileAction>(
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
-            PopupMenuItem<ProfileAction>(
-              value: isFriend ? ProfileAction.unfriend : ProfileAction.friend,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(isFriend ? MdiIcons.accountMinus : MdiIcons.accountPlus),
-                  const SizedBox(width: 8.0),
-                  Text(isFriend ? 'Remove friend' : 'Add friend'),
-                ],
-              ),
-            ),
+        return FutureBuilder<bool>(
+          future: blockedBloc.checkIfUserIsBlocked(user.uid),
+          initialData: false,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            final bool blocked = snapshot.hasData && snapshot.data;
 
-            if (!widget.model.private || isFriend)
-            PopupMenuItem<ProfileAction>(
-              value: ProfileAction.message,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  Icon(MdiIcons.email),
-                  SizedBox(width: 8.0),
-                  Text('Message'),
-                ],
-              ),
-            ),
-            PopupMenuItem<ProfileAction>(
-              value: ProfileAction.report,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  Icon(MdiIcons.alertCircle),
-                  SizedBox(width: 8.0),
-                  Text('Report'),
-                ],
-              ),
-            ),
-          ],
-          onSelected: (ProfileAction action) async {
-            // TODO(itsprof): implement actions
-            switch (action) {
-              // TODO(itsprof): check if blocked
-              case ProfileAction.friend:
-                DialogHelper.instance().showWaitingDialog(
-                  context: context,
-                  title: 'Sending friend request...',
-                );
-
-                try {
-                  await friendsBloc.sendFriendRequest(user.uid);
-                  Navigator.pop(context);
-
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Sent Request'),
-                      content: Text(sprintf(kFriendRequestSent, <String>[user.displayName])),
-                      actions: <Widget>[
-                        FlatButton(
-                          onPressed: () => Navigator.of(context)
-                            ..pop()
-                            ..pop(),
-                          child: const Text('Dismiss'),
-                        ),
-                      ],
-                    ),
-                  );
-                } catch (error) {
-                  Navigator.pop(context);
-                  DialogHelper.instance().showErrorDialog(
-                    context: context,
-                    title: 'Can\'t Send Request',
-                    message: error ?? 'Your friend request can\'t be sent. Please try again later.'
-                  );
-                }
-                break;
-              case ProfileAction.unfriend:
-                showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Remove Friend'),
-                    content: Text(sprintf(kFriendRemove, <String>[user.displayName])),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-
-                          try {
-                            await friendsBloc.removeFriend(user.uid);
-                            setState(() {});
-                          } catch (error) {
-                            DialogHelper.instance().showErrorDialog(
-                              context: context,
-                              title: 'Can\'t Remove',
-                              message: 'Friend can\'t be removed. Please try again later.'
-                            );
-                          }
-                        },
-                        child: const Text(
-                          'Remove',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Dismiss'),
-                      ),
+            return PopupMenuButton<ProfileAction>(
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<ProfileAction>>[
+                PopupMenuItem<ProfileAction>(
+                  value: isFriend ? ProfileAction.unfriend : ProfileAction.friend,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(isFriend ? MdiIcons.accountMinus : MdiIcons.accountPlus),
+                      const SizedBox(width: 8.0),
+                      Text(isFriend ? 'Remove friend' : 'Add friend'),
                     ],
                   ),
-                );
-                break;
-              default:
-                break;
-            }
+                ),
+
+                if (!widget.model.private || isFriend)
+                PopupMenuItem<ProfileAction>(
+                  value: ProfileAction.message,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Icon(MdiIcons.email),
+                      SizedBox(width: 8.0),
+                      Text('Message'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<ProfileAction>(
+                  value: blocked ? ProfileAction.unblock : ProfileAction.block,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Icon(MdiIcons.accountOff),
+                      const SizedBox(width: 8.0),
+                      Text(blocked ? 'Unblock' : 'Block'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<ProfileAction>(
+                  value: ProfileAction.report,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Icon(MdiIcons.alertCircle),
+                      SizedBox(width: 8.0),
+                      Text('Report'),
+                    ],
+                  ),
+                ),
+              ],
+              onSelected: (ProfileAction action) async {
+                // TODO(itsprof): implement actions
+                switch (action) {
+                  case ProfileAction.friend:
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Sending friend request...',
+                    );
+
+                    try {
+                      await friendsBloc.sendFriendRequest(user.uid);
+                      Navigator.pop(context);
+
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Sent Request'),
+                          content: Text(sprintf(kFriendRequestSent, <String>[user.displayName])),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () => Navigator.of(context)
+                                ..pop()
+                                ..pop(),
+                              child: const Text('Dismiss'),
+                            ),
+                          ],
+                        ),
+                      );
+                    } catch (error) {
+                      Navigator.pop(context);
+                      DialogHelper.instance().showErrorDialog(
+                        context: context,
+                        title: 'Can\'t Send Request',
+                        message: error ?? 'Your friend request can\'t be sent. Please try again later.'
+                      );
+                    }
+                    break;
+                  case ProfileAction.unfriend:
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Remove Friend'),
+                        content: Text(sprintf(kFriendRemove, <String>[user.displayName])),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+
+                              try {
+                                await friendsBloc.removeFriend(user.uid);
+                                setState(() {});
+                              } catch (error) {
+                                DialogHelper.instance().showErrorDialog(
+                                  context: context,
+                                  title: 'Can\'t Remove',
+                                  message: 'Friend can\'t be removed. Please try again later.'
+                                );
+                              }
+                            },
+                            child: const Text(
+                              'Remove',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Dismiss'),
+                          ),
+                        ],
+                      ),
+                    );
+                    break;
+                  case ProfileAction.block:
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Blocking user...',
+                    );
+
+                    try {
+                      await blockedBloc.block(user.uid);
+                      Navigator.pop(context);
+                      setState(() {});
+
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          content: const Text('User has been blocked.'),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Dismiss'),
+                            ),
+                          ],
+                        ),
+                      );
+                    } catch (error) {
+                      Navigator.pop(context);
+                      DialogHelper.instance().showErrorDialog(
+                        context: context,
+                        title: 'Can\'t Send Request',
+                        message: error ?? 'Can\'t block user. Please try again later.'
+                      );
+                    }
+                    break;
+                  case ProfileAction.unblock:
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Unblocking user...',
+                    );
+
+                    try {
+                      await blockedBloc.unblock(user.uid);
+                      Navigator.pop(context);
+                      setState(() {});
+
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          content: const Text('User has been unblocked.'),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Dismiss'),
+                            ),
+                          ],
+                        ),
+                      );
+                    } catch (error) {
+                      Navigator.pop(context);
+                      DialogHelper.instance().showErrorDialog(
+                        context: context,
+                        title: 'Can\'t Send Request',
+                        message: error ?? 'Can\'t unblock user. Please try again later.'
+                      );
+                    }
+                    break;
+                  default:
+                    break;
+                }
+              },
+            );
           },
         );
       }

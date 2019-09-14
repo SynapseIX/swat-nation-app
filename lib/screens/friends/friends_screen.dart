@@ -11,6 +11,7 @@ import 'package:swat_nation/routes.dart';
 import 'package:swat_nation/utils/date_helper.dart';
 import 'package:swat_nation/widgets/common/verified_badge.dart';
 
+/// Represents the friend list screen for the authenticated user.
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({
     Key key,
@@ -65,10 +66,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
           }
 
           final List<FriendModel> data = snapshot.data;
+
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (BuildContext context, int index) {
               final FriendModel model = data[index];
+
               return FutureBuilder<UserModel>(
                 future: userBloc.userByUid(model.uid),
                 builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
@@ -77,6 +80,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   }
 
                   final UserModel user = snapshot.data;
+                  
                   Widget tile;
                   if (model.accepted) {
                     tile = ListTile(
