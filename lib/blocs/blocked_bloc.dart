@@ -19,14 +19,14 @@ class BlockedBloc extends BaseBloc with BlockedTransformer {
   
   Future<void> block(String otherUid) async {
     _firestore
-      .collection('friends/$uid/list')
+      .collection('blocked/$uid/list')
       .document(otherUid)
       .setData(BlockedModel(dateBlocked: Timestamp.now()).toMap());
   }
 
   Future<void> unblock(String otherUid) async {
     _firestore
-      .document('friends/$uid/list/$otherUid')
+      .document('blocked/$uid/list/$otherUid')
       .delete();
   }
   
