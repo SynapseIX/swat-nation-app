@@ -40,6 +40,11 @@ class BlockedBloc extends BaseBloc with BlockedTransformer {
     return doc.exists;
   }
 
+   Future<bool> checkIfUserIsBlocked(String otherUid) async {
+    final DocumentSnapshot doc = await _firestore.document('blocked/$uid/list/$otherUid').get();
+    return doc.exists;
+  }
+
   @override
   void dispose() {
     print('BlockedBloc disposed');
