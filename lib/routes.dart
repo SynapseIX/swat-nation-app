@@ -35,7 +35,7 @@ class Routes {
   static String changeEmail = '/change-email/';
 
   static String inbox = '/inbox/:uid';
-  static String converstion = '/conversation/:recepientUid';
+  static String conversation = '/conversation/:recipientUid';
 
   static String friends = '/my-friends/:uid';
   static String blocked = '/blocked/:uid';
@@ -103,7 +103,7 @@ class Routes {
 
     // Conversation
     router.define(
-      inbox,
+      conversation,
       handler: ConversationScreen.routeHandler(),
       transitionType: TransitionType.native,
     );

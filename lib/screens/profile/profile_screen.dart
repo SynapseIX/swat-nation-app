@@ -215,6 +215,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             case ProfileAction.edit:
               _navigateToEdit();
               break;
+            case ProfileAction.inbox:
+              Routes.router.navigateTo(context, '/inbox/${widget.myUid}');
+              break;
             case ProfileAction.block:
               Routes.router.navigateTo(context, '/blocked/${widget.myUid}');
               break;
@@ -359,6 +362,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     );
+                    break;
+                  case ProfileAction.message:
+                    DialogHelper.instance().showWaitingDialog(
+                      context: context,
+                      title: 'Preparing...',
+                    );
+
+                    try {
+                      Navigator.pop(context);
+                      Routes.router.navigateTo(context, '/conversation/${user.uid}');
+                    } catch (error) {
+                      Navigator.pop(context);
+                      DialogHelper.instance().showErrorDialog(
+                        context: context,
+                        title: 'Can\'t Message',
+                        message: error ?? 'Can\'t message this user. Please try again later.'
+                      );
+                    }
                     break;
                   case ProfileAction.block:
                     DialogHelper.instance().showWaitingDialog(
