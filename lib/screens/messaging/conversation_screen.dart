@@ -13,6 +13,7 @@ import 'package:swat_nation/models/private_message_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/comment_input.dart';
+import 'package:swat_nation/widgets/common/verified_badge.dart';
 import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the private messaging screen between the user and another user.
@@ -201,6 +202,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
               Text(
                 displayName,
                 overflow: TextOverflow.ellipsis,
+              ),
+              if (snapshot.data.verified)
+              const VerifiedBadge(
+                margin: EdgeInsets.only(left: 4.0),
               ),
             ],
           );
