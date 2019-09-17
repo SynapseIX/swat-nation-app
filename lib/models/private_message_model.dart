@@ -6,21 +6,25 @@ import 'package:swat_nation/base/base_model.dart';
 class PrivateMessageModel extends BaseModel {
   PrivateMessageModel({
     @required this.uid,
+    @required this.text,
     @required this.timestamp,
   });
 
   PrivateMessageModel.fromSnapshot(DocumentSnapshot snapshot) {
     uid = snapshot.data['uid'];
+    text = snapshot.data['text'];
     timestamp = snapshot.data['timestamp'];
   }
 
   String uid;
+  String text;
   Timestamp timestamp;
 
   @override
   String toString() {
     return '''
     uid: $uid
+    text: $text
     timestamp: $timestamp
     ''';
   }
@@ -29,6 +33,7 @@ class PrivateMessageModel extends BaseModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uid': uid,
+      'text': text,
       'timestamp': timestamp,
     };
   }

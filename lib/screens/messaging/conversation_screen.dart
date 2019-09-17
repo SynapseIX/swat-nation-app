@@ -1,9 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:swat_nation/base/base_theme.dart';
+import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
+import 'package:swat_nation/models/private_message_model.dart';
 import 'package:swat_nation/models/user_model.dart';
+import 'package:swat_nation/themes/dark_theme.dart';
+import 'package:swat_nation/widgets/common/comment_input.dart';
 
 /// Represents the private messaging screen between the user and another user.
 class ConversationScreen extends StatefulWidget {
@@ -34,6 +41,9 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
+  final TextEditingController controller = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+
   UserBloc userBloc;
 
   @override
@@ -50,9 +60,50 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: null,
+    return GestureDetector(
+      onTap: _dismissKeyboard,
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: _EmptyState(),
+              ),
+              StreamBuilder<BaseTheme>(
+                stream: ThemeBloc.instance().stream,
+                builder: (BuildContext context, AsyncSnapshot<BaseTheme> themeSnapshot) {
+                  final BaseTheme theme = themeSnapshot.data;
+
+                  return CommentInput(
+                    controller: controller,
+                    focusNode: focusNode,
+                    keyboardAppearance: theme is DarkTheme
+                      ? Brightness.dark
+                      : Brightness.light,
+                    fillColor: theme is DarkTheme
+                      ? const Color(0xFF111111)
+                      : Colors.white,
+                    onSubmitted: (String value) {
+                      if (value.trim().isNotEmpty) {
+                        final PrivateMessageModel message = PrivateMessageModel(
+                          uid: widget.uid,
+                          text: value,
+                          timestamp: Timestamp.now(),
+                        );
+
+                        // TODO(itsprof): send message
+                        print('Sending ${message.text}');
+                        controller.clear();
+                      }
+                    },
+                  );
+                }
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -102,6 +153,36 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  void _dismissKeyboard() {
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: const <Widget>[
+          Icon(
+            MdiIcons.chatProcessing,
+            size: 80.0,
+          ),
+          SizedBox(height: 8.0),
+          Text(
+            'Messages appear here.',
+            style: TextStyle(
+              fontSize: 17.0,
+            ),
+          )
+        ],
       ),
     );
   }
