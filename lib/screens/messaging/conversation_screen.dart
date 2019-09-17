@@ -1,3 +1,4 @@
+import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluro/fluro.dart';
@@ -88,8 +89,34 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         reverse: true,
                         itemCount: data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final PrivateMessageModel model = data[index];
-                          return Text(model.text);
+                          final PrivateMessageModel message = data[index];
+                          final bool me = message.uid == widget.uid;
+                          
+                          final bool needsNip = index == 0
+                            || message.uid != data[index - 1].uid;
+                          
+                          final BubbleEdges margin = needsNip
+                            ? const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 8.0)
+                            : const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 4.0);
+                          
+                          BubbleNip nip;
+                          if (needsNip) {
+                            nip = me ? BubbleNip.rightBottom : BubbleNip.leftTop;
+                          }
+
+                          return Bubble(
+                            nip: nip,
+                            margin: margin,
+                            color: me ? Colors.lightBlue : Colors.lightGreen,
+                            alignment: me ? Alignment.topRight : Alignment.topLeft,
+                            child: Text(
+                              message.text,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 17.0,
+                              ),
+                            ),
+                          );
                         },
                       );
                     },

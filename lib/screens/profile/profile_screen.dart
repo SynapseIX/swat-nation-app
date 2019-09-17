@@ -369,18 +369,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: 'Preparing...',
                     );
 
-                    try {
+                    final bool blocked = await blockedBloc.checkIfBlocked(user.uid);
+                    if (blocked) {
                       Navigator.pop(context);
-                      Routes
-                        .router
-                        .navigateTo(context, '/conversation/${widget.myUid}/${user.uid}');
-                    } catch (error) {
-                      Navigator.pop(context);
-                      DialogHelper.instance().showErrorDialog(
-                        context: context,
-                        title: 'Can\'t Message',
-                        message: error ?? 'Can\'t message this user. Please try again later.'
-                      );
+                        DialogHelper.instance().showErrorDialog(
+                          context: context,
+                          title: 'Can\'t Message',
+                          message: 'Can\'t message this user. Please try again later.'
+                        );
+                    } else {
+                      try {
+                        Navigator.pop(context);
+                        Routes
+                          .router
+                          .navigateTo(context, '/conversation/${widget.myUid}/${user.uid}');
+                      } catch (error) {
+                        Navigator.pop(context);
+                        DialogHelper.instance().showErrorDialog(
+                          context: context,
+                          title: 'Can\'t Message',
+                          message: error ?? 'Can\'t message this user. Please try again later.'
+                        );
+                      } 
                     }
                     break;
                   case ProfileAction.block:
