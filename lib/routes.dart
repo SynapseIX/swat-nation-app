@@ -12,6 +12,8 @@ import 'package:swat_nation/screens/clips/create_clip_screen.dart';
 import 'package:swat_nation/screens/friends/friends_screen.dart';
 import 'package:swat_nation/screens/images/image_viewer.dart';
 import 'package:swat_nation/screens/main_screen.dart';
+import 'package:swat_nation/screens/messaging/conversation_screen.dart';
+import 'package:swat_nation/screens/messaging/inbox_screen.dart';
 import 'package:swat_nation/screens/profile/change_email_screen.dart';
 import 'package:swat_nation/screens/profile/edit_profile_screen.dart';
 import 'package:swat_nation/screens/profile/profile_screen.dart';
@@ -32,10 +34,11 @@ class Routes {
   static String editProfile = '/edit-profile/:uid';
   static String changeEmail = '/change-email/';
 
+  static String inbox = '/inbox/:uid';
+  static String conversation = '/conversation/:uid/:recipientUid';
+
   static String friends = '/my-friends/:uid';
-
   static String blocked = '/blocked/:uid';
-
   static String achievements = '/achievements/:uid/:me';
   
   static String clip = '/clip/:uid';
@@ -88,6 +91,20 @@ class Routes {
     router.define(
       changeEmail,
       handler: ChangeEmailScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Inbox
+    router.define(
+      inbox,
+      handler: InboxScreen.routeHandler(),
+      transitionType: TransitionType.native,
+    );
+
+    // Conversation
+    router.define(
+      conversation,
+      handler: ConversationScreen.routeHandler(),
       transitionType: TransitionType.native,
     );
 

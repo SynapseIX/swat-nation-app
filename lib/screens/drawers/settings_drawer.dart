@@ -105,7 +105,10 @@ class SettingsDrawer extends StatelessWidget {
 
             // Change theme
             ListTile(
-              leading: const Icon(MdiIcons.weatherNight),
+              leading: Icon(
+                MdiIcons.weatherNight,
+                color: Theme.of(context).accentColor,
+              ),
               title: const Text('Dark Mode'),
               trailing: Switch.adaptive(
                 activeColor: Theme.of(context).primaryColor,
