@@ -13,6 +13,7 @@ import 'package:swat_nation/models/private_message_model.dart';
 import 'package:swat_nation/models/user_model.dart';
 import 'package:swat_nation/themes/dark_theme.dart';
 import 'package:swat_nation/widgets/common/comment_input.dart';
+import 'package:swat_nation/widgets/dialogs/dialog_helper.dart';
 
 /// Represents the private messaging screen between the user and another user.
 class ConversationScreen extends StatefulWidget {
@@ -76,7 +77,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             children: <Widget>[
               Expanded(
                 child: StreamBuilder<List<PrivateMessageModel>>(
-                  stream: messagingBloc.conversation(widget.recipientUid),
+                  stream: messagingBloc.messages(widget.recipientUid),
                   builder:
                     (BuildContext context, AsyncSnapshot<List<PrivateMessageModel>> snapshot) {
                       if (snapshot.hasError || !snapshot.hasData) {
@@ -205,6 +206,45 @@ class _ConversationScreenState extends State<ConversationScreen> {
           );
         },
       ),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(MdiIcons.playlistRemove),
+          onPressed: () {
+            showDialog<void>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Clear Conversation'),
+                content: const Text('Are you sure you want to clear this conversation?'),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () async {
+                      DialogHelper.instance().showWaitingDialog(
+                        context: context,
+                        title: 'Clearing conversation...',
+                      );
+
+                      await messagingBloc.clear(widget.recipientUid);
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop();
+                    },
+                    child: const Text(
+                      'Yes, clear',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Dismiss'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
