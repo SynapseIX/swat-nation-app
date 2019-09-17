@@ -4,6 +4,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:swat_nation/base/base_theme.dart';
+import 'package:swat_nation/blocs/messaging_bloc.dart';
 import 'package:swat_nation/blocs/theme_bloc.dart';
 import 'package:swat_nation/blocs/user_bloc.dart';
 import 'package:swat_nation/constants.dart';
@@ -44,16 +45,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
   final TextEditingController controller = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
+  MessagingBloc messagingBloc;
   UserBloc userBloc;
 
   @override
   void initState() {
+    messagingBloc = MessagingBloc(uid: widget.uid);
     userBloc = UserBloc();
     super.initState();
   }
 
   @override
   void dispose() {
+    controller.dispose();
+    focusNode.dispose();
+    messagingBloc.dispose();
     userBloc.dispose();
     super.dispose();
   }
@@ -68,7 +74,26 @@ class _ConversationScreenState extends State<ConversationScreen> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: _EmptyState(),
+                child: StreamBuilder<List<PrivateMessageModel>>(
+                  stream: messagingBloc.conversation(widget.recipientUid),
+                  builder:
+                    (BuildContext context, AsyncSnapshot<List<PrivateMessageModel>> snapshot) {
+                      if (snapshot.hasError || !snapshot.hasData) {
+                        return _EmptyState();
+                      }
+
+                      final List<PrivateMessageModel> data = snapshot.data;
+                      
+                      return ListView.builder(
+                        reverse: true,
+                        itemCount: data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final PrivateMessageModel model = data[index];
+                          return Text(model.text);
+                        },
+                      );
+                    },
+                ),
               ),
               StreamBuilder<BaseTheme>(
                 stream: ThemeBloc.instance().stream,
@@ -92,8 +117,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           timestamp: Timestamp.now(),
                         );
 
-                        // TODO(itsprof): send message
-                        print('Sending ${message.text}');
+                        messagingBloc.send(message, widget.recipientUid);
                         controller.clear();
                       }
                     },
