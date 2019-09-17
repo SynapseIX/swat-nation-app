@@ -35,7 +35,7 @@ class Routes {
   static String changeEmail = '/change-email/';
 
   static String inbox = '/inbox/:uid';
-  static String conversation = '/conversation/:recipientUid';
+  static String conversation = '/conversation/:uid/:recipientUid';
 
   static String friends = '/my-friends/:uid';
   static String blocked = '/blocked/:uid';

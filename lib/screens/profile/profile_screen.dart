@@ -371,7 +371,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     try {
                       Navigator.pop(context);
-                      Routes.router.navigateTo(context, '/conversation/${user.uid}');
+                      Routes
+                        .router
+                        .navigateTo(context, '/conversation/${widget.myUid}/${user.uid}');
                     } catch (error) {
                       Navigator.pop(context);
                       DialogHelper.instance().showErrorDialog(

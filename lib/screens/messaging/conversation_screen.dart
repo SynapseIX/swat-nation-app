@@ -9,16 +9,20 @@ import 'package:swat_nation/models/user_model.dart';
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({
     Key key,
+    @required this.uid,
     @required this.recipientUid,
   }) : super(key: key);
 
+  final String uid;
   final String recipientUid;
   
   static Handler routeHandler() {
     return Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> parameters) {
+        final String uid = parameters['uid'].first;
         final String recipientUid = parameters['recipientUid'].first;
         return ConversationScreen(
+          uid: uid,
           recipientUid: recipientUid,
         );
       }
