@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:swat_nation/screens/404/not_found_screen.dart';
 import 'package:swat_nation/screens/about/about_screen.dart';
 import 'package:swat_nation/screens/achievements/achievements_screen.dart';
 import 'package:swat_nation/screens/auth/create_account_screen.dart';
@@ -52,8 +53,7 @@ class Routes {
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-        // TODO(itsprof): create Not Found screen
-        return Material(child: const Center(child: Text('404')));
+        return NotFoundScreen();
       },
     );
 
