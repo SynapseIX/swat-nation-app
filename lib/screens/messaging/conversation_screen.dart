@@ -98,7 +98,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             || message.uid != data[index - 1].uid;
                           
                           final BubbleEdges margin = needsNip
-                            ? const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 16.0)
+                            ? BubbleEdges.only(
+                                left: 16.0,
+                                right: 16.0,
+                                bottom: index == 0 ? 0.0 : 16.0,
+                              )
                             : const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 4.0);
                           
                           BubbleNip nip;
