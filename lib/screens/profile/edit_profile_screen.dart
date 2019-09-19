@@ -117,20 +117,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Edit Profile'),
-          actions: <Widget>[
-            StreamBuilder<String>(
-              stream: bloc.displayNameStream,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                return IconButton(
-                  icon: const Icon(MdiIcons.cloudUpload),
-                  tooltip: 'Save',
-                  onPressed: snapshot.hasData 
-                    ? () => _saveChanges(context)
-                    : null,
-                );
-              },
-            ),
-          ],
         ),
         body: ListView(
           children: <Widget>[
@@ -417,6 +403,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     },
                   ),
                 ],
+              ),
+            ),
+
+            // Save
+            Container(
+              width: double.infinity,
+              height: 40.0,
+              margin: const EdgeInsets.all(16.0),
+              child: StreamBuilder<String>(
+                stream: bloc.displayNameStream,
+                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  return RaisedButton(
+                    color: Colors.green,
+                    child: const Text(
+                      'Save Changes',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: snapshot.hasData 
+                      ? () => _saveChanges(context)
+                      : null,
+                  );
+                },
               ),
             ),
           ],
