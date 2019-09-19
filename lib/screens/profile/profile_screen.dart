@@ -1157,8 +1157,6 @@ class _PublicBody extends StatelessWidget {
               );
             };
 
-            // TODO(itsprof): validate if subscriber
-            const bool subscriber = true;
             Widget clipsContent;
             int numberOfClips = 0;
 
@@ -1174,7 +1172,7 @@ class _PublicBody extends StatelessWidget {
               
               // View All
               cards.add(ViewAllCard(
-                text: 'Manage',
+                text: me ? 'Manage' : 'View All',
                 onTap: () {
                   Routes.router.navigateTo(
                     context,
@@ -1188,13 +1186,45 @@ class _PublicBody extends StatelessWidget {
               clipsContent = Container(
                 height: 200.0,
                 padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: const Center(
-                    child: Text(
-                      kNoClipsCopy,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                child: GestureDetector(
+                  onTap: me  
+                    ? () {
+                        // TODO(itsprof): validate if subscriber
+                        const bool subscriber = true;
+                        final DialogHelper helper = DialogHelper.instance();
+
+                        if (subscriber) {
+                          if (numberOfClips < kSubClipLimit) {
+                            Routes.router.navigateTo(context, 'clip/create/${user.uid}');
+                          } else {
+                            helper.showErrorDialog(
+                              context: context,
+                              title: 'Can\'t Add More Clips',
+                              message: kSubClipLimitMessage,
+                            );
+                          }
+                        } else {
+                          if (numberOfClips < kNoSubClipLimit) {
+                            Routes.router.navigateTo(context, 'clip/create/${user.uid}');
+                          } else {
+                            helper.showSubscribeDialog(
+                              context: context,
+                              message: kNoSubClipLimitMessage,
+                            );
+                          }
+                        }
+                      }
+                    : null,
+                  child: Card(
+                    child: Center(
+                      child: Text(
+                        me
+                        ? '$kNoClipsCopy\nTap to add a clip.'
+                        : kNoClipsCopy,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -1206,40 +1236,7 @@ class _PublicBody extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                TextHeader(
-                  'Clips',
-                  actions: me
-                    ? <Widget>[
-                      IconButton(
-                        icon: Icon(MdiIcons.plusCircleOutline),
-                        onPressed: () {
-                          final DialogHelper helper = DialogHelper.instance();
-
-                          if (subscriber) {
-                            if (numberOfClips < kSubClipLimit) {
-                              Routes.router.navigateTo(context, 'clip/create/${user.uid}');
-                            } else {
-                              helper.showErrorDialog(
-                                context: context,
-                                title: 'Can\'t Add More Clips',
-                                message: kSubClipLimitMessage,
-                              );
-                            }
-                          } else {
-                            if (numberOfClips < kNoSubClipLimit) {
-                              Routes.router.navigateTo(context, 'clip/create/${user.uid}');
-                            } else {
-                              helper.showSubscribeDialog(
-                                context: context,
-                                message: kNoSubClipLimitMessage,
-                              );
-                            }
-                          }
-                        },
-                      )
-                    ]
-                  : <Widget>[],
-                ),
+                const TextHeader('Clips'),
                 clipsContent,
               ],
             );

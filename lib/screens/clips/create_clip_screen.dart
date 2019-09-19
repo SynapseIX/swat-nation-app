@@ -97,41 +97,6 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Add Clip'),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(MdiIcons.cloudUpload),
-              tooltip: 'Upload Clip',
-              onPressed: validateLink(model.link)
-                ? () async {
-                  DialogHelper.instance().showWaitingDialog(
-                    context: context,
-                    title: 'Adding clip...'
-                  );
-
-                  final Random random = Random(DateTime.now().millisecondsSinceEpoch);
-
-                  model.random = random.nextInt(kMaxRandomValue);
-                  model.author = widget.user.uid;
-                  model.createdAt = Timestamp.now();
-                  model.title = titleController.text.isNotEmpty
-                    ? titleController.text
-                    : null;
-
-                  final DocumentReference ref = await bloc.create(model);
-                  await ref.setData(
-                    <String, dynamic>{
-                      'uid': ref.documentID,
-                    },
-                    merge: true,
-                  );
-
-                  Navigator.of(context)
-                    ..pop()
-                    ..pop();
-                }
-                : null,
-            ),
-          ],
         ),
         body: ListView(
           children: <Widget>[
@@ -212,6 +177,52 @@ class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransforme
                   });
                 },
                 onSubmitted: (String value) => _dismissKeyboard(),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                width: double.infinity,
+                height: 40.0,
+                child: RaisedButton(
+                  color: Colors.green,
+                  child: const Text(
+                    'Upload Clip',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: validateLink(model.link)
+                    ? () async {
+                      DialogHelper.instance().showWaitingDialog(
+                        context: context,
+                        title: 'Uploading clip...'
+                      );
+
+                      final Random random = Random(DateTime.now().millisecondsSinceEpoch);
+
+                      model.random = random.nextInt(kMaxRandomValue);
+                      model.author = widget.user.uid;
+                      model.createdAt = Timestamp.now();
+                      model.title = titleController.text.isNotEmpty
+                        ? titleController.text
+                        : null;
+
+                      final DocumentReference ref = await bloc.create(model);
+                      await ref.setData(
+                        <String, dynamic>{
+                          'uid': ref.documentID,
+                        },
+                        merge: true,
+                      );
+
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop();
+                    }
+                    : null,
+                ),
               ),
             ),
           ],
