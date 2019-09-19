@@ -229,7 +229,7 @@ class _EmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 17.0,
             ),
-          )
+          ),
         ],
       ),
     );
