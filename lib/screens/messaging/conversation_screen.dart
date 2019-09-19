@@ -98,7 +98,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             || message.uid != data[index - 1].uid;
                           
                           final BubbleEdges margin = needsNip
-                            ? const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 8.0)
+                            ? const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 16.0)
                             : const BubbleEdges.only(left: 16.0, right: 16.0, bottom: 4.0);
                           
                           BubbleNip nip;
@@ -109,6 +109,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           return Bubble(
                             nip: nip,
                             margin: margin,
+                            padding: const BubbleEdges.all(8.0),
                             color: me ? Colors.lightBlue : Colors.lightGreen,
                             alignment: me ? Alignment.topRight : Alignment.topLeft,
                             child: Text(
@@ -149,6 +150,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         messagingBloc.send(message, widget.recipientUid);
                         controller.clear();
                       }
+
+                      FocusScope.of(context).requestFocus(focusNode);
                     },
                   );
                 }
