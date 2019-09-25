@@ -143,20 +143,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     fillColor: theme is DarkTheme
                       ? const Color(0xFF111111)
                       : Colors.white,
-                    onSubmitted: (String value) {
-                      if (value.trim().isNotEmpty) {
-                        final PrivateMessageModel message = PrivateMessageModel(
-                          uid: widget.uid,
-                          text: value,
-                          timestamp: Timestamp.now(),
-                        );
-
-                        messagingBloc.send(message, widget.recipientUid);
-                        controller.clear();
-                      }
-
-                      FocusScope.of(context).requestFocus(focusNode);
-                    },
+                    onSubmitted: send,
                   );
                 }
               ),
@@ -165,6 +152,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ),
       ),
     );
+  }
+
+  void send(String text) {
+    if (text.trim().isNotEmpty) {
+      final PrivateMessageModel message = PrivateMessageModel(
+        uid: widget.uid,
+        text: text,
+        timestamp: Timestamp.now(),
+      );
+
+      messagingBloc.send(message, widget.recipientUid);
+      controller.clear();
+    }
+
+    FocusScope.of(context).requestFocus(focusNode);
   }
 
   Widget _buildAppBar() {
