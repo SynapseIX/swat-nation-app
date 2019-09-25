@@ -107,7 +107,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           
                           BubbleNip nip;
                           if (needsNip) {
-                            nip = me ? BubbleNip.rightBottom : BubbleNip.leftTop;
+                            nip = me ? BubbleNip.rightBottom : BubbleNip.leftBottom;
                           }
 
                           return Bubble(
