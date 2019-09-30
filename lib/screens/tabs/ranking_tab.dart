@@ -120,20 +120,11 @@ class _RankingTabState extends State<RankingTab> with AutomaticKeepAliveClientMi
                     ),
                   ],
                 ),
-                trailing: FutureBuilder<FirebaseUser>(
-                  future: AuthBloc.instance().currentUser,
-                  builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
-                    if (!snapshot.hasData) {
-                      return const SizedBox();
-                    }
-
-                    return snapshot.data.uid == model.uid
-                     ? const Icon(
-                        MdiIcons.account,
-                        color: Colors.amber,
-                      )
-                    : const SizedBox();
-                  },
+                trailing: Text(
+                  '${model.monthlyScore}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
                 ),
                 onTap: () async {
                   DialogHelper.instance().showWaitingDialog(
