@@ -228,6 +228,7 @@ class _FinderTabState extends State<FinderTab> with AutomaticKeepAliveClientMixi
                             final FirebaseUser currentUser = await AuthBloc
                               .instance()
                               .currentUser;
+                              
                             if (currentUser == null) {
                               return DialogHelper
                                 .instance()
