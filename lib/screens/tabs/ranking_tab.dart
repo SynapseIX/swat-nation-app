@@ -49,6 +49,17 @@ class _RankingTabState extends State<RankingTab> with AutomaticKeepAliveClientMi
     return Scaffold(
       appBar: AppBar(
         title: Text('${humanizeDateTime(DateTime.now(), 'MMMM yyyy')} Ranking'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              MdiIcons.menu,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openEndDrawer();
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<List<UserModel>>(
         stream: bloc.monthlyRanking,
