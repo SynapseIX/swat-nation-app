@@ -32,7 +32,7 @@ class AuthBloc extends BaseBloc {
   Future<FirebaseUser> loginWithFacebook() async {
     final FacebookLogin facebookLogin = FacebookLogin();
     final FacebookLoginResult fbLoginResult = await facebookLogin
-      .logInWithReadPermissions(<String>['public_profile', 'email']);
+      .logIn(<String>['public_profile', 'email']);
 
     switch (fbLoginResult.status) {
       case FacebookLoginStatus.loggedIn:
