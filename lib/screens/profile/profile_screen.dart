@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -566,6 +567,23 @@ class _PublicHeader extends StatelessWidget {
                         const SizedBox(width: 4.0),
                         Text(
                           '${user.score}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4.0),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          MdiIcons.medal,
+                          color: Colors.amber,
+                        ),
+                        const SizedBox(width: 4.0),
+                        Text(
+                          '${user.monthlyScore}',
                           style: const TextStyle(
                             color: Colors.white,
                           ),
