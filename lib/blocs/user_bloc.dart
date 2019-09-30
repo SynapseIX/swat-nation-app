@@ -13,6 +13,12 @@ class UserBloc extends BaseBloc with UserTransformer {
     .orderBy('displayName')
     .snapshots()
     .transform(userTransformer);
+  
+  Stream<List<UserModel>> get monthlyRanking => _firestore
+    .collection(userCollection)
+    .orderBy('monthlyScore', descending: true)
+    .snapshots()
+    .transform(userTransformer);
 
   Future<UserModel> userByUid(String uid) async {
     try {
