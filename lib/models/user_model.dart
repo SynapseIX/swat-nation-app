@@ -24,6 +24,7 @@ class UserModel extends BaseModel {
     this.bio,
     this.private = false,
     this.score = 0,
+    this.monthlyScore = 0,
   });
 
   UserModel.fromSnapshot(DocumentSnapshot document) {
@@ -46,6 +47,7 @@ class UserModel extends BaseModel {
     bio = document.data['bio'];
     private = document.data['private'];
     score = document.data['score'];
+    monthlyScore = document.data['monthlyScore'];
   }
 
   UserModel.blank();
@@ -70,6 +72,7 @@ class UserModel extends BaseModel {
   String bio;
   bool private;
   int score;
+  int monthlyScore;
 
   @override
   String toString() {
@@ -91,6 +94,7 @@ class UserModel extends BaseModel {
     bio: $bio
     private: $private
     score: $score
+    monthlyScore: $monthlyScore
     ''';
   }
 
@@ -114,6 +118,7 @@ class UserModel extends BaseModel {
       'bio': bio,
       'private': private,
       'score': score,
+      'monthlyScore': monthlyScore,
     };
   }
 }

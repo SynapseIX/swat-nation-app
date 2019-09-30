@@ -37,8 +37,10 @@ class AchievementsBloc extends BaseBloc with AchievementTransformer {
 
     final BadgeModel badge = await badgeWithPath(model.badge.path);
     final int score = user.score ?? 0;
+    final int monthlyScore = user.monthlyScore ?? 0;
 
     user.score = score + badge.points;
+    user.monthlyScore = monthlyScore + badge.points;
     await userBloc.update(user);
     userBloc.dispose();
 
