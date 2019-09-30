@@ -145,12 +145,18 @@ class _RankingTabState extends State<RankingTab> with AutomaticKeepAliveClientMi
                     title: 'Preparing...'
                   );
 
-                  final FirebaseUser me = await AuthBloc.instance().currentUser;
+                  final FirebaseUser currentUser = await AuthBloc.instance().currentUser;
                   Navigator.pop(context);
 
-                  Routes
-                    .router
-                    .navigateTo(context, '/profile/${me.uid}/${model.uid}');
+                  if (currentUser == null) {
+                    return DialogHelper
+                      .instance()
+                      .showSignInDIalog(context: context);
+                  } else {
+                    Routes
+                      .router
+                      .navigateTo(context, '/profile/${currentUser.uid}/${model.uid}');
+                  }
                 }
               );
             },
