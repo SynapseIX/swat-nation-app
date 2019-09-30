@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -142,7 +144,7 @@ class _RankingTabState extends State<RankingTab> with AutomaticKeepAliveClientMi
               );
             },
             separatorBuilder: (BuildContext context, int index) {
-              return const Divider(indent: 16.0);
+              return Divider(indent: Platform.isIOS ? 16.0 : 0.0);
             },
           );
         },
