@@ -91,159 +91,154 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       body: GestureDetector(
         onTap: () => _dismissKeyboard(),
         child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        // Logo
-                        Container(
-                          margin: const EdgeInsets.only(top: 16.0),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF333333),
-                            shape: BoxShape.circle,
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: kLogo,
-                            fadeInDuration: const Duration(milliseconds: 300),
-                            width: 120.0,
-                            height: 120.0,
-                          ),
-                        ),
-
-                        const SizedBox(height: 8.0),
-
-                        // Email field
-                        StreamBuilder<String>(
-                          stream: uiBloc.emailStream,
-                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                            return TextField(
-                              keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                                ? Brightness.dark
-                                : Brightness.light,
-                              controller: emailController,
-                              autocorrect: false,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              focusNode: emailNode,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                hintText: 'user@example.com',
-                                errorText: snapshot.error,
-                              ),
-                              onSubmitted: (String value) {
-                                emailNode.nextFocus();
-                              },
-                              onChanged: uiBloc.onChangeEmail,
-                            );
-                          },
-                        ),
-
-                        // Password field
-                        StreamBuilder<String>(
-                          stream: uiBloc.passwordStream,
-                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                            return TextField(
-                              keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                                ? Brightness.dark
-                                : Brightness.light,
-                              controller: passwordController,
-                              autocorrect: false,
-                              obscureText: true,
-                              textInputAction: TextInputAction.next,
-                              focusNode: passwordNode,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                hintText: 'password',
-                                errorText: snapshot.error,
-                              ),
-                              onSubmitted: (String value) {
-                                passwordNode.nextFocus();
-                              },
-                              onChanged: uiBloc.onChangePassword,
-                            );
-                          },
-                        ),
-
-                        // Confirm password field
-                        StreamBuilder<String>(
-                          stream: uiBloc.confirmPasswordStream,
-                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                            return TextField(
-                              keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                                ? Brightness.dark
-                                : Brightness.light,
-                              controller: confirmPasswordController,
-                              autocorrect: false,
-                              obscureText: true,
-                              textInputAction: TextInputAction.next,
-                              focusNode: confirmPasswordNode,
-                              decoration: InputDecoration(
-                                labelText: 'Confirm Password',
-                                hintText: 'confirm password',
-                                errorText: snapshot.error,
-                              ),
-                              onSubmitted: (String value) {
-                                confirmPasswordNode.nextFocus();
-                              },
-                              onChanged: uiBloc.onChangeConfirmPassword,
-                            );
-                          },
-                        ),
-
-                        // Username field
-                        StreamBuilder<String>(
-                          stream: uiBloc.displayNameStream,
-                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                            return TextField(
-                              keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
-                                ? Brightness.dark
-                                : Brightness.light,
-                              controller: usernameController,
-                              autocorrect: false,
-                              textInputAction: TextInputAction.go,
-                              focusNode: usernameNode,
-                              maxLength: kDisplayNameMaxChararcters,
-                              decoration: InputDecoration(
-                                labelText: 'Username',
-                                hintText: 'Username',
-                                errorText: snapshot.error,
-                              ),
-                              onSubmitted: (String value) {
-                                _dismissKeyboard();
-
-                                if (uiBloc.createAccountValidValue) {
-                                  _submitCreateAccount(context);
-                                }
-                              },
-                              onChanged: uiBloc.onChangeDisplayName,
-                            );
-                          },
-                        ),
-
-                        const SizedBox(height: 24.0),
-
-                        // Create Account button
-                        Container(
-                          width: double.infinity,
-                          height: 40.0,
-                          child: StreamBuilder<bool>(
-                            stream: uiBloc.createAccountValidStream,
-                            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                              return RaisedButton(
-                                child: const Text('Create Account'),
-                                onPressed: snapshot.hasData
-                                  ? () => _submitCreateAccount(context)
-                                  : null,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: <Widget>[
+                // Logo
+                Container(
+                  margin: const EdgeInsets.only(top: 16.0),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF333333),
+                    shape: BoxShape.circle,
                   ),
+                  child: CachedNetworkImage(
+                    imageUrl: kLogo,
+                    fadeInDuration: const Duration(milliseconds: 300),
+                    width: 120.0,
+                    height: 120.0,
+                  ),
+                ),
+
+                const SizedBox(height: 8.0),
+
+                // Email field
+                StreamBuilder<String>(
+                  stream: uiBloc.emailStream,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    return TextField(
+                      keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                        ? Brightness.dark
+                        : Brightness.light,
+                      controller: emailController,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      focusNode: emailNode,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'user@example.com',
+                        errorText: snapshot.error,
+                      ),
+                      onSubmitted: (String value) {
+                        emailNode.nextFocus();
+                      },
+                      onChanged: uiBloc.onChangeEmail,
+                    );
+                  },
+                ),
+
+                // Password field
+                StreamBuilder<String>(
+                  stream: uiBloc.passwordStream,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    return TextField(
+                      keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                        ? Brightness.dark
+                        : Brightness.light,
+                      controller: passwordController,
+                      autocorrect: false,
+                      obscureText: true,
+                      textInputAction: TextInputAction.next,
+                      focusNode: passwordNode,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'password',
+                        errorText: snapshot.error,
+                      ),
+                      onSubmitted: (String value) {
+                        passwordNode.nextFocus();
+                      },
+                      onChanged: uiBloc.onChangePassword,
+                    );
+                  },
+                ),
+
+                // Confirm password field
+                StreamBuilder<String>(
+                  stream: uiBloc.confirmPasswordStream,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    return TextField(
+                      keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                        ? Brightness.dark
+                        : Brightness.light,
+                      controller: confirmPasswordController,
+                      autocorrect: false,
+                      obscureText: true,
+                      textInputAction: TextInputAction.next,
+                      focusNode: confirmPasswordNode,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        hintText: 'confirm password',
+                        errorText: snapshot.error,
+                      ),
+                      onSubmitted: (String value) {
+                        confirmPasswordNode.nextFocus();
+                      },
+                      onChanged: uiBloc.onChangeConfirmPassword,
+                    );
+                  },
+                ),
+
+                // Username field
+                StreamBuilder<String>(
+                  stream: uiBloc.displayNameStream,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    return TextField(
+                      keyboardAppearance: ThemeBloc.instance().currentTheme is DarkTheme
+                        ? Brightness.dark
+                        : Brightness.light,
+                      controller: usernameController,
+                      autocorrect: false,
+                      textInputAction: TextInputAction.go,
+                      focusNode: usernameNode,
+                      maxLength: kDisplayNameMaxChararcters,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        hintText: 'Username',
+                        errorText: snapshot.error,
+                      ),
+                      onSubmitted: (String value) {
+                        _dismissKeyboard();
+
+                        if (uiBloc.createAccountValidValue) {
+                          _submitCreateAccount(context);
+                        }
+                      },
+                      onChanged: uiBloc.onChangeDisplayName,
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 24.0),
+
+                // Create Account button
+                Container(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: StreamBuilder<bool>(
+                    stream: uiBloc.createAccountValidStream,
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      return RaisedButton(
+                        child: const Text('Create Account'),
+                        onPressed: snapshot.hasData
+                          ? () => _submitCreateAccount(context)
+                          : null,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
