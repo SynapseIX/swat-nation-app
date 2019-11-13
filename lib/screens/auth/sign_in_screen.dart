@@ -97,7 +97,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: <Widget>[
                     // Logo
                     Container(
-                      margin: const EdgeInsets.only(top: 16.0),
+                      margin: const EdgeInsets.only(top: 8.0),
                       decoration: const BoxDecoration(
                         color: Color(0xFF333333),
                         shape: BoxShape.circle,
@@ -105,17 +105,31 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: CachedNetworkImage(
                         imageUrl: kLogo,
                         fadeInDuration: const Duration(milliseconds: 300),
-                        width: 60.0,
-                        height: 60.0,
+                        width: 80.0,
+                        height: 80.0,
                       ),
                     ),
 
                     const SizedBox(height: 8.0),
 
-                    Text(
-                      'Sign In with Email',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.title,
+                    // OR Divider
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Divider(
+                            color: Theme.of(context).textTheme.body1.color,
+                          ),
+                        ),
+                        Text(
+                          '    Sign in with email    ',
+                          style: Theme.of(context).textTheme.headline,
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Theme.of(context).textTheme.body1.color,
+                          ),
+                        ),
+                      ],
                     ),
 
                     const SizedBox(height: 8.0),
