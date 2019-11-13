@@ -112,24 +112,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
                     const SizedBox(height: 8.0),
 
-                    // OR Divider
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Divider(
-                            color: Theme.of(context).textTheme.body1.color,
-                          ),
-                        ),
-                        Text(
-                          '    Sign in with email    ',
-                          style: Theme.of(context).textTheme.headline,
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Theme.of(context).textTheme.body1.color,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Sign in with email',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline,
                     ),
 
                     const SizedBox(height: 8.0),
