@@ -15,7 +15,7 @@ class NotFoundScreen extends StatelessWidget {
             size: 80.0,
           ),
           const SizedBox(height: 8.0),
-          Text(
+          const Text(
             'Ooops! Nothing to see here.',
             style: TextStyle(
               fontSize: 17.0,

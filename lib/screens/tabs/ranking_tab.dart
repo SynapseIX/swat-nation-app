@@ -187,7 +187,7 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 8.0),
           Text(
             'Ranking for ${humanizeDateTime(DateTime.now(), 'MMMM yyyy')} appears here.',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 17.0,
             ),
           ),
