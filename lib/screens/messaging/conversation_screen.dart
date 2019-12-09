@@ -41,7 +41,7 @@ class ConversationScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _ConversationScreenState();
+  _ConversationScreenState createState() => _ConversationScreenState();
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {

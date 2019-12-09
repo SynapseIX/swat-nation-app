@@ -75,7 +75,7 @@ class ProfileScreen extends StatefulWidget {
   final String myUid;
 
   @override
-  State createState() => _ProfileScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {

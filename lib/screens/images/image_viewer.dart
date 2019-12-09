@@ -27,7 +27,7 @@ class ImageViewer extends StatefulWidget {
   }
 
   @override
-  State createState() => _ImageViewerState();
+  _ImageViewerState createState() => _ImageViewerState();
 }
 
 class _ImageViewerState extends State<ImageViewer> {

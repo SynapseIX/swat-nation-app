@@ -14,7 +14,7 @@ class MemberCard extends StatefulWidget {
   final TeamMemberModel model;
 
   @override
-  State createState() => _MemberCardState();
+  _MemberCardState createState() => _MemberCardState();
 }
 
 class _MemberCardState extends State<MemberCard> {

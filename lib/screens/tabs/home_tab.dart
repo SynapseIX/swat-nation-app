@@ -33,7 +33,7 @@ class HomeTab extends StatefulWidget implements BaseTab {
   const HomeTab({ Key key }) : super(key: key);
 
   @override
-  State createState() => _HomeTabState();
+  _HomeTabState createState() => _HomeTabState();
 
   @override
   IconData get icon => MdiIcons.home;

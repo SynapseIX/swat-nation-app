@@ -57,7 +57,7 @@ class ClipScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _ClipScreenState();
+  _ClipScreenState createState() => _ClipScreenState();
 }
 
 class _ClipScreenState extends State<ClipScreen>

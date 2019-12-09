@@ -31,7 +31,7 @@ class BlockedScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _BlockedScreenState();
+  _BlockedScreenState createState() => _BlockedScreenState();
 }
 
 class _BlockedScreenState extends State<BlockedScreen> {

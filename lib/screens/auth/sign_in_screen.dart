@@ -38,7 +38,7 @@ class SignInScreen extends StatefulWidget {
   }
   
   @override
-  State createState() => _SignInScreenState();
+  _SignInScreenState createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {

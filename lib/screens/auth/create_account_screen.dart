@@ -34,7 +34,7 @@ class CreateAccountScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _CreateAccountScreenState();
+  _CreateAccountScreenState createState() => _CreateAccountScreenState();
 }
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {

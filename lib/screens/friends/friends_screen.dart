@@ -32,7 +32,7 @@ class FriendsScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _FriendsScreenState();
+  _FriendsScreenState createState() => _FriendsScreenState();
 }
 
 class _FriendsScreenState extends State<FriendsScreen> {

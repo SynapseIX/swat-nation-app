@@ -20,7 +20,7 @@ class FinderTab extends StatefulWidget implements BaseTab {
   const FinderTab({ Key key }) : super(key: key);
 
   @override
-  State createState() => _FinderTabState();
+  _FinderTabState createState() => _FinderTabState();
 
   @override
   IconData get icon => MdiIcons.accountSearch;

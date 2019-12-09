@@ -40,7 +40,7 @@ class AllClipsScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _AllClipsScreenState();
+  _AllClipsScreenState createState() => _AllClipsScreenState();
 }
 
 class _AllClipsScreenState extends State<AllClipsScreen> {

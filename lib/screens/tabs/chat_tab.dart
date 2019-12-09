@@ -24,7 +24,7 @@ class ChatTab extends StatefulWidget implements BaseTab {
   const ChatTab({ Key key }) : super(key: key);
 
   @override
-  State createState() => _ChatTabState();
+  _ChatTabState createState() => _ChatTabState();
 
   @override
   IconData get icon => MdiIcons.chat;

@@ -26,7 +26,7 @@ class MainScreen extends StatefulWidget {
   }
   
   @override
-  State createState() => _MainScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {

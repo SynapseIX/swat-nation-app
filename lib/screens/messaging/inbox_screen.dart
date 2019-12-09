@@ -34,7 +34,7 @@ class InboxScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _InboxScreenState();
+  _InboxScreenState createState() => _InboxScreenState();
 }
 
 class _InboxScreenState extends State<InboxScreen> {

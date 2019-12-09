@@ -14,9 +14,7 @@ class App extends StatefulWidget {
   const App({ Key key }) : super(key: key);
 
   @override
-  State createState() {
-    return _AppState();
-  }
+  _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {

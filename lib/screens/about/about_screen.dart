@@ -30,7 +30,7 @@ class AboutScreen extends StatefulWidget {
   }
 
   @override
-  State createState() => _AboutScreenState();
+  _AboutScreenState createState() => _AboutScreenState();
 }
 
 class _AboutScreenState extends State<AboutScreen> {

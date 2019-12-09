@@ -50,9 +50,7 @@ class CreateClipScreen extends StatefulWidget {
   }
 
   @override
-  State createState() {
-    return _CreateClipScreenState();
-  }
+  _CreateClipScreenState createState() =>_CreateClipScreenState();
 }
 
 class _CreateClipScreenState extends State<CreateClipScreen> with ClipTransformer {
