@@ -24,7 +24,5 @@ class AboutModel extends BaseModel {
   List<TeamMemberModel> team;
 
   @override
-  Map<String, dynamic> toMap() {
-    return null;
-  }
+  Map<String, dynamic> toMap() => null;
 }
