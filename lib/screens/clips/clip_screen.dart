@@ -115,7 +115,6 @@ class _ClipScreenState extends State<ClipScreen>
     controller.dispose();
 
     Wakelock.disable();
-    AutoOrientation.portraitUpMode();
     super.dispose();
   }
 
@@ -156,7 +155,10 @@ class _ClipScreenState extends State<ClipScreen>
                   ),
                   leading: IconButton(
                     icon: const Icon(MdiIcons.close),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      AutoOrientation.portraitUpMode();
+                      Navigator.pop(context);
+                    },
                   ),
                   actions: <Widget>[
                     IconButton(
