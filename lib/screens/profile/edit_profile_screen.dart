@@ -390,7 +390,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fontSize: 15.0,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   StreamBuilder<bool>(
                     stream: bloc.privacyStream,
                     initialData: false,

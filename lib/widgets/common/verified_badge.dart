@@ -19,8 +19,8 @@ class VerifiedBadge extends StatelessWidget {
         Scaffold.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            SnackBar(
-              content: const Text(kVerifiedCopy),
+            const SnackBar(
+              content: Text(kVerifiedCopy),
             ),
           );
       },

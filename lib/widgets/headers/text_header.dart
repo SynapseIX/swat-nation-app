@@ -39,7 +39,7 @@ class TextHeader extends StatelessWidget {
             textAlign: textAlign,
             overflow: overflow,
           ),
-          Spacer(),
+          const Spacer(),
           if (actions.isNotEmpty)
           Row(
             mainAxisSize: MainAxisSize.min,

@@ -274,11 +274,11 @@ class _AppBar extends StatelessWidget {
           );
         }
 
-        return SliverAppBar(
+        return const SliverAppBar(
           pinned: true,
           floating: true,
           automaticallyImplyLeading: false,
-          title: const Text('What\'s New?'),
+          title: Text('What\'s New?'),
         );
       },
     );

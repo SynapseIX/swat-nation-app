@@ -613,8 +613,8 @@ class _PublicHeader extends StatelessWidget {
                 Clipboard.setData(ClipboardData(text: user.uid));
                 Scaffold.of(context)
                   ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                    content: const Text('Your Support ID has been copied.'),
+                  ..showSnackBar(const SnackBar(
+                    content: Text('Your Support ID has been copied.'),
                   ));
               },
               child: Column(
@@ -677,8 +677,8 @@ class _PrivateHeader extends StatelessWidget {
         image: DecorationImage(
           image: CachedNetworkImageProvider(user.headerUrl ?? kDefaultProfileHeader),
           fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            const Color(0x88000000),
+          colorFilter: const ColorFilter.mode(
+            Color(0x88000000),
             BlendMode.overlay,
           ),
         ),

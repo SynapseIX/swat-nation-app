@@ -39,8 +39,8 @@ class CommentInput extends StatelessWidget {
         textInputAction: TextInputAction.send,
         decoration: InputDecoration(
           hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
               Radius.circular(20.0),
             ),
           ),
