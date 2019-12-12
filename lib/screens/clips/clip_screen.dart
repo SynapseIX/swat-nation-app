@@ -1,3 +1,4 @@
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -113,14 +114,8 @@ class _ClipScreenState extends State<ClipScreen>
     controller.removeListener(_listener);
     controller.dispose();
 
-    // TODO(itsprof): force orientation change natively
-    SystemChrome.setPreferredOrientations(
-      <DeviceOrientation>[
-        DeviceOrientation.portraitUp,
-      ],
-    );
-
     Wakelock.disable();
+    AutoOrientation.portraitUpMode();
     super.dispose();
   }
 
